@@ -236,7 +236,7 @@
 <script>
     const quizData = [
         {
-            question: "1. Indica cuáles de las siguientes afirmaciones son correctas: [cite: 761]",
+            question: "1. Indica cuáles de las siguientes afirmaciones son correctas: ",
             options: [
                 "A. La escuela de la IA Fuerte defiende que las máquinas pueden llegar a tener conciencia.",
                 "B. La escuela de la IA Débil no defiende que los procesos cerebrales puedan ser simulados en un computador.",
@@ -246,28 +246,28 @@
             correct: [0, 2],
             type: "multiple",
             topic: "1.2. Aproximación a conceptos (IA Fuerte y Test de Turing)",
-            justification: "La IA Fuerte sostiene que las máquinas pueden tener conciencia y el Test de Turing evalúa la capacidad de una máquina para conversar como un humano. Es falso que la IA Débil no defienda la simulación cerebral (simplemente no busca conciencia) [cite: 763] y el aprendizaje automático es parte integral de la IA[cite: 765]."
+            justification: "La IA Fuerte sostiene que las máquinas pueden tener conciencia y el Test de Turing evalúa la capacidad de una máquina para conversar como un humano. Es falso que la IA Débil no defienda la simulación cerebral (simplemente no busca conciencia)  y el aprendizaje automático es parte integral de la IA."
         },
         {
-            question: "2. Indica cuál de las siguientes afirmaciones no es correcta: [cite: 766]",
+            question: "2. Indica cuál de las siguientes afirmaciones no es correcta: ",
             options: [
-                "A. La minería de datos usa aprendizaje automático para descubrir patrones en grandes cantidades de datos. [cite: 767, 768]",
-                "B. La minería de datos tiene un objetivo fundamentalmente teórico. [cite: 769]",
-                "C. Existe una fase KDD que consiste en ejecutar técnicas de IA. [cite: 770]",
-                "D. En el KDD existen fases previas de selección y transformación de los datos. [cite: 771]"
+                "A. La minería de datos usa aprendizaje automático para descubrir patrones en grandes cantidades de datos.",
+                "B. La minería de datos tiene un objetivo fundamentalmente teórico. ",
+                "C. Existe una fase KDD que consiste en ejecutar técnicas de IA. ",
+                "D. En el KDD existen fases previas de selección y transformación de los datos. "
             ],
             correct: 1,
             type: "single",
             topic: "1.2. Concepto de Minería de Datos",
-            justification: "La afirmación B es incorrecta porque el objetivo de la minería de datos es eminentemente práctico[cite: 769], no teórico."
+            justification: "La afirmación B es incorrecta porque el objetivo de la minería de datos es eminentemente práctico, no teórico."
         },
         {
-            question: "3. Indica cuál no es correcta respecto a la experiencia en el aprendizaje de conceptos: [cite: 772]",
+            question: "3. Indica cuál no es correcta respecto a la experiencia en el aprendizaje de conceptos: ",
             options: [
-                "A. Consiste en un conjunto de objetos específicos denominados instancias. [cite: 774]",
-                "B. Consiste en una serie de ejemplos y no-ejemplos. [cite: 775]",
-                "C. Consiste en instancias con atributos de entrada y de salida. [cite: 776]",
-                "D. Consiste en un conjunto de datos denominado datos de prueba. [cite: 777]"
+                "A. Consiste en un conjunto de objetos específicos denominados instancias. ",
+                "B. Consiste en una serie de ejemplos y no-ejemplos. ",
+                "C. Consiste en instancias con atributos de entrada y de salida. ",
+                "D. Consiste en un conjunto de datos denominado datos de prueba. "
             ],
             correct: 3,
             type: "single",
@@ -275,36 +275,36 @@
             justification: "La experiencia se compone de datos de entrenamiento[cite: 774, 776]. Los datos de prueba se utilizan para validar la generalización de la solución después del entrenamiento[cite: 336, 777]."
         },
         {
-            question: "4. Identificar la clase de una instancia desconocida en base a atributos comunes a ejemplos previos es: [cite: 781]",
-            options: ["A. Discriminación. [cite: 782]", "B. Generalización. [cite: 783]", "C. Clasificación. [cite: 784]", "D. Descripción. [cite: 785]"],
+            question: "4. Identificar la clase de una instancia desconocida en base a atributos comunes a ejemplos previos es: ",
+            options: ["A. Discriminación. ", "B. Generalización. ", "C. Clasificación. ", "D. Descripción. "],
             correct: 1,
             type: "single",
             topic: "1.3. Tareas básicas: Generalización",
             justification: "La generalización consiste en identificar la clase de una instancia desconocida examinando los atributos comunes con ejemplos encontrados previamente[cite: 783, 284]."
         },
         {
-            question: "5. Descubrir síntomas comunes de un grupo con enfermedad bien conocida es un aprendizaje de tipo: [cite: 786]",
-            options: ["A. Supervisado. [cite: 788]", "B. No-supervisado. [cite: 789]"],
+            question: "5. Descubrir síntomas comunes de un grupo con enfermedad bien conocida es un aprendizaje de tipo: ",
+            options: ["A. Supervisado. ", "B. No-supervisado. "],
             correct: 0,
             type: "single",
             topic: "1.3. Aprendizaje Supervisado",
             justification: "Se trata de aprendizaje supervisado porque se intenta describir un concepto o clase (enfermedad) que ya es conocido a partir de ejemplos[cite: 788, 312]."
         },
         {
-            question: "6. Descubrir síntomas comunes de un grupo con diagnóstico desconocido es un aprendizaje de tipo: [cite: 790]",
-            options: ["A. Supervisado. [cite: 792]", "B. No-supervisado. [cite: 793]"],
+            question: "6. Descubrir síntomas comunes de un grupo con diagnóstico desconocido es un aprendizaje de tipo: ",
+            options: ["A. Supervisado. ", "B. No-supervisado. "],
             correct: 1,
             type: "single",
             topic: "1.3. Aprendizaje No-supervisado",
             justification: "Es no-supervisado porque el objetivo es formar un nuevo concepto o clase desconocida a partir de los datos[cite: 793, 314]."
         },
         {
-            question: "7. Indica cuál no es cierta respecto al descubrimiento de conocimiento (KDD): [cite: 794]",
+            question: "7. Indica cuál no es cierta respecto al descubrimiento de conocimiento (KDD): ",
             options: [
-                "A. Procedimiento completo para extraer conocimiento. [cite: 795]",
-                "B. Sea cual sea el modelo KDD las fases siempre son las mismas. [cite: 796]",
-                "C. La interpretación de resultados es parte del procedimiento. [cite: 797]",
-                "D. Es un proceso que puede ser iterativo. [cite: 797]"
+                "A. Procedimiento completo para extraer conocimiento. ",
+                "B. Sea cual sea el modelo KDD las fases siempre son las mismas. ",
+                "C. La interpretación de resultados es parte del procedimiento. ",
+                "D. Es un proceso que puede ser iterativo. "
             ],
             correct: 1,
             type: "single",
@@ -312,39 +312,39 @@
             justification: "La afirmación B es falsa; aunque hay etapas típicas, el resto de las etapas variará de unos modelos KDD a otros[cite: 796, 496]."
         },
         {
-            question: "8. Indica cuál de las siguientes afirmaciones no es correcta: [cite: 801]",
+            question: "8. Indica cuál de las siguientes afirmaciones no es correcta: ",
             options: [
-                "A. Los datos de entrenamiento son instancias. [cite: 802]",
-                "B. Pueden contener no-ejemplos. [cite: 803]",
-                "C. Los atributos son denominados también ejemplos. [cite: 804]",
-                "D. Al concepto que se aprende se le llama también clase. [cite: 805]"
+                "A. Los datos de entrenamiento son instancias. ",
+                "B. Pueden contener no-ejemplos. ",
+                "C. Los atributos son denominados también ejemplos. ",
+                "D. Al concepto que se aprende se le llama también clase. "
             ],
             correct: 2,
             type: "single",
             topic: "1.3. Definiciones de Aprendizaje",
-            justification: "Los atributos son las características de las instancias[cite: 267]. Las instancias que son miembros de la clase son las que se denominan ejemplos[cite: 804, 272]."
+            justification: "Los atributos son las características de las instancias. Las instancias que son miembros de la clase son las que se denominan ejemplos[cite: 804, 272]."
         },
         {
-            question: "9. Indica cuáles son correctas respecto al aprendizaje de conceptos: [cite: 807]",
+            question: "9. Indica cuáles son correctas respecto al aprendizaje de conceptos: ",
             options: [
-                "A. Se resuelven como búsqueda en espacio de hipótesis. [cite: 808]",
-                "B. Se aplican búsquedas sobre el espacio completo. [cite: 809]",
-                "C. El tamaño de los datos no influye. [cite: 810]",
-                "D. Existen distintas descripciones de un concepto en la práctica. [cite: 811]",
-                "E. El sobreajuste es generalizar demasiado. [cite: 811]"
+                "A. Se resuelven como búsqueda en espacio de hipótesis. ",
+                "B. Se aplican búsquedas sobre el espacio completo. ",
+                "C. El tamaño de los datos no influye. ",
+                "D. Existen distintas descripciones de un concepto en la práctica. ",
+                "E. El sobreajuste es generalizar demasiado. "
             ],
             correct: [0, 3],
             type: "multiple",
             topic: "1.3. Hipótesis y Búsqueda",
-            justification: "El aprendizaje se plantea a menudo como búsqueda en un espacio de hipótesis [cite: 808] y pueden hallarse distintas descripciones válidas[cite: 328, 811]. Buscar en el espacio completo suele ser inviable [cite: 330, 809] y el sobreajuste es ser demasiado específico[cite: 332, 811]."
+            justification: "El aprendizaje se plantea a menudo como búsqueda en un espacio de hipótesis  y pueden hallarse distintas descripciones válidas[cite: 328, 811]. Buscar en el espacio completo suele ser inviable [cite: 330, 809] y el sobreajuste es ser demasiado específico[cite: 332, 811]."
         },
         {
-            question: "10. Indica cuál no es correcta respecto a un sistema experto: [cite: 812]",
+            question: "10. Indica cuál no es correcta respecto a un sistema experto: ",
             options: [
-                "A. Incorpora conocimiento de un experto humano. [cite: 813]",
-                "B. Raramente se ha aplicado a problemas reales con éxito. [cite: 814]",
-                "C. Suele estar limitado a un dominio. [cite: 815]",
-                "D. Puede complementarse con aprendizaje automático. [cite: 816]"
+                "A. Incorpora conocimiento de un experto humano. ",
+                "B. Raramente se ha aplicado a problemas reales con éxito. ",
+                "C. Suele estar limitado a un dominio. ",
+                "D. Puede complementarse con aprendizaje automático. "
             ],
             correct: 1,
             type: "single",
