@@ -13,7 +13,7 @@
             --primary: #f7b212;
             --text-dark: #1e293b;
             --accent: #3b82f6;
-            --code-bg: #f1f5f9;
+            --highlight-bg: #f8fafc;
         }
 
         body {
@@ -26,28 +26,32 @@
         }
 
         .content-container {
-            max-width: 850px;
+            max-width: 900px;
             margin: 0 auto;
             background: var(--card-bg);
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
-        h1 { font-family: 'Arvo', serif; color: var(--bg-color); border-bottom: 4px solid var(--primary); display: inline-block; margin-bottom: 20px; font-size: 2rem; }
-        h2 { color: var(--accent); margin-top: 35px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.4rem; }
-        
+        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); margin: 0; font-size: 2.2rem; }
+        .topic-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        h2 { color: var(--accent); margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.5rem; }
+        h3 { color: var(--bg-color); font-size: 1.2rem; margin-top: 25px; }
+
         .concept-box {
-            background: #f8fafc;
-            padding: 15px 20px;
-            border-radius: 10px;
+            background: var(--highlight-bg);
+            padding: 20px;
+            border-radius: 12px;
             margin: 15px 0;
             border: 1px solid #e2e8f0;
         }
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }
@@ -55,45 +59,37 @@
         .info-card {
             background: #f1f5f9;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 10px;
             border-top: 4px solid var(--accent);
         }
 
-        .info-card h3 { margin-top: 0; color: var(--accent); font-size: 1.1rem; }
-
-        .metric-box {
-            background: #eff6ff;
-            border: 1px dashed var(--accent);
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
 
         .nav-footer {
             display: flex;
             justify-content: space-between;
-            margin-top: 40px;
+            margin-top: 50px;
             padding-top: 20px;
-            border-top: 1px solid #eee;
+            border-top: 2px solid #eee;
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.9rem;
-            transition: opacity 0.2s;
+            transition: all 0.2s;
         }
 		
+		
 		.important {
-            background-color: #f5eef8;
-            border-left: 5px solid #9b59b6;
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
             padding: 15px;
             margin: 20px 0;
             border-radius: 0 5px 5px 0;
         }
-		
         .concept-box {
             background-color: #ebf5fb;
             border: 1px solid #d6eaf8;
@@ -101,20 +97,9 @@
             border-radius: 5px;
             margin: 15px 0;
         }
-
+		
         .btn-back { background: #e2e8f0; color: #64748b; }
         .btn-quiz { background: var(--primary); color: #000; }
-
-        .syntax-box {
-            background: #1e293b;
-            color: #f7b212;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            text-align: center;
-            margin: 20px 0;
-        }
     </style>
 </head>
 <body>
