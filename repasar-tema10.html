@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Repaso: Tema 10 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+	<style>
+        :root {
+            --bg-color: #1e293b;
+            --card-bg: #ffffff;
+            --primary: #f7b212;
+            --text-dark: #1e293b;
+            --accent: #3b82f6;
+            --highlight-bg: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); margin: 0; font-size: 2.2rem; }
+        .topic-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        h2 { color: var(--accent); margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.5rem; }
+        h3 { color: var(--bg-color); font-size: 1.2rem; margin-top: 25px; }
+
+        .concept-box {
+            background: var(--highlight-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 4px solid var(--accent);
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+		
+		
+		.important {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .concept-box {
+            background-color: #ebf5fb;
+            border: 1px solid #d6eaf8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+		
+        .btn-back { background: #e2e8f0; color: #64748b; }
+        .btn-quiz { background: var(--primary); color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <header>
+        <span class="topic-tag">Guía de Estudio: Técnicas de Inteligencia Artificial</span>
+        <h1>Tema 10: Gestión de la Incertidumbre e Imprecisión en Sistemas Expertos</h1>
+    </header>
+
+
+    <h2>10.2. Introducción</h2>
+    <p>En el mundo real, un sistema experto a menudo debe trabajar con datos y reglas que no son perfectos debido a información incompleta, ruidosa o a conocimiento impreciso y contradictorio. Para manejar esto, existen dos tipos principales de proposiciones:</p>
+    <ul>
+        <li><strong>Proposición incierta:</strong> No se puede determinar la verdad o falsedad de un hecho (ej. "es posible que llueva"). Se modela mediante Factores de Certeza o Razonamiento Bayesiano.</li>
+        <li><strong>Proposición imprecisa:</strong> No se conoce el valor exacto de una variable (ej. "el cielo está muy oscuro"). Se modela mediante la Lógica Difusa.</li>
+    </ul>
+
+    <h2>10.3. Razonamiento bayesiano</h2>
+    <p>Basado en el Teorema de Bayes, calcula la probabilidad condicionada de una hipótesis $H$ dado que se observa una evidencia $E$.</p>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Limitaciones:</strong> Exige conocer demasiadas probabilidades previas, lo que dificulta la adquisición de conocimiento y conlleva un alto coste computacional y de almacenamiento.</li>
+            <li><strong>Clasificadores Naïve Bayes:</strong> Son una aplicación simplificada y popular. Asumen que los atributos de entrada son <em>independientes entre sí</em> con respecto a la clase. Funcionan muy bien con conjuntos de datos medianos o grandes, como en diagnósticos médicos o clasificación de textos.</li>
+        </ul>
+    </div>
+
+    <h2>10.4. Factores de certeza (CF)</h2>
+    <p>Surgieron como alternativa práctica al razonamiento bayesiano en el sistema experto médico MYCIN.</p>
+    <ul>
+        <li><strong>Valores:</strong> Varían entre -1 (falsedad total / incredulidad) y +1 (certeza total / creencia).</li>
+        <li><strong>Propagación en reglas:</strong> Si el antecedente es incierto, su factor se propaga al consecuente.
+            <ul>
+                <li><em>Regla simple:</em> $CF_{consecuente} = CF_{antecedente} \times CF_{regla}$.</li>
+                <li><em>Regla con AND (conjunción):</em> Se toma el <strong>mínimo</strong> factor de certeza de los antecedentes y se multiplica por el de la regla.</li>
+                <li><em>Regla con OR (disyunción):</em> Se toma el <strong>máximo</strong> factor de certeza de los antecedentes y se multiplica por el de la regla.</li>
+            </ul>
+        </li>
+    </ul>
+    <p><strong>Ventaja:</strong> Requieren menos coste computacional y menos datos estadísticos masivos que el método bayesiano.</p>
+
+    <h2>10.5. Lógica difusa</h2>
+    <p>Creada por Zadeh (1965), permite razonar con términos imprecisos de forma natural perdiendo el enfoque booleano estricto. En lugar de pertenecer o no a un conjunto (0 o 1), los elementos tienen un <strong>grado de pertenencia</strong> entre 0 y 1.</p>
+    <div class="important">
+        <strong>Conceptos clave:</strong>
+        <ul>
+            <li><strong>Función de pertenencia ($\mu$):</strong> Define el grado (de 0 a 1) en que un valor $x$ pertenece a un conjunto difuso $A$.</li>
+            <li><strong>Variable lingüística:</strong> Variable cuyos valores son términos o atributos (ej. <em>Temperatura</em> = baja, alta).</li>
+            <li><strong>Modificadores lingüísticos (Hedges):</strong> Funciones matemáticas que alteran el conjunto difuso simulando adverbios. Por ejemplo, "muy" eleva al cuadrado el grado de pertenencia (reduciéndolo), mientras que "más o menos" le aplica la raíz cuadrada (expandiéndolo).</li>
+            <li><strong>Reglas difusas:</strong> Expresiones (SI... ENTONCES...) donde el grado de verdad parcial del antecedente se propaga al consecuente.</li>
+        </ul>
+    </div>
+
+    <h2>10.6. Inferencia difusa</h2>
+    <p>El proceso completo en un sistema de control difuso consta de tres etapas principales:</p>
+    <ol>
+        <li><strong>Codificación (Fuzzification):</strong> Toma variables numéricas precisas de entrada y les asigna un grado de pertenencia a los conjuntos difusos.</li>
+        <li><strong>Implicación y Composición:</strong>
+            <ul>
+                <li><em>Implicación:</em> Calcula el grado de verdad de la premisa. Si usa AND, emplea típicamente el método <strong>MIN</strong> o PRODUCT. Si usa OR, emplea <strong>MAX</strong> o PROBOR.</li>
+                <li><em>Composición (Agregación):</em> Combina las salidas de todas las reglas en un único conjunto difuso. Generalmente usa el método <strong>MAX</strong> o SUM (el más común es el enfoque <em>min-max</em>).</li>
+            </ul>
+        </li>
+        <li><strong>Decodificación (Defuzzification):</strong> Convierte el conjunto difuso resultante en un valor numérico preciso y real para la salida. El método más utilizado es el <strong>Centroide</strong> (centro de gravedad), aunque existen otros como MOM (media de los máximos), SOM o Bisector.</li>
+    </ol>
+
+    <h2>10.7. Aplicaciones y ejemplos de implementación</h2>
+    <p>La lógica difusa reduce drásticamente el código necesario para controlar procesos complejos al utilizar reglas basadas en lenguaje natural.</p>
+    <div class="concept-box">
+        <strong>Ejemplo práctico (Python):</strong><br>
+        Uso de la librería <code>scikit-fuzzy</code> para modelar el cálculo de una propina en un restaurante. 
+        <ul>
+            <li><em>Entradas (Antecedentes):</em> Calidad de la comida (0-10) y Servicio (0-10).</li>
+            <li><em>Salida (Consecuente):</em> Propina (0-25%).</li>
+            <li>Se aplican reglas difusas como: "SI el servicio fue pobre O la comida pobre, ENTONCES propina baja". El simulador recibe entradas exactas (ej. comida 6.5 y servicio 9.8) y, tras la defuzzificación, devuelve un porcentaje de propina preciso (ej. 19.84%).</li>
+        </ul>
+    </div>
+
+    <div class="nav-footer">
+        <a href="repasar.html" class="btn btn-back">← Menú de Temas</a>
+        <a href="tema10.html" class="btn btn-quiz">Ir al Test del Tema →</a>
+    </div>
+</div>
+
+</body>
+</html>

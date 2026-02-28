@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio: Resolución de Problemas mediante Búsqueda (Tema 9)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+	<style>
+        :root {
+            --bg-color: #1e293b;
+            --card-bg: #ffffff;
+            --primary: #f7b212;
+            --text-dark: #1e293b;
+            --accent: #3b82f6;
+            --highlight-bg: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); margin: 0; font-size: 2.2rem; }
+        .topic-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        h2 { color: var(--accent); margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.5rem; }
+        h3 { color: var(--bg-color); font-size: 1.2rem; margin-top: 25px; }
+
+        .concept-box {
+            background: var(--highlight-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 4px solid var(--accent);
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+		
+		
+		.important {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .concept-box {
+            background-color: #ebf5fb;
+            border: 1px solid #d6eaf8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+		
+        .btn-back { background: #e2e8f0; color: #64748b; }
+        .btn-quiz { background: var(--primary); color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <header>
+        <span class="topic-tag">Guía de Estudio: Técnicas de Inteligencia Artificial</span>
+        <h1>Tema 09: Resolución de Problemas mediante Búsqueda</h1>
+    </header>
+
+    <h2>9.2. Introducción. «El mundo de los bloques»</h2>
+    <ul>
+        <li><strong>Agentes inteligentes:</strong> A diferencia de los sistemas programados para objetivos fijos, un agente inteligente decide sobre sus acciones en función de su estado, capacidades y objetivos.</li>
+        <li><strong>Proceso de búsqueda:</strong> El problema consiste en encontrar el camino en un espacio de estados aplicando operadores para ir desde un estado inicial hasta un estado objetivo. Requiere descriptores de estado, descriptores de operación y un algoritmo de búsqueda.</li>
+        <li><strong>«Mundo de los bloques»:</strong> Es un ejemplo clásico de robótica basado en el planificador STRIPS. Cada acción (como apilar o desapilar bloques) se define por tres componentes: <strong>Precondiciones (P)</strong>, fórmulas a <strong>Borrar (B)</strong> y fórmulas a <strong>Añadir (A)</strong> al entorno tras la ejecución.</li>
+    </ul>
+
+    <h2>9.3. Dirección de la búsqueda</h2>
+    <p>El camino a través del espacio de estados se puede trazar en dos direcciones:</p>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Búsqueda hacia adelante:</strong> Guiada por los datos, aplica información desde el estado inicial hasta encontrar el objetivo.</li>
+            <li><strong>Búsqueda hacia atrás:</strong> Guiada por el objetivo, retrocede desde la meta deseada averiguando las condiciones previas hasta llegar al estado inicial.</li>
+            <li><strong>Criterios de elección:</strong> Conviene partir del conjunto con menor número de estados al de mayor número (ej. si hay pocos estados iniciales y múltiples finales, mejor hacia adelante). También se debe avanzar por donde el factor de ramificación sea menor. Si se necesita justificar el razonamiento ante el usuario (ej. sistemas de diagnóstico), la mejor opción es la búsqueda hacia atrás.</li>
+        </ul>
+    </div>
+
+    <h2>9.4. Búsqueda exhaustiva o a ciegas</h2>
+    <p>Estos métodos generan todos los estados posibles de forma sistemática y no aplican ninguna información sobre la localización del objetivo.</p>
+    <ul>
+        <li><strong>Búsqueda en amplitud:</strong> Desarrolla cada nivel del árbol completamente antes del siguiente, utilizando una estrategia FIFO. Garantiza la solución por el camino más corto (con costes uniformes), pero es lenta y exige gran cantidad de memoria.</li>
+        <li><strong>Búsqueda en profundidad:</strong> Prioriza los nodos más profundos (estrategia LIFO), volviendo atrás si se encuentra en un callejón sin salida. Requiere menos memoria, pero no garantiza encontrar la solución más corta.</li>
+        <li><strong>Búsqueda en profundidad acotada e iterativa:</strong> Para evitar caminos infinitos se establece una cota límite de profundidad. En el método iterativo, esa cota se incrementa gradualmente, combinando las ventajas de encontrar el camino corto sin saturar la memoria.</li>
+    </ul>
+
+    <h2>9.5. Búsqueda heurística</h2>
+    <div class="important">
+        <strong>Concepto clave:</strong> Utiliza información del problema mediante una <strong>función heurística</strong> que mide la proximidad estimada de los nodos al objetivo, lo que reduce drásticamente los nodos a explorar. Aunque ofrecen buenas soluciones rápidamente, no garantizan obtener la solución óptima.
+    </div>
+    <ul>
+        <li><strong>Escalada simple (Hill Climbing):</strong> El algoritmo avanza en el primer momento que encuentra un estado sucesor más favorable que el actual.</li>
+        <li><strong>Escalada por máxima pendiente:</strong> Explora <em>todos</em> los estados sucesores y escoge el mejor salto posible. Aunque es más lento que la escalada simple, halla mejores rutas, si bien ambos sufren de quedarse atrapados en máximos locales y mesetas.</li>
+        <li><strong>Mejor el primero (Best-first):</strong> Combina amplitud y profundidad. Almacena los nodos en listas de abiertos y cerrados, evaluando y expandiendo siempre el nodo no explorado que parezca más prometedor.</li>
+        <li><strong>Algoritmo A*:</strong> Particularización del anterior, donde la función a minimizar es $f(n) = g(n) + h(n)$. El valor $g(n)$ es el coste real desde el inicio y $h(n)$ es la estimación heurística. Para funcionar correctamente, la heurística $h(n)$ ha de ser <strong>admisible</strong>: nunca debe sobreestimar el coste real al objetivo.</li>
+    </ul>
+
+    <h2>9.6. Búsqueda en juegos</h2>
+    <p>Este enfoque aborda juegos de dos jugadores sin azar, de <strong>información completa</strong> (todo es visible) y <strong>suma nula</strong> (lo que uno gana el otro pierde, ej. ajedrez o tres-en-raya).</p>
+    <ul>
+        <li><strong>Algoritmo Minimax:</strong> Supone que ambos contrincantes, MAX y MIN, juegan de forma perfecta. MAX intentará maximizar su ventaja y MIN procurará minimizar la ventaja de MAX. Si se llega a soluciones finales, se asigna un 1 (victoria MAX) o un 0 (victoria MIN), valor que se propaga hacia la raíz tomando máximos o mínimos alternativamente según el turno del jugador.</li>
+    </ul>
+
+    <h2>9.7. Costes</h2>
+    <p>La optimización del algoritmo se define como un equilibrio al minimizar la suma de dos factores:</p>
+    <ul>
+        <li><strong>Coste debido a la expansión del árbol:</strong> Disminuye cuanto más potente y precisa es la información (el heurístico) con la que se guía a la red.</li>
+        <li><strong>Coste debido a la estrategia de control:</strong> Aumenta a medida que el heurístico empleado es mejor o más complejo, requiriendo más recursos de cómputo para tomar cada decisión.</li>
+    </ul>
+
+    <h2>9.8. Aplicaciones prácticas y ejemplos de implementación</h2>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Planificación de rutas:</strong> Algoritmos como Dijkstra y A* son el fundamento de aplicativos modernos como Google Maps, Uber y Cabify para encontrar trayectos de menor coste o distancia. Las implementaciones comerciales actuales (como CH, RAPTOR o CRP) procesan estas búsquedas en milisegundos gracias al paralelismo y la jerarquía.</li>
+            <li><strong>Librería NetworkX (Python):</strong> Es un paquete utilizado para el análisis y creación de redes complejas. Permite modelar grafos (por ejemplo, con distancias entre ciudades en sus aristas) e invocar de manera sencilla a algoritmos como Dijkstra o A* (<code>nx.shortest_path</code> o <code>nx.astar_path</code>) para hallar automáticamente la ruta más óptima, facilitando también su dibujado con <em>matplotlib</em>.</li>
+        </ul>
+    </div>
+
+    <div class="nav-footer">
+        <a href="repasar.html" class="btn btn-back">← Menú de Temas</a>
+        <a href="tema09.html" class="btn btn-quiz">Ir al Test del Tema →</a>
+    </div>
+</div>
+
+</body>
+</html>

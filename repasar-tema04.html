@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Tema 04 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b;
+            --card-bg: #ffffff;
+            --primary: #f7b212;
+            --text-dark: #1e293b;
+            --accent: #3b82f6;
+            --code-bg: #f1f5f9;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .content-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); border-bottom: 4px solid var(--primary); display: inline-block; margin-bottom: 20px; font-size: 2rem; }
+        h2 { color: var(--accent); margin-top: 35px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.4rem; }
+        
+        .concept-box {
+            background: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            border-top: 4px solid var(--accent);
+        }
+
+        .info-card h3 { margin-top: 0; color: var(--accent); font-size: 1.1rem; }
+
+        .metric-box {
+            background: #eff6ff;
+            border: 1px dashed var(--accent);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+		
+		.important {
+            background-color: #f5eef8;
+            border-left: 5px solid #9b59b6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+		
+        .concept-box {
+            background-color: #ebf5fb;
+            border: 1px solid #d6eaf8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .btn-back { background: #e2e8f0; color: #64748b; }
+        .btn-quiz { background: var(--primary); color: #000; }
+
+        .syntax-box {
+            background: #1e293b;
+            color: #f7b212;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <header>
+        <span class="topic-tag">Guía de Estudio: Técnicas de Inteligencia Artificial</span>
+		<h1>Tema 04: Sistemas de Reglas</h1>
+    </header>
+
+    <h2>4.2. Reglas de clasificación y reglas de asociación</h2>
+    <p>Los sistemas de reglas son un método muy extendido para la representación del conocimiento, destacando por ser modulares, comprensibles y permitir la explicación de sus decisiones. Su sintaxis básica se compone de un <strong>antecedente</strong> (condiciones unidas por AND/OR) y un <strong>consecuente</strong> (conclusión o acción).</p>
+    
+    <div class="concept-box">
+        <ul>
+            <li><strong>Reglas de clasificación:</strong> Su consecuente predice la clase o variable de salida. Son una alternativa a los árboles de decisión, pudiendo mapearse mutuamente.</li>
+            <li><strong>Reglas de asociación:</strong> Predicen valores de atributos, combinaciones de valores o la propia clase. Su objetivo es descubrir combinaciones de pares atributo-valor que ocurren con frecuencia (ej. descubrir qué compran los usuarios conjuntamente).</li>
+        </ul>
+    </div>
+
+    <h3>Medidas de evaluación de reglas</h3>
+    <p>Dado que la cantidad de posibles reglas es inmensa, se utilizan métricas para determinar su relevancia:</p>
+    <ul>
+        <li><strong>Confianza:</strong> Porcentaje de ejemplos que cumplen la regla (antecedente y consecuente) respecto a los que cumplen únicamente el antecedente. Mide la probabilidad condicional.</li>
+        <li><strong>Soporte:</strong> Porcentaje de ejemplos que cumplen el antecedente y el consecuente de la regla respecto al número <em>total</em> de ejemplos en el dataset.</li>
+        <li><strong>Cobertura:</strong> Número absoluto de ejemplos que cumplen la regla.</li>
+        <li><strong>Lift:</strong> Mide la correlación entre el antecedente y el consecuente. Si es =1, son independientes; si es >1, existe correlación positiva (la regla es útil); si es <1, la correlación es negativa.</li>
+    </ul>
+
+    <h2>4.3. Algoritmos de aprendizaje de reglas de clasificación</h2>
+    <p>El enfoque principal para inducir reglas de clasificación directamente es el <strong>algoritmo de recubrimiento secuencial</strong>.</p>
+    
+    <div class="important">
+        <strong>Funcionamiento del Recubrimiento Secuencial:</strong><br>
+        Es un proceso iterativo en el que: 1) Se aprende una regla que cubre ejemplos de una clase C, 2) Se eliminan del dataset los ejemplos cubiertos por esa regla, 3) Se repite hasta cubrir todos los ejemplos positivos.
+    </div>
+
+    <ul>
+        <li><strong>Algoritmo PRISM:</strong> Utiliza el recubrimiento secuencial y una búsqueda codiciosa (greedy). Selecciona progresivamente las restricciones del antecedente basándose en la medida de <strong>confianza</strong>. Si hay empate entre restricciones, escoge la de mayor <strong>cobertura</strong>.</li>
+        <li><strong>OneRule y ZeroRule:</strong> Algoritmos extremadamente simples. ZeroRule clasifica todo basándose en la moda o media de la clase, mientras que OneRule genera reglas basadas en el atributo que produzca el menor error total.</li>
+        <li><strong>RIPPER:</strong> Un algoritmo más avanzado que incorpora técnicas de reducción de error mediante poda incremental.</li>
+    </ul>
+
+    <h2>4.4. Algoritmos de aprendizaje de reglas de asociación</h2>
+    <p>El algoritmo más representativo es el <strong>Algoritmo Apriori</strong>, el cual extrae reglas eficientemente en dos fases:</p>
+    <ol>
+        <li><strong>Generación de ítem-sets:</strong> Busca conjuntos de pares atributo-valor que superen un valor de soporte/cobertura mínima. Opera incrementalmente: primero evalúa conjuntos de 1 elemento, luego los combina para generar conjuntos de 2 elementos, luego de 3, etc. Solo se combinan aquellos que ya superaron el umbral en la fase previa.</li>
+        <li><strong>Generación de reglas:</strong> A partir de los ítem-sets validados, genera las reglas y descarta aquellas que no superen un umbral mínimo de confianza.</li>
+    </ol>
+    
+    <p>Existen variantes para optimizar la carga computacional, como:</p>
+    <ul>
+        <li><strong>FP-Growth:</strong> Comprime la base de datos usando una estructura de patrones frecuentes (árbol de prefijos) para evitar generar tantas combinaciones candidatas.</li>
+        <li><strong>ECLAT:</strong> Analiza las transacciones utilizando un formato vertical de los datos en lugar del formato horizontal clásico.</li>
+        <li><strong>PART:</strong> Extrae reglas de asociación a partir del algoritmo de árboles de decisión C4.5.</li>
+    </ul>
+
+    <h2>4.5. Aplicaciones y ejemplos de implementación</h2>
+    
+    <h3>Aplicaciones en el mundo real</h3>
+    <ul>
+        <li><strong>Análisis del carrito de la compra (Asociación):</strong> Identificación de productos que se adquieren juntos (ej. pañales y cerveza) para diseñar ofertas personalizadas o mejorar la distribución de estantes.</li>
+        <li><strong>Medicina y Web:</strong> Análisis de patrones de navegación web y extracción de relaciones en historias clínicas (ej. recuperación postoperatoria y secuelas crónicas).</li>
+    </ul>
+
+    <h3>Otros algoritmos clasificadores importantes</h3>
+    <div class="concept-box">
+        <ul>
+            <li><strong>k-NN (k-Nearest Neighbors):</strong> Aprendizaje no paramétrico basado en la distancia. Clasifica un dato promediando o tomando la moda de sus <em>k</em> vecinos más cercanos.</li>
+            <li><strong>Naïve Bayes:</strong> Clasificador probabilístico que asume fuerte independencia entre variables. Es el estándar clásico para el filtrado de correo Spam.</li>
+            <li><strong>SVM (Máquinas de Soporte Vectorial):</strong> Busca líneas o hiperplanos que separen los datos maximizando el margen entre clases. Muy útil en análisis de sentimientos y clasificación de texto/imágenes.</li>
+        </ul>
+    </div>
+
+    <h3>Implementación en Python</h3>
+    <p>Para la generación de reglas de asociación en Python no se utiliza Scikit-learn, sino la librería especializada <strong>MLxtend</strong> (Machine Learning extensions). Mediante el objeto <code>TransactionEncoder</code> se adaptan los datos de las cestas de compra a un formato de matriz booleana, permitiendo luego invocar directamente a la función <code>apriori()</code> configurando el umbral mínimo de soporte.</p>
+
+
+    <div class="nav-footer">
+        <a href="repasar.html" class="btn btn-back">← Volver al listado</a>
+        <a href="tema04.html" class="btn btn-quiz">Ir al Test del Tema →</a>
+    </div>
+</div>
+
+</body>
+</html>

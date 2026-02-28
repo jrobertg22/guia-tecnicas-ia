@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario: Tema 10 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b; 
+            --card-bg: #f8fafc;
+            --primary: #f7b212;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --accent: #3b82f6;
+            --success: #15803d;
+            --error: #b91c1c;
+            --feedback-bg: #f1f5f9;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 90%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 40px;
+            position: relative;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-family: 'Arvo', serif;
+            font-size: 1.6rem;
+            margin: 0;
+            color: var(--bg-color);
+        }
+
+        .question-number {
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .multi-hint {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-style: italic;
+            display: block;
+            margin-top: -15px;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent);
+            background-color: #eff6ff;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #fefce8;
+        }
+
+        .option-item.correct-ans {
+            border-color: var(--success);
+            background-color: #f0fdf4;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .option-item.wrong-ans {
+            border-color: var(--error);
+            background-color: #fef2f2;
+            color: var(--error);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        input { margin-right: 12px; }
+
+        .feedback-area {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: var(--feedback-bg);
+            border-left: 4px solid var(--accent);
+            display: none;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .justification {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-light);
+        }
+
+        .nav-buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-validate { background: var(--primary); color: #000; flex-grow: 1; }
+        .btn-next { background: var(--bg-color); color: white; }
+        .btn-prev { background: #e2e8f0; color: var(--text-light); }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        #result-screen { text-align: center; display: none; }
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 6px solid var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="progress-bar-container"><div id="progress-fill"></div></div>
+    
+    <div id="quiz-screen">
+        <header>
+            <span class="question-number" id="q-count"></span>
+            <h1>Tema 10: Gestión de la Incertidumbre e Imprecisión</h1>
+        </header>
+
+        <div id="q-text" class="question-text"></div>
+        <span id="q-hint" class="multi-hint"></span>
+        <div class="options-list" id="options-container"></div>
+
+        <div class="feedback-area" id="feedback-area">
+            <span class="feedback-title" id="feedback-status"></span>
+            <p class="justification" id="justification-text"></p>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-prev" id="btn-prev" onclick="changeQuestion(-1)">Anterior</button>
+            <button class="btn-validate" id="btn-validate" onclick="validateCurrent()">Validar Respuesta</button>
+            <button class="btn-next" id="btn-next" onclick="changeQuestion(1)" disabled>Siguiente</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1>¡Test Completado!</h1>
+        <div class="score-circle" id="final-score"></div>
+        <p>Has finalizado el repaso sobre sistemas expertos difusos y probabilísticos.</p>
+        <div style="text-align: left; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 20px;">
+            <h3>Sugerencias de Repaso:</h3>
+            <ul id="suggested-topics"></ul>
+        </div>
+        
+        <button class="btn-next" style="margin-top: 20px; width: 100%;" onclick="location.reload()">Reiniciar Test</button>
+        <button class="btn-prev" style="margin-top: 10px; width: 100%; border: 2px solid #e2e8f0;" onclick="window.location.href='index.html'">Ir al Menú Principal</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "1. Completa la siguiente sentencia con la opción adecuada: «Si no se sabe con certeza que el consecuente de las reglas es resultado de las evidencias en los antecedentes, puedo modelar el sistema utilizando [...]»:",
+            options: [
+                "A. Variables difusas.",
+                "B. Conjuntos difusos.",
+                "C. Factores de certeza.",
+                "D. Inferencia bayesiana."
+            ],
+            correct: [2, 3],
+            type: "multiple",
+            topic: "10.2. Introducción",
+            justification: "Cuando no se puede determinar la verdad o falsedad total de un hecho (incertidumbre), se emplean factores de certeza o inferencia bayesiana. Las variables y conjuntos difusos se usan para la imprecisión."
+        },
+        {
+            question: "2. Completa la siguiente sentencia con la opción adecuada: «Si no se puede precisar el valor exacto de las variables en los antecedentes de las reglas, se puede diseñar el sistema utilizando [...]»:",
+            options: [
+                "A. Factores de certeza.",
+                "B. Teorema de Bayes.",
+                "C. Lógica difusa.",
+                "D. Grados de certeza."
+            ],
+            correct: [2],
+            type: "single",
+            topic: "10.2. Introducción",
+            justification: "La imprecisión (emplear variables de las que no se conoce su valor exacto o es vago) se modela específicamente mediante lógica difusa."
+        },
+        {
+            question: "3. Indica cuales de las siguientes afirmaciones son ciertas:",
+            options: [
+                "A. Una limitación de la inferencia bayesiana es que puede implicar la necesidad de conocer un gran número de probabilidades.",
+                "B. Una ventaja de la inferencia bayesiana es que el coste computacional es bajo.",
+                "C. Una ventaja de utilizar factores de certeza frente a inferencia bayesiana es que el primero implica menos coste computacional.",
+                "D. Un factor de certeza puede tener un valor negativo."
+            ],
+            correct: [0, 2, 3],
+            type: "multiple",
+            topic: "10.3 y 10.4. Bayes vs Factores de Certeza",
+            justification: "La inferencia bayesiana tiene un alto coste computacional. Los factores de certeza son más sencillos computacionalmente y pueden ser negativos (indicando incredulidad), con un rango de -1 a +1."
+        },
+        {
+            question: "4. Indica la opción que finalice de manera correcta la siguiente frase: «En una regla cuyos antecedentes presentan una conjunción, el factor de certeza del consecuente se calcula de la siguiente manera [...]»:",
+            options: [
+                "A. El producto del máximo factor de confianza de los antecedentes por el factor de confianza del consecuente.",
+                "B. El producto del mínimo factor de confianza de los antecedentes por el factor de confianza del consecuente.",
+                "C. No se utilizan factores de confianza en los antecedentes.",
+                "D. Ninguna de las anteriores opciones es correcta."
+            ],
+            correct: [1],
+            type: "single",
+            topic: "10.4. Factores de certeza (Reglas AND)",
+            justification: "Para reglas conjuntivas (AND), el factor de certeza del antecedente se calcula tomando el valor mínimo de los factores de las evidencias individuales."
+        },
+        {
+            question: "5. Indica cuáles de las siguientes afirmaciones son correctas:",
+            options: [
+                "A. Una gran ventaja de la lógica difusa es poder expresar las reglas mediante palabras de uso cotidiano.",
+                "B. Las reglas en la lógica difusa emplean variables numéricas.",
+                "C. La lógica difusa se basa en el uso de conjuntos difusos.",
+                "D. La función de pertenencia indica si una variable pertenece o no pertenece a un conjunto."
+            ],
+            correct: [0, 2],
+            type: "multiple",
+            topic: "10.5. Lógica difusa",
+            justification: "La lógica difusa usa conjuntos difusos y permite un lenguaje natural (variables lingüísticas). La función de pertenencia no es binaria (pertenece/no pertenece), sino que indica un grado de pertenencia entre 0 y 1."
+        },
+        {
+            question: "6. Indica cuáles de las siguientes afirmaciones son correctas:",
+            options: [
+                "A. Una variable lingüística es una variable cuyos valores son términos lingüísticos.",
+                "B. Los modificadores lingüísticos modelan adjetivos.",
+                "C. Los modificadores lingüísticos modifican la forma del conjunto difuso.",
+                "D. Las reglas difusas emplean variables lingüísticas."
+            ],
+            correct: [0, 2, 3],
+            type: "multiple",
+            topic: "10.5. Variables y modificadores",
+            justification: "Las variables lingüísticas toman términos como valores y se usan en reglas difusas. Los modificadores (hedges) modelan adverbios (como 'muy' o 'poco') que alteran matemáticamente la forma del conjunto difuso."
+        },
+        {
+            question: "7. Indica cuáles de las siguientes afirmaciones son correctas:",
+            options: [
+                "A. Las entradas a un sistema de control difuso son variables precisas o abruptas.",
+                "B. Las salidas de un sistema de control difuso son variables precisas o abruptas.",
+                "C. La base de conocimiento de un sistema de control difuso básico contiene las reglas difusas.",
+                "D. Un sistema de control difuso básico realiza una codificación, una inferencia lógica y una decodificación."
+            ],
+            correct: [0, 1, 2, 3],
+            type: "multiple",
+            topic: "10.6. Inferencia difusa",
+            justification: "Todas son correctas. Un sistema de control difuso toma entradas precisas, las procesa mediante codificación, inferencia y reglas, y decodifica el resultado para devolver una salida precisa de control."
+        },
+        {
+            question: "8. Los métodos que calculan el grado de verdad de las premisas o antecedentes de las reglas y lo aplican a la conclusión se denominan:",
+            options: [
+                "A. Métodos de composición.",
+                "B. Métodos de implicación.",
+                "C. Modificadores.",
+                "D. Métodos de decodificación."
+            ],
+            correct: [1],
+            type: "single",
+            topic: "10.6. Métodos de implicación",
+            justification: "Los métodos de implicación (como MIN o PRODUCT) son los encargados de aplicar el grado de verdad obtenido en el antecedente a la función de salida de la regla."
+        },
+        {
+            question: "9. Completa la siguiente frase. El método centroide es un método de:",
+            options: [
+                "A. Composición.",
+                "B. Implicación.",
+                "C. Decodificación.",
+                "D. Codificación."
+            ],
+            correct: [2],
+            type: "single",
+            topic: "10.6. Decodificación",
+            justification: "El centroide es el método de decodificación más común, calculando el centro de gravedad del área del conjunto difuso agregado para obtener un valor numérico final."
+        },
+        {
+            question: "10. ¿A qué se refiere el método min-max?",
+            options: [
+                "A. A un método de implicación y composición.",
+                "B. A un método de composición.",
+                "C. A un método bayesiano.",
+                "D. A un método de decodificación."
+            ],
+            correct: [0],
+            type: "single",
+            topic: "10.6. Métodos estándar",
+            justification: "En la práctica, la combinación más común de métodos de inferencia es utilizar MIN para la implicación y MAX para la composición/agregación (método min-max)."
+        }
+    ];
+
+    let currentIdx = 0;
+    const userAnswers = new Array(quizData.length).fill(null).map(() => []);
+    const validatedArr = new Array(quizData.length).fill(false);
+
+    function render() {
+        const q = quizData[currentIdx];
+        const isValidated = validatedArr[currentIdx];
+        document.getElementById('q-count').innerText = `Pregunta ${currentIdx + 1} de ${quizData.length}`;
+        document.getElementById('q-text').innerText = q.question;
+        document.getElementById('q-hint').innerText = q.type === "multiple" ? "(Selecciona todas las opciones que correspondan)" : "";
+        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / quizData.length) * 100}%`;
+        const container = document.getElementById('options-container');
+        container.innerHTML = "";
+        q.options.forEach((opt, i) => {
+            const div = document.createElement('div');
+            const isSelected = userAnswers[currentIdx].includes(i);
+            let statusClass = "";
+            if (isValidated) {
+                if (q.correct.includes(i)) statusClass = "correct-ans";
+                else if (isSelected) statusClass = "wrong-ans";
+                div.classList.add("disabled");
+            } else if (isSelected) {
+                statusClass = "selected";
+            }
+            div.className = `option-item ${statusClass}`;
+            div.innerHTML = `<input type="${q.type === 'multiple' ? 'checkbox' : 'radio'}" ${isSelected ? 'checked' : ''} ${isValidated ? 'disabled' : ''}> <span>${opt}</span>`;
+            if (!isValidated) div.onclick = () => selectOption(i);
+            container.appendChild(div);
+        });
+        document.getElementById('feedback-area').style.display = isValidated ? "block" : "none";
+        if (isValidated) {
+            const isCorrect = checkCorrectness(currentIdx);
+            document.getElementById('feedback-status').innerText = isCorrect ? "✓ ¡Correcto!" : "✗ Revisión Necesaria";
+            document.getElementById('feedback-status').style.color = isCorrect ? "var(--success)" : "var(--error)";
+            document.getElementById('justification-text').innerText = q.justification;
+        }
+        document.getElementById('btn-prev').disabled = currentIdx === 0;
+        document.getElementById('btn-validate').style.display = isValidated ? "none" : "block";
+        document.getElementById('btn-next').disabled = !isValidated;
+        document.getElementById('btn-next').innerText = currentIdx === quizData.length - 1 ? "Finalizar" : "Siguiente";
+    }
+
+    function selectOption(idx) {
+        if (quizData[currentIdx].type === "single") userAnswers[currentIdx] = [idx];
+        else {
+            const pos = userAnswers[currentIdx].indexOf(idx);
+            if (pos > -1) userAnswers[currentIdx].splice(pos, 1);
+            else userAnswers[currentIdx].push(idx);
+        }
+        render();
+    }
+
+    function validateCurrent() {
+        if (userAnswers[currentIdx].length === 0) return alert("Selecciona al menos una respuesta.");
+        validatedArr[currentIdx] = true;
+        render();
+    }
+
+    function checkCorrectness(idx) {
+        const user = userAnswers[idx].sort().join(',');
+        const correct = quizData[idx].correct.sort().join(',');
+        return user === correct;
+    }
+
+    function changeQuestion(step) {
+        if (step === 1 && currentIdx === quizData.length - 1) return showResults();
+        currentIdx += step;
+        render();
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        let score = 0;
+        const failedTopics = new Set();
+        quizData.forEach((q, i) => { if (checkCorrectness(i)) score++; else failedTopics.add(q.topic); });
+        document.getElementById('final-score').innerText = `${score}/10`;
+        const list = document.getElementById('suggested-topics');
+        list.innerHTML = "";
+        failedTopics.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
+        if (failedTopics.size === 0) list.innerHTML = "<li>¡Excelente trabajo! Dominas la gestión de la incertidumbre.</li>";
+    }
+    render();
+</script>
+</body>
+</html>

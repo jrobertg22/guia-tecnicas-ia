@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa de Repaso: Tema 06 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b;
+            --card-bg: #ffffff;
+            --primary: #f7b212;
+            --text-dark: #1e293b;
+            --accent: #3b82f6;
+            --highlight-bg: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); margin: 0; font-size: 2.2rem; }
+        .topic-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        h2 { color: var(--accent); margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.5rem; }
+        h3 { color: var(--bg-color); font-size: 1.2rem; margin-top: 25px; }
+
+        .concept-box {
+            background: var(--highlight-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 4px solid var(--accent);
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+		
+		
+		.important {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .concept-box {
+            background-color: #ebf5fb;
+            border: 1px solid #d6eaf8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+		
+        .btn-back { background: #e2e8f0; color: #64748b; }
+        .btn-quiz { background: var(--primary); color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <header>
+        <span class="topic-tag">Guía de Estudio: Técnicas de Inteligencia Artificial</span>
+		<h1>Tema 03: Python para la implementación de técnicas de inteligencia artificial</h1>
+    </header>
+	
+    <h2>2.2. Introducción</h2>
+    <ul>
+        <li><strong>Origen y Popularidad:</strong> Python es un lenguaje creado por Guido van Rossum y lanzado en 1991. Actualmente es el lenguaje más empleado en el ámbito de la inteligencia artificial y el machine learning, con un 57% de científicos de datos utilizándolo.</li>
+        <li><strong>Motivos de su éxito:</strong> Su popularidad se disparó por el lanzamiento de bibliotecas como TensorFlow por Google en 2015. Además, cuenta con una sintaxis muy simple, lo que lo hace idóneo para principiantes y permite que los algoritmos sean fáciles de implementar.</li>
+    </ul>
+
+    <h2>2.3. El lenguaje Python: conceptos básicos e instalación</h2>
+    <div class="concept-box">
+        <strong>Características Clave del Lenguaje:</strong>
+        <ul>
+            <li><strong>Interpretado:</strong> Ejecuta sentencias línea a línea sin necesidad de compilación previa (como ocurre en C/C++ o Pascal).</li>
+            <li><strong>Multiparadigma:</strong> Soporta programación orientada a objetos, imperativa/procedural y funcional.</li>
+            <li><strong>Tipado:</strong> Es <strong>fuertemente tipado</strong> (no permite violaciones de tipos de datos sin conversión explícita) y de <strong>tipado dinámico</strong> (una variable puede cambiar de tipo en tiempo de ejecución).</li>
+        </ul>
+    </div>
+    <p><strong>Instalación:</strong> Se puede instalar desde su web oficial (que incluye el gestor de paquetes PIP) o mediante gestores de entornos como Conda o Miniconda, muy útiles en el análisis de datos.</p>
+
+    <h2>2.4. La sintaxis de Python</h2>
+    <ul>
+        <li><strong>Indentación estricta:</strong> El sangrado es obligatorio para definir los distintos bloques de ejecución.</li>
+        <li><strong>Variables:</strong> Se crean automáticamente al usarlas por primera vez, son sensibles a mayúsculas/minúsculas (<em>case-sensitive</em>) y no pueden comenzar por un número.</li>
+        <li><strong>Operadores especiales:</strong> Además de los aritméticos y lógicos, destacan los operadores de <strong>identidad</strong> (<code>is</code>, <code>is not</code>) que verifican si dos referencias apuntan a la misma memoria, y los de <strong>membresía</strong> (<code>in</code>, <code>not in</code>) para iterar o buscar en colecciones.</li>
+    </ul>
+
+    <h2>2.5. Listas, tuplas, conjuntos y diccionarios</h2>
+    <p>Python incluye cuatro tipos básicos de colecciones para manejar datos:</p>
+    <div class="important">
+        <ul>
+            <li><strong>Listas (<code>[]</code>):</strong> Colecciones ordenadas y modificables. Permiten duplicados y elementos de diferentes tipos.</li>
+            <li><strong>Tuplas (<code>()</code>):</strong> Colecciones ordenadas pero inmutables (no se puede alterar su valor tras crearlas).</li>
+            <li><strong>Conjuntos / Sets (<code>{}</code>):</strong> Colecciones no ordenadas que no permiten elementos duplicados ni acceso por índice.</li>
+            <li><strong>Diccionarios (<code>{clave: valor}</code>):</strong> Equivalentes a mapas o <em>hashes</em>. Son pares clave-valor sin orden, flexibles y modificables.</li>
+        </ul>
+    </div>
+
+    <h2>2.6. Librerías útiles para el análisis de datos</h2>
+    <p>El ecosistema de Python es rico en librerías esenciales para IA:</p>
+    <ul>
+        <li><strong>NumPy:</strong> Procesamiento eficiente de matrices multidimensionales y álgebra lineal.</li>
+        <li><strong>SciPy:</strong> Módulos para optimización, integración y estadística avanzada.</li>
+        <li><strong>Scikit-learn:</strong> Librería principal para algoritmos de machine learning clásico (supervisado y no supervisado).</li>
+        <li><strong>Pandas:</strong> Ideal para la extracción, limpieza y preparación de datos utilizando <em>dataframes</em>.</li>
+        <li><strong>Matplotlib:</strong> Librería de trazado 2D para visualización de patrones de datos e histogramas.</li>
+        <li><strong>Deep Learning:</strong> <strong>Keras</strong> (API de alto nivel para redes neuronales), <strong>TensorFlow</strong> (cálculo de tensores de alto rendimiento de Google), y <strong>PyTorch</strong> (cálculo tensorial con aceleración GPU).</li>
+    </ul>
+
+    <h2>2.7. La librería NumPy para el manejo de datos</h2>
+    <ul>
+        <li><strong>Rendimiento:</strong> Proporciona arrays (<code>darray</code>) unas 50 veces más rápidos que las listas nativas debido a su almacenamiento contiguo en memoria y su escritura interna en C/C++.</li>
+        <li><strong>Copy vs View:</strong> <code>copy()</code> genera un array nuevo e independiente, mientras que <code>view()</code> crea una referencia que, al modificarse, altera los datos del original.</li>
+        <li><strong>Manipulación:</strong> Ofrece gran flexibilidad con el <em>slicing</em> (particionado), redimensionamiento (<code>reshape()</code>) y filtros de búsqueda mediante <code>where()</code>.</li>
+    </ul>
+
+    <h2>2.8. Importación de datos</h2>
+    <p>Es un paso clave para nutrir modelos predictivos. Opciones destacadas:</p>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Librería estándar:</strong> A través del módulo <code>csv</code>, leyendo línea por línea.</li>
+            <li><strong>Pandas (Recomendado):</strong> La función <code>read_csv()</code> es altamente versátil; detecta automáticamente cabeceras, infiere tipos de datos, maneja campos vacíos y convierte el conjunto en un <em>dataframe</em> eficiente.</li>
+            <li><strong>Fuentes Externas y "Toy Datasets":</strong> Carga directa desde URLs (ej. repositorios OpenML o Kaggle) o utilizando conjuntos de prueba ya incluidos en librerías como Scikit-learn.</li>
+        </ul>
+    </div>
+
+    <h2>2.9. Introducción a Machine Learning con librerías en Python</h2>
+    <ul>
+        <li><strong>Estadística Descriptiva:</strong> Uso de NumPy y SciPy para obtener de manera rápida la media, mediana, moda, varianza y percentiles de variables continuas, discretas o categóricas.</li>
+        <li><strong>Distribución de datos:</strong> Capacidad para generar datos aleatorios (por ejemplo, siguiendo distribuciones Gaussianas o normales) y visualizarlos en histogramas o gráficos de dispersión con Matplotlib.</li>
+        <li><strong>Regresiones:</strong> Aplicación de modelos clásicos de aprendizaje supervisado, logrando regresiones lineales con SciPy, polinómicas con NumPy, o regresiones múltiples robustas usando Pandas y Scikit-learn.</li>
+    </ul>
+	
+    <div class="nav-footer">
+        <a href="repasar.html" class="btn btn-back">← Volver al listado</a>
+        <a href="tema02.html" class="btn btn-quiz">Ir al Test del Tema →</a>
+    </div>
+</div>
+
+</body>
+</html>

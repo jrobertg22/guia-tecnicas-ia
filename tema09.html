@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario: Tema 09 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b; 
+            --card-bg: #f8fafc;
+            --primary: #f7b212;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --accent: #3b82f6;
+            --success: #15803d;
+            --error: #b91c1c;
+            --feedback-bg: #f1f5f9;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 90%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 40px;
+            position: relative;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-family: 'Arvo', serif;
+            font-size: 1.6rem;
+            margin: 0;
+            color: var(--bg-color);
+        }
+
+        .question-number {
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .multi-hint {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-style: italic;
+            display: block;
+            margin-top: -15px;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent);
+            background-color: #eff6ff;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #fefce8;
+        }
+
+        .option-item.correct-ans {
+            border-color: var(--success);
+            background-color: #f0fdf4;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .option-item.wrong-ans {
+            border-color: var(--error);
+            background-color: #fef2f2;
+            color: var(--error);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        input { margin-right: 12px; }
+
+        .feedback-area {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: var(--feedback-bg);
+            border-left: 4px solid var(--accent);
+            display: none;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .justification {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-light);
+        }
+
+        .nav-buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-validate { background: var(--primary); color: #000; flex-grow: 1; }
+        .btn-next { background: var(--bg-color); color: white; }
+        .btn-prev { background: #e2e8f0; color: var(--text-light); }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        #result-screen { text-align: center; display: none; }
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 6px solid var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="progress-bar-container"><div id="progress-fill"></div></div>
+    
+    <div id="quiz-screen">
+        <header>
+            <span class="question-number" id="q-count"></span>
+            <h1>Tema 9: Resolución de problemas mediante búsqueda</h1>
+        </header>
+
+        <div id="q-text" class="question-text"></div>
+        <span id="q-hint" class="multi-hint"></span>
+        <div class="options-list" id="options-container"></div>
+
+        <div class="feedback-area" id="feedback-area">
+            <span class="feedback-title" id="feedback-status"></span>
+            <p class="justification" id="justification-text"></p>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-prev" id="btn-prev" onclick="changeQuestion(-1)">Anterior</button>
+            <button class="btn-validate" id="btn-validate" onclick="validateCurrent()">Validar Respuesta</button>
+            <button class="btn-next" id="btn-next" onclick="changeQuestion(1)" disabled>Siguiente</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1>¡Test Completado!</h1>
+        <div class="score-circle" id="final-score"></div>
+        <p>Has finalizado el repaso sobre algoritmos de búsqueda.</p>
+        <div style="text-align: left; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 20px;">
+            <h3>Sugerencias de Repaso:</h3>
+            <ul id="suggested-topics"></ul>
+        </div>
+        
+        <button class="btn-next" style="margin-top: 20px; width: 100%;" onclick="location.reload()">Reiniciar Test</button>
+        <button class="btn-prev" style="margin-top: 10px; width: 100%; border: 2px solid #e2e8f0;" onclick="window.location.href='index.html'">Ir al Menú Principal</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "1. Indica cuáles de las siguientes afirmaciones son correctas respecto a los problemas de búsqueda de estados:",
+            options: [
+                "A. La resolución conlleva definir únicamente dos descriptores: operación y estado.",
+                "B. (Opción repetida en el material original).",
+                "C. La búsqueda de estados se aplica en juegos y en robótica.",
+                "D. Se describe como la búsqueda de un camino a través de estados para alcanzar un objetivo desde un estado inicial."
+            ],
+            correct: [2, 3],
+            type: "multiple",
+            topic: "9.2. Introducción",
+            justification: "Se definen tres descriptores: estado, operación y algoritmo. Esta técnica es fundamental en robótica (STRIPS) y juegos (Minimax), basándose en encontrar una secuencia de acciones entre un inicio y un objetivo."
+        },
+        {
+            question: "2. Cuando se conoce un estado inicial y múltiples estados objetivos, ¿qué búsqueda es más conveniente aplicar en principio?",
+            options: ["A. Búsqueda hacia adelante.", "B. Búsqueda hacia atrás."],
+            correct: [0],
+            type: "single",
+            topic: "9.3. Dirección de la búsqueda",
+            justification: "Es más eficiente ir del conjunto con menor número de elementos al de mayor. Si el inicio es único y los objetivos son varios, la búsqueda hacia adelante evita ramificaciones innecesarias desde múltiples puntos finales."
+        },
+        {
+            question: "3. Si he de justificar el motivo por el que se da un razonamiento se suele utilizar:",
+            options: ["A. Búsqueda hacia adelante.", "B. Búsqueda hacia atrás."],
+            correct: [1],
+            type: "single",
+            topic: "9.3. Dirección de la búsqueda",
+            justification: "La búsqueda hacia atrás se aproxima más al modo de pensar humano en diagnóstico (sistemas expertos), permitiendo responder por qué se realiza una comprobación para llegar a la causa raíz."
+        },
+        {
+            question: "4. Indica cuáles de las siguientes afirmaciones son correctas respecto a los algoritmos de búsqueda a ciegas:",
+            options: [
+                "A. La búsqueda en amplitud sigue una estrategia LIFO.",
+                "B. La búsqueda en profundidad garantiza la solución por el camino más corto.",
+                "C. La búsqueda en profundidad no tiene en cuenta ninguna información sobre el problema.",
+                "D. La búsqueda en profundidad iterativa intenta combinar las ventajas de amplitud y profundidad."
+            ],
+            correct: [2, 3],
+            type: "multiple",
+            topic: "9.4. Búsqueda exhaustiva",
+            justification: "La búsqueda a ciegas (fuerza bruta) ignora información del dominio. La profundidad iterativa combina el bajo consumo de memoria de la profundidad con la garantía de optimalidad de la amplitud."
+        },
+        {
+            question: "5. Indica cuáles de las siguientes afirmaciones son correctas respecto a los algoritmos de búsqueda heurística:",
+            options: [
+                "A. Utilizan información heurística sobre el problema para encontrar la solución.",
+                "B. El heurístico es una función que permite garantizar encontrar la solución óptima.",
+                "C. Facilitan la aceleración de la búsqueda.",
+                "D. El heurístico puede utilizarse para decidir qué nodo hijo considerar primero."
+            ],
+            correct: [0, 2, 3],
+            type: "multiple",
+            topic: "9.5. Búsqueda heurística",
+            justification: "Las heurísticas son reglas de estrategia que limitan el espacio de búsqueda. Aunque aceleran el proceso, no siempre garantizan la solución óptima; ofrecen soluciones 'suficientemente buenas'."
+        },
+        {
+            question: "6. Indica la afirmación correcta relacionada con la búsqueda heurística:",
+            options: [
+                "A. La escalada por máxima pendiente presenta problemas de máximos locales pero no de mesetas.",
+                "B. La escalada simple considera todos los posibles movimientos y escoge el mejor.",
+                "C. El algoritmo de búsqueda «primero el mejor» puede presentar problemas de memoria.",
+                "D. El heurístico en A* ha de ser admisible, esto es, no sobreestimar el coste desde el origen al actual."
+            ],
+            correct: [2],
+            type: "single",
+            topic: "9.5. Búsqueda heurística",
+            justification: "Best-first debe mantener todos los nodos abiertos en memoria. La opción D es falsa porque el heurístico admisible no debe sobreestimar el coste del nodo actual *al objetivo*."
+        },
+        {
+            question: "7. Si no se dispone de información útil de un problema de búsqueda, ¿qué método de los siguientes se podría en principio aplicar para resolverlo?",
+            options: ["A. Búsqueda en profundidad.", "B. Búsqueda «mejor el primero».", "C. Escalada por máxima pendiente.", "D. Ninguno de los anteriores."],
+            correct: [0],
+            type: "single",
+            topic: "9.4. Búsqueda exhaustiva",
+            justification: "Sin información (heurística) del problema, se deben aplicar algoritmos de búsqueda exhaustiva o a ciegas, como la búsqueda en profundidad."
+        },
+        {
+            question: "8. Si se dispone de información útil de un problema de búsqueda, ¿qué método de los siguientes se podría, en principio, aplicar para resolverlo?",
+            options: ["A. Búsqueda en profundidad iterativa.", "B. Búsqueda en profundidad acotada.", "C. Búsqueda «mejor el primero».", "D. Ninguno de los anteriores."],
+            correct: [2],
+            type: "single",
+            topic: "9.5. Búsqueda heurística",
+            justification: "Al disponer de información útil, se aplican algoritmos informados o heurísticos. 'Primero el mejor' utiliza una función de evaluación basada en heurísticos para guiar la búsqueda."
+        },
+        {
+            question: "9. Indica cuáles de las siguientes afirmaciones relativas al algoritmo Minimax de búsqueda en juegos son ciertas:",
+            options: [
+                "A. Minimax es un algoritmo utilizado en la búsqueda en juegos.",
+                "B. El algoritmo Minimax desarrolla todo el espacio de estados.",
+                "C. Minimax se aplica a juegos de información completa, pero suma no nula.",
+                "D. Minimax toma las decisiones óptimas para que si es posible Min gane la partida."
+            ],
+            correct: [0, 1],
+            type: "multiple",
+            topic: "9.6. Búsqueda en juegos",
+            justification: "Minimax se aplica a juegos de suma nula. En su versión teórica básica, desarrolla todo el árbol de jugadas posibles. Su objetivo es que MAX maximice su ventaja asumiendo que MIN jugará de forma óptima para él."
+        },
+        {
+            question: "10. Si se desea minimizar el coste del proceso de búsqueda se ha de:",
+            options: [
+                "A. Minimizar el coste debido a la expansión del árbol.",
+                "B. Minimizar el coste debido a la estrategia de control.",
+                "C. Minimizar la suma de los costes de expansión y de estrategia de control.",
+                "D. Minimizar costes de expansión y utilizar el mejor heurístico posible."
+            ],
+            correct: [2],
+            type: "single",
+            topic: "9.7. Costes",
+            justification: "El coste total es la suma del tiempo/recursos de generar nodos (expansión) y de decidir cuál expandir (control). Un heurístico complejo baja la expansión pero sube el coste de control; el punto óptimo es el mínimo de su suma."
+        }
+    ];
+
+    let currentIdx = 0;
+    const userAnswers = new Array(quizData.length).fill(null).map(() => []);
+    const validatedArr = new Array(quizData.length).fill(false);
+
+    function render() {
+        const q = quizData[currentIdx];
+        const isValidated = validatedArr[currentIdx];
+        document.getElementById('q-count').innerText = `Pregunta ${currentIdx + 1} de ${quizData.length}`;
+        document.getElementById('q-text').innerText = q.question;
+        document.getElementById('q-hint').innerText = q.type === "multiple" ? "(Selecciona todas las opciones que correspondan)" : "";
+        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / quizData.length) * 100}%`;
+        const container = document.getElementById('options-container');
+        container.innerHTML = "";
+        q.options.forEach((opt, i) => {
+            const div = document.createElement('div');
+            const isSelected = userAnswers[currentIdx].includes(i);
+            let statusClass = "";
+            if (isValidated) {
+                if (q.correct.includes(i)) statusClass = "correct-ans";
+                else if (isSelected) statusClass = "wrong-ans";
+                div.classList.add("disabled");
+            } else if (isSelected) {
+                statusClass = "selected";
+            }
+            div.className = `option-item ${statusClass}`;
+            div.innerHTML = `<input type="${q.type === 'multiple' ? 'checkbox' : 'radio'}" ${isSelected ? 'checked' : ''} ${isValidated ? 'disabled' : ''}> <span>${opt}</span>`;
+            if (!isValidated) div.onclick = () => selectOption(i);
+            container.appendChild(div);
+        });
+        document.getElementById('feedback-area').style.display = isValidated ? "block" : "none";
+        if (isValidated) {
+            const isCorrect = checkCorrectness(currentIdx);
+            document.getElementById('feedback-status').innerText = isCorrect ? "✓ ¡Correcto!" : "✗ Revisión Necesaria";
+            document.getElementById('feedback-status').style.color = isCorrect ? "var(--success)" : "var(--error)";
+            document.getElementById('justification-text').innerText = q.justification;
+        }
+        document.getElementById('btn-prev').disabled = currentIdx === 0;
+        document.getElementById('btn-validate').style.display = isValidated ? "none" : "block";
+        document.getElementById('btn-next').disabled = !isValidated;
+        document.getElementById('btn-next').innerText = currentIdx === quizData.length - 1 ? "Finalizar" : "Siguiente";
+    }
+
+    function selectOption(idx) {
+        if (quizData[currentIdx].type === "single") userAnswers[currentIdx] = [idx];
+        else {
+            const pos = userAnswers[currentIdx].indexOf(idx);
+            if (pos > -1) userAnswers[currentIdx].splice(pos, 1);
+            else userAnswers[currentIdx].push(idx);
+        }
+        render();
+    }
+
+    function validateCurrent() {
+        if (userAnswers[currentIdx].length === 0) return alert("Selecciona al menos una respuesta.");
+        validatedArr[currentIdx] = true;
+        render();
+    }
+
+    function checkCorrectness(idx) {
+        const user = userAnswers[idx].sort().join(',');
+        const correct = quizData[idx].correct.sort().join(',');
+        return user === correct;
+    }
+
+    function changeQuestion(step) {
+        if (step === 1 && currentIdx === quizData.length - 1) return showResults();
+        currentIdx += step;
+        render();
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        let score = 0;
+        const failedTopics = new Set();
+        quizData.forEach((q, i) => { if (checkCorrectness(i)) score++; else failedTopics.add(q.topic); });
+        document.getElementById('final-score').innerText = `${score}/10`;
+        const list = document.getElementById('suggested-topics');
+        list.innerHTML = "";
+        failedTopics.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
+        if (failedTopics.size === 0) list.innerHTML = "<li>¡Excelente trabajo! Dominas los algoritmos de búsqueda.</li>";
+    }
+    render();
+</script>
+</body>
+</html>

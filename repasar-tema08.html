@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa de Repaso: Tema 08</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b;
+            --card-bg: #ffffff;
+            --primary: #f7b212;
+            --text-dark: #1e293b;
+            --accent: #3b82f6;
+            --highlight-bg: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); margin: 0; font-size: 2.2rem; }
+        .topic-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        h2 { color: var(--accent); margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.5rem; }
+        h3 { color: var(--bg-color); font-size: 1.2rem; margin-top: 25px; }
+
+        .concept-box {
+            background: var(--highlight-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 4px solid var(--accent);
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+		
+		
+		.important {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .concept-box {
+            background-color: #ebf5fb;
+            border: 1px solid #d6eaf8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+		
+        .btn-back { background: #e2e8f0; color: #64748b; }
+        .btn-quiz { background: var(--primary); color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <header>
+        <span class="topic-tag">Guía de Estudio: Técnicas de Inteligencia Artificial</span>
+        <h1>Tema 08: Sistemas de Recomendación</h1>
+    </header>
+
+    <h2>8.2. Introducción. Tipos de recomendadores y aplicaciones</h2>
+    <p>La gran cantidad de información disponible en Internet abruma a los usuarios, por lo que las técnicas para clasificar y filtrar contenidos resultan de gran interés [1]. Los sistemas recomendadores modelan preferencias creando perfiles de usuario y recomiendan productos mediante diversas técnicas de emparejamiento [1-3].</p>
+    <ul>
+        <li><strong>Filtrado demográfico:</strong> Utiliza descripciones de personas para relacionar un ítem con el estereotipo de usuarios al que le suele gustar [4].</li>
+        <li><strong>Filtrado colaborativo:</strong> Realiza recomendaciones basándose en la retroalimentación explícita (valoraciones) o implícita (historial de compras) de conjuntos de usuarios [4, 5].</li>
+        <li><strong>Filtrado basado en contenidos:</strong> Emplea la metainformación de los ítems para aprender la relación entre un usuario y ese contenido [5].</li>
+        <li><strong>Filtrado basado en el conocimiento (KBF) y en la utilidad:</strong> Se usan para ítems complejos que rara vez se compran (ej. viviendas), considerando restricciones estrictas del usuario (como el precio) o cálculos de utilidad directa [5-7].</li>
+    </ul>
+    <p><strong>Aplicaciones comunes:</strong> Sistemas de comercio electrónico como Amazon (que recomiendan productos adquiridos por otros compradores), plataformas de libros, música y vídeo (que sugieren contenidos similares), o portales de noticias personalizados [8, 9].</p>
+
+    <h2>8.3. Recomendación colaborativa. Filtrado basado en usuarios y en ítems</h2>
+    <p>Los sistemas colaborativos recomiendan ítems basándose en las preferencias o historiales de otros usuarios [10].</p>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Filtrado basado en usuarios:</strong> Predice la valoración que un usuario dará a un contenido analizando las valoraciones de otros usuarios similares a él [11]. Un algoritmo destacado por su simplicidad y eficiencia es <strong>Slope One</strong>, el cual predice calificaciones basándose en la diferencia media de valoraciones entre los ítems [12-14].</li>
+            <li><strong>Filtrado basado en ítems:</strong> Calcula la similitud entre los propios ítems basándose en los datos de los usuarios (por ejemplo, si los usuarios tienden a comprar dos ítems conjuntamente) [15, 16]. Utiliza la medida de <strong>similitud coseno</strong> para crear una tabla de ítems similares, siendo este el enfoque popularizado por Amazon [16, 17].</li>
+        </ul>
+    </div>
+    <div class="important">
+        <strong>Problema principal:</strong> El filtrado colaborativo basado en usuarios tiene problemas cuando existen ítems nuevos sin valoraciones, ya que no hay información previa para poder recomendarlos [18]. Además, requieren un gran número de usuarios para funcionar correctamente [19].
+    </div>
+
+    <h2>8.4. Recomendación basada en contenido. Representación y similitud</h2>
+    <p>Este filtrado recomienda ítems que son similares a aquellos que al usuario ya le han gustado previamente, basándose en la información textual estructurada o metadatos de los ítems [19, 20].</p>
+    <ul>
+        <li><strong>Modelo de Espacio de Vectores (VSM):</strong> Los contenidos se representan como un vector de pesos en un espacio de <em>n</em> dimensiones [21].</li>
+        <li><strong>Ponderación TF-IDF (Term Frequency-Inverse Document Frequency):</strong> Método utilizado para asignar pesos a los términos. Otorga mayor relevancia a aquellas palabras que aparecen frecuentemente en un documento, pero <strong>rara vez en el resto de la colección</strong>, evitando así que términos muy comunes dominen la similitud [22, 23].</li>
+        <li><strong>Medida de similitud:</strong> La afinidad entre el perfil del usuario y los documentos se calcula empleando la <strong>similitud del coseno</strong> [24, 25].</li>
+    </ul>
+    <p><strong>Limitaciones:</strong> Tienden a recomendar ítems excesivamente similares (falta de novedad) y basan sus decisiones en metadatos objetivos, ignorando factores subjetivos críticos como la calidad real de un ítem (ej. un curso bien explicado frente a uno confuso) [26, 27].</p>
+
+    <h2>8.5. Sistemas de recomendación híbridos</h2>
+    <div class="important">
+        <strong>Objetivo:</strong> Los sistemas híbridos combinan dos o más estrategias de recomendación para beneficiarse de sus ventajas complementarias, aliviando problemas individuales como el escalado, la falta de datos (escasez o <em>sparsity</em>) o el arranque en frío de ítems nuevos [28-31].
+    </div>
+    <p>Según Burke (2002), existen múltiples métodos de hibridación [30, 32, 33]:</p>
+    <ul>
+        <li><strong>Ponderados (Weighted) y Conmutados (Switching):</strong> Combinan puntuaciones en una sola, o cambian de técnica según criterios definidos [32].</li>
+        <li><strong>Mixtos (Mixed):</strong> Muestran sugerencias de múltiples recomendadores a la vez [33].</li>
+        <li><strong>En cascada (Cascade) y Características aumentadas:</strong> La salida de un recomendador sirve para refinar o alimentar a otro. En estos métodos, <strong>el orden de aplicación es fundamental</strong> y altera completamente el resultado [33-35].</li>
+    </ul>
+
+    <h2>8.6. Ejemplos de implementación</h2>
+    <p>En la práctica (por ejemplo, utilizando Python con las librerías <code>pandas</code>, <code>numpy</code> y <code>seaborn</code>), los sistemas de recomendación se pueden implementar siguiendo estos pasos sobre bases de datos como <em>MovieLens</em> [36, 37]:</p>
+    <div class="concept-box">
+        <ol>
+            <li><strong>Preparación de datos:</strong> Se cruzan los ficheros de películas y de valoraciones (ratings) empleando herramientas como <code>pd.merge()</code> [38].</li>
+            <li><strong>Agrupación y limpieza:</strong> Mediante <code>groupby()</code>, se calcula la valoración media de cada película y el total de votos recibidos [39, 40]. Es crucial establecer un <strong>umbral mínimo de clasificaciones</strong> (ej. más de 100 votos), ya que una película con 5 estrellas votada por una sola persona no es estadísticamente fiable [39-41].</li>
+            <li><strong>Matriz Usuario-Ítem:</strong> Se genera una tabla dinámica (pivot table) donde las filas son los usuarios y las columnas las películas [42, 43].</li>
+            <li><strong>Cálculo de similitud:</strong> Se emplea la <strong>correlación de Pearson</strong> (usando la función <code>corrwith()</code>) entre las clasificaciones de una película objetivo y el resto de películas de la matriz, determinando así qué películas fluctúan de forma similar para poder recomendarlas [44-47].</li>
+        </ol>
+    </div>
+
+
+    <div class="nav-footer">
+        <a href="repasar.html" class="btn btn-back">← Menú de Temas</a>
+        <a href="tema08.html" class="btn btn-quiz">Ir al Test del Tema →</a>
+    </div>
+</div>
+
+</body>
+</html>	

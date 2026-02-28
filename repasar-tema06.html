@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa de Repaso: Tema 06 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b;
+            --card-bg: #ffffff;
+            --primary: #f7b212;
+            --text-dark: #1e293b;
+            --accent: #3b82f6;
+            --highlight-bg: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); margin: 0; font-size: 2.2rem; }
+        .topic-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        h2 { color: var(--accent); margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.5rem; }
+        h3 { color: var(--bg-color); font-size: 1.2rem; margin-top: 25px; }
+
+        .concept-box {
+            background: var(--highlight-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 4px solid var(--accent);
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+		
+		
+		.important {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .concept-box {
+            background-color: #ebf5fb;
+            border: 1px solid #d6eaf8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+		
+        .btn-back { background: #e2e8f0; color: #64748b; }
+        .btn-quiz { background: var(--primary); color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <header>
+        <span class="topic-tag">Guía de Estudio: Técnicas de Inteligencia Artificial</span>
+		<h1>Tema 06: Deep Learning y Reinforcement Learning</h1>
+    </header>
+
+    <h2>6.2. El papel del deep learning dentro del machine learning</h2>
+    <p>El aprendizaje automático (Machine Learning) se subdivide en varias categorías principales:</p>
+    <ul>
+        <li><strong>Clásico:</strong> Supervisado (datos etiquetados), No supervisado (descubrir estructuras/agrupaciones) y Semisupervisado.</li>
+        <li><strong>Ensemble Learning:</strong> Combinación de modelos para mejorar precisión.</li>
+        <li><strong>Deep Learning (Aprendizaje Profundo):</strong> Útil frente a datos muy complejos o cuando se buscan precisiones superiores al ML clásico.</li>
+        <li><strong>Reinforcement Learning (Aprendizaje por Refuerzo):</strong> Utilizado cuando no hay datos de entrada previos, sino un entorno interactivo.</li>
+    </ul>
+
+    <h2>6.3. Redes neuronales y deep learning</h2>
+    <div class="important">
+        <strong>Definición:</strong> El <em>Deep Learning</em> es una clase de algoritmos que utiliza múltiples capas para extraer progresivamente características de nivel superior de la entrada bruta (ej. en una imagen: detectar bordes en las primeras capas y objetos completos en las últimas).
+    </div>
+    <ul>
+        <li><strong>Resurgimiento:</strong> Tienen éxito hoy en día gracias a la enorme capacidad de computación (CPU, GPU de alto paralelismo y TPU especializadas) y al almacenamiento masivo de datos (Big Data).</li>
+        <li><strong>Versatilidad:</strong> Pueden actuar como sustitutos de métodos supervisados, no supervisados y semisupervisados, resolviendo problemas de PNL, visión por computador, reconocimiento de voz, etc.</li>
+    </ul>
+
+    <h2>6.4. Redes prealimentadas profundas (Feedforward)</h2>
+    <p>En estas redes, la información fluye en una sola dirección: de la entrada a la salida, sin bucles ni retroalimentación.</p>
+    <ul>
+        <li><strong>El Perceptrón:</strong> Unidad básica (monocapa) que funciona como un clasificador lineal separando clases mediante un hiperplano, utilizando funciones de activación (signo, escalón, logística).</li>
+        <li><strong>Perceptrón Multicapa (MLP):</strong> Red profunda con al menos una capa oculta. Se entrena iterativamente ajustando pesos mediante el <strong>método de retropropagación del error</strong> (propagando el gradiente de error hacia atrás).</li>
+    </ul>
+
+    <h2>6.5. Redes neuronales recurrentes profundas (RNN)</h2>
+    <p>A diferencia de las feedforward, las RNN tienen neuronas específicas con una "memoria" que almacenan entradas de ciclos anteriores, permitiendo bucles de retroalimentación.</p>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Aplicación ideal:</strong> Procesamiento de secuencias de datos, como el texto, la genómica, la traducción o la síntesis de voz.</li>
+            <li><strong>LSTM (Long Short-Term Memory):</strong> Mejoran a las RNN incorporando "puertas" (entrada, salida y olvido) que controlan qué información guardar o descartar.</li>
+            <li><strong>GRU (Gated Recurrent Units):</strong> Variación de LSTM con solo dos puertas, mejorando el rendimiento computacional, aunque requiriendo redes más grandes para igualar su expresividad.</li>
+        </ul>
+    </div>
+
+    <h2>6.6. Autoencoders (AE)</h2>
+    <p>Redes neuronales simétricas en forma de "reloj de arena", utilizadas típicamente en tareas no supervisadas.</p>
+    <ul>
+        <li><strong>Estructura:</strong> Comprimen la información desde la entrada (codificador) hacia un código central o "cuello de botella", para luego intentar reconstruirla a la salida (decodificador).</li>
+        <li><strong>Variantes:</strong> <strong>DAE</strong> (Denoising Autoencoders) para eliminar ruido; <strong>SAE</strong> (Sparse) para extraer características; y <strong>VAE</strong> (Variational) basados en probabilidad y matemáticas bayesianas para generar nuevos datos.</li>
+    </ul>
+
+    <h2>6.7. Redes neuronales convolucionales (CNN)</h2>
+    <div class="important">
+        <strong>CNN / DCNN:</strong> Son el estándar de oro en visión artificial (búsqueda de objetos, reconocimiento facial). En lugar de procesar la imagen completa de golpe, aplican filtros ("convoluciones") por bloques pequeños de píxeles, extrayendo características abstractas capa por capa.
+    </div>
+    <ul>
+        <li><strong>Redes Deconvolucionales (DNN):</strong> Operan a la inversa. Al alimentarlas con una etiqueta ("gato"), generan una imagen sintética del objeto.</li>
+    </ul>
+
+    <h2>6.8. Redes generativas antagónicas (GAN)</h2>
+    <p>Consisten en dos redes neuronales compitiendo entre sí en un entorno de "juego de suma cero".</p>
+    <ul>
+        <li><strong>Red Generativa:</strong> Intenta crear datos o imágenes falsas lo más realistas posible.</li>
+        <li><strong>Red Discriminativa:</strong> Intenta detectar si la imagen que recibe es real (del dataset) o falsa (creada por el generador).</li>
+        <li><strong>Aplicaciones:</strong> Deepfakes (sustitución de caras en vídeo), envejecimiento facial, transferencia de estilo y generación de imágenes artificiales ultrarrealistas.</li>
+    </ul>
+
+    <h2>6.9. Aprendizaje por refuerzo (Reinforcement Learning)</h2>
+    <p>El agente aprende a tomar decisiones interactuando con un <strong>entorno</strong> a base de prueba y error, buscando maximizar una <strong>recompensa</strong> (ej. videojuegos o coches autónomos).</p>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Compromiso Exploración/Explotación:</strong> El agente debe decidir entre aprovechar el conocimiento seguro que ya le da puntos (explotar) o arriesgarse a tomar rutas nuevas para descubrir recompensas mayores (explorar). Se maneja comúnmente con la estrategia <strong>epsilon-greedy</strong>.</li>
+            <li><strong>Procesos de Decisión de Markov (MDP):</strong> Modelo matemático donde se consideran estados, transiciones y un factor de descuento para valorar las recompensas futuras.</li>
+            <li><strong>Q-Learning:</strong> Algoritmo clásico (libre de modelo) que guarda los valores aprendidos en una matriz gigante (Q-matrix) para saber qué acción es la óptima en cada estado.</li>
+        </ul>
+    </div>
+
+    <h2>6.10. Aprendizaje por refuerzo profundo (Deep RL)</h2>
+    <p>Combina el Reinforcement Learning con Redes Neuronales Profundas. Permite operar en entornos donde el número de estados posibles es inmanejable para una tabla (como el juego de Go o los píxeles de un videojuego de Atari).</p>
+    <ul>
+        <li><strong>Deep Q-Networks (DQN):</strong> Sustituyen la tabla Q del Q-learning tradicional por una red neuronal que estima el valor Q.</li>
+        <li><strong>Double DQN (DDQN):</strong> Soluciona el problema de "sobreestimación" de recompensas de DQN usando dos redes neuronales separadas: una para seleccionar la acción y otra para evaluar su calidad.</li>
+        <li><strong>Casos de éxito:</strong> <em>AlphaGo</em> (y sus versiones posteriores <em>AlphaGo Zero</em> sin datos humanos) de DeepMind, que logró vencer a campeones mundiales de Go.</li>
+    </ul>
+
+    <h2>6.11. Ejemplos de implementación</h2>
+    <p>Para construir modelos de Deep Learning en código, la industria emplea frameworks especializados como <strong>TensorFlow</strong> (creado por Google) y su API de alto nivel <strong>Keras</strong>.</p>
+    <ul>
+        <li><strong>Tensor (TensorFlow):</strong> Es una entidad algebraica generalizada (escalar, vector o matriz multidimensional) independiente de cualquier sistema de coordenadas.</li>
+        <li><strong>Flujo típico (Ejemplo Fashion-MNIST):</strong> 
+            <ol>
+                <li>Carga y preprocesamiento de datos (normalización de píxeles a valores entre 0 y 1).</li>
+                <li>Definición del modelo Secuencial: Capa de aplanado (<code>Flatten</code>) seguida de capas densas (<code>Dense</code> con activación <em>ReLU</em>).</li>
+                <li>La última capa utiliza la función <strong>Softmax</strong>, la cual devuelve un array de probabilidades normalizadas para clasificar la entrada.</li>
+                <li>Compilación (definiendo la función de pérdida y optimizador como Adam) y Entrenamiento (<code>model.fit</code>) validando la exactitud y el posible sobreajuste (<em>overfitting</em>).</li>
+            </ol>
+        </li>
+    </ul>
+
+
+    <div class="nav-footer">
+        <a href="repasar.html" class="btn btn-back">← Menú de Temas</a>
+        <a href="tema06.html" class="btn btn-quiz">Ir al Test del Tema →</a>
+    </div>
+</div>
+
+</body>
+</html>

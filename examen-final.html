@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Final: Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b; 
+            --card-bg: #f8fafc;
+            --primary: #f7b212;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --accent: #3b82f6;
+            --success: #15803d;
+            --error: #b91c1c;
+            --feedback-bg: #f1f5f9;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 95%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 40px;
+            position: relative;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        header { text-align: center; margin-bottom: 25px; }
+        h1 { font-family: 'Arvo', serif; font-size: 1.6rem; margin: 0; color: var(--bg-color); }
+        .question-info { font-weight: 600; color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 8px; display: block; }
+
+        .question-text { font-size: 1.2rem; line-height: 1.5; margin-bottom: 20px; font-weight: 600; }
+        .multi-hint { font-size: 0.8rem; color: var(--text-light); font-style: italic; display: block; margin-top: -15px; margin-bottom: 15px; }
+
+        .options-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+        .option-item { border: 2px solid #e2e8f0; border-radius: 10px; padding: 12px 18px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; font-size: 0.95rem; }
+        .option-item:hover:not(.disabled) { border-color: var(--accent); background-color: #eff6ff; }
+        .option-item.selected { border-color: var(--primary); background-color: #fefce8; }
+        .option-item.correct-ans { border-color: var(--success); background-color: #f0fdf4; color: var(--success); font-weight: 600; }
+        .option-item.wrong-ans { border-color: var(--error); background-color: #fef2f2; color: var(--error); }
+        .option-item.disabled { cursor: default; }
+
+        .feedback-area { margin-top: 20px; padding: 15px; border-radius: 10px; background: var(--feedback-bg); border-left: 4px solid var(--accent); display: none; }
+        .feedback-title { font-weight: 700; display: block; margin-bottom: 5px; }
+
+        .nav-buttons { margin-top: 25px; display: flex; justify-content: space-between; gap: 10px; }
+        button { padding: 12px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-validate { background: var(--primary); color: #000; flex-grow: 1; }
+        .btn-next { background: var(--bg-color); color: white; }
+        .btn-prev { background: #e2e8f0; color: var(--text-light); }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        #result-screen { text-align: center; display: none; }
+        .score-circle { width: 120px; height: 120px; border-radius: 50%; border: 8px solid var(--primary); display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: 700; margin: 20px auto; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="progress-bar-container"><div id="progress-fill"></div></div>
+    
+    <div id="quiz-screen">
+        <header>
+            <span class="question-info" id="q-meta"></span>
+            <h1>Examen Final de IA</h1>
+        </header>
+        <div id="q-text" class="question-text"></div>
+        <span id="q-hint" class="multi-hint"></span>
+        <div class="options-list" id="options-container"></div>
+        <div class="feedback-area" id="feedback-area">
+            <span class="feedback-title" id="feedback-status"></span>
+            <p id="justification-text" style="font-size: 0.9rem; margin: 5px 0;"></p>
+        </div>
+        <div class="nav-buttons">
+            <button class="btn-prev" id="btn-prev" onclick="changeQuestion(-1)">Anterior</button>
+            <button class="btn-validate" id="btn-validate" onclick="validateCurrent()">Validar Respuesta</button>
+            <button class="btn-next" id="btn-next" onclick="changeQuestion(1)" disabled>Siguiente</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1>Resultado del Examen</h1>
+        <div class="score-circle" id="final-score"></div>
+        <p id="evaluation-text"></p>
+        <div style="text-align: left; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 20px;">
+            <h3>Temas a reforzar:</h3>
+            <ul id="failed-topics"></ul>
+        </div>
+        <button class="btn-next" style="margin-top: 20px; width: 100%;" onclick="location.reload()">Nuevo Intento Aleatorio</button>
+        <button class="btn-prev" style="margin-top: 10px; width: 100%; border: 2px solid #e2e8f0;" onclick="window.location.href='index.html'">Volver al Inicio</button>
+    </div>
+</div>
+
+<script>
+    const allQuestions = {
+        T1: [
+            { q: "Indica cuáles de las siguientes afirmaciones son correctas:", opts: ["A. La escuela de la IA Fuerte defiende que las máquinas pueden llegar a tener conciencia.", "B. La escuela de la IA Débil no defiende que los procesos cerebrales puedan ser simulados.", "C. El juego de imitación de Turing consiste en que una máquina consiga mantener una conversación tal y como lo haría un humano.", "D. Las técnicas de aprendizaje automático no forman parte de la IA."], correct: [0, 2], type: "multiple", topic: "Tema 1", just: "La IA Fuerte sostiene que las máquinas pueden tener conciencia; el Test de Turing evalúa la conversación humana." },
+            { q: "Indica cuál de las siguientes afirmaciones no es correcta:", opts: ["A. La minería de datos usa aprendizaje automático para descubrir patrones.", "B. La minería de datos tiene un objetivo fundamentalmente teórico.", "C. Existe una fase KDD que consiste en ejecutar técnicas de IA.", "D. En el KDD existen fases previas de selección y transformación."], correct: [1], type: "single", topic: "Tema 1", just: "El objetivo de la minería de datos es eminentemente práctico, no teórico." },
+            { q: "Indica cuál no es correcta respecto a la experiencia en el aprendizaje de conceptos:", opts: ["A. Conjunto de instancias.", "B. Ejemplos y no-ejemplos.", "C. Atributos de entrada y de salida.", "D. Datos de prueba."], correct: [3], type: "single", topic: "Tema 1", just: "Los datos de prueba sirven para validar la solución después del entrenamiento, no forman la experiencia inicial." },
+            { q: "Identificar la clase de una instancia desconocida en base a atributos comunes a ejemplos previos es:", opts: ["A. Discriminación.", "B. Generalización.", "C. Clasificación.", "D. Descripción."], correct: [1], type: "single", topic: "Tema 1", just: "La generalización consiste en identificar la clase de una instancia nueva examinando atributos comunes previos." },
+            { q: "Descubrir síntomas comunes de un grupo con enfermedad bien conocida es un aprendizaje de tipo:", opts: ["A. Supervisado.", "B. No-supervisado."], correct: [0], type: "single", topic: "Tema 1", just: "Es supervisado porque la clase (enfermedad) ya es conocida." },
+            { q: "Descubrir síntomas comunes de un grupo con diagnóstico desconocido es un aprendizaje de tipo:", opts: ["A. Supervisado.", "B. No-supervisado."], correct: [1], type: "single", topic: "Tema 1", just: "Es no-supervisado porque el objetivo es formar un nuevo concepto o clase desconocida." },
+            { q: "Indica cuál no es cierta respecto al descubrimiento de conocimiento (KDD):", opts: ["A. Procedimiento completo para extraer conocimiento.", "B. Sea cual sea el modelo KDD las fases siempre son las mismas.", "C. La interpretación de resultados es parte del procedimiento.", "D. Es un proceso que puede ser iterativo."], correct: [1], type: "single", topic: "Tema 1", just: "Las fases del KDD varían de unos modelos a otros." },
+            { q: "Indica cuál de las siguientes afirmaciones no es correcta:", opts: ["A. Los datos de entrenamiento son instancias.", "B. Pueden contener no-ejemplos.", "C. Los atributos son denominados también ejemplos.", "D. Al concepto que se aprende se le llama también clase."], correct: [2], type: "single", topic: "Tema 1", just: "Los atributos son las características; las instancias miembros de la clase son los ejemplos." },
+            { q: "Indica cuáles son correctas respecto al aprendizaje de conceptos:", opts: ["A. Se resuelven como búsqueda en espacio de hipótesis.", "B. Se aplican búsquedas sobre el espacio completo.", "C. El tamaño de los datos no influye.", "D. Existen distintas descripciones de un concepto en la práctica."], correct: [0, 3], type: "multiple", topic: "Tema 1", just: "El aprendizaje se plantea como búsqueda de hipótesis y suele haber varias descripciones válidas." },
+            { q: " Indica cuál no es correcta respecto a un sistema experto:", opts: ["A. Incorpora conocimiento de un experto humano.", "B. Raramente se ha aplicado a problemas reales con éxito.", "C. Suele estar limitado a un dominio.", "D. Puede complementarse con aprendizaje automático."], correct: [1], type: "single", topic: "Tema 1", just: "Los sistemas expertos han tenido éxito real al compararse con el rendimiento humano en áreas específicas." }
+        ],
+        T2: [
+            { q: "Indica la respuesta correcta:", opts: ["A. Python es un lenguaje fuertemente tipado y estático.", "B. Python es declarativo.", "C. Python es imperativo, fuertemente tipado, de tipado dinámico.", "D. Python es débilmente tipado."], correct: [2], type: "single", topic: "Tema 2", just: "Python es imperativo, dinámico y fuertemente tipado." },
+            { q: "Resultado por pantalla de: print(int(2 + 2j))", opts: ["A. 2.", "B. 2+2j.", "C. 0.", "D. Resultará un error."], correct: [3], type: "single", topic: "Tema 2", just: "No se puede hacer casting de un número complejo a entero directamente." },
+            { q: "Si x=\"Bienvenidos\", ¿cuál es print(x[-4:-2])?", opts: ["A. [-4-3-2].", "B. Error.", "C. id.", "D. -6."], correct: [2], type: "single", topic: "Tema 2", just: "El slicing toma las posiciones -4 ('i') y -3 ('d')." },
+            { q: "Indica la respuesta incorrecta sobre Python:", opts: ["A. Listas son ordenadas y mutables.", "B. Tuplas son no ordenadas e inmutables.", "C. Conjuntos no admiten duplicados.", "D. Diccionarios son clave-valor mutables."], correct: [1], type: "single", topic: "Tema 2", just: "Las tuplas SÍ son colecciones ordenadas." },
+            { q: "Si y = x (siendo x tupla), señala la opción correcta:", opts: ["A. Modificar y afecta a x.", "B. Modificar y no afecta a x.", "C. No podemos modificar ningún elemento de y.", "D. Ninguna."], correct: [2], type: "single", topic: "Tema 2", just: "Las tuplas son inmutables; no se pueden alterar una vez creadas." },
+            { q: "Si y = x (siendo x lista), señala la opción correcta:", opts: ["A. Al modificar un elemento de y, x se verá modificado.", "B. Al modificar y, x no se verá modificado.", "C. No podemos modificar y por ser lista.", "D. Ninguna."], correct: [0], type: "single", topic: "Tema 2", just: "Al asignar listas se hace por referencia; ambas apuntan al mismo objeto." },
+            { q: "¿Cuál de las siguientes preguntas es correcta?", opts: ["A. TensorFlow es de Google.", "B. Pandas carga CSVs.", "C. Keras es para redes neuronales.", "D. Todas las anteriores."], correct: [3], type: "single", topic: "Tema 2", just: "Todas son definiciones correctas de las librerías de IA en Python." },
+            { q: "¿Con qué función se importa un dataset CSV en Pandas?", opts: ["A. pandas.importdataset().", "B. pandas.readcsv().", "C. pandas.readurl().", "D. pandas.importcsv()."], correct: [1], type: "single", topic: "Tema 2", just: "Se usa la función readcsv() (literallmente read_csv en código real)." },
+            { q: "¿Cuál es el objetivo de TensorFlow Lite?", opts: ["A. Librerías gratuitas.", "B. No existe.", "C. Uso con Go.", "D. Dispositivos móviles con baja capacidad."], correct: [3], type: "single", topic: "Tema 2", just: "Lite está optimizada para terminales móviles y dispositivos 'Edge'." },
+            { q: " Para mostrar gráficos por pantalla aplicaría:", opts: ["A. Keras.", "B. Scikit-learn.", "C. Matplotlib.", "D. SciPy."], correct: [2], type: "single", topic: "Tema 2", just: "Matplotlib es la biblioteca estándar para visualización 2D." }
+        ],
+        T3: [
+            { q: "La clasificación mediante árboles de decisión es de tipo:", opts: ["A. Supervisado.", "B. No-supervisado.", "C. Supervisado y no supervisado.", "D. Ninguna."], correct: [0], type: "single", topic: "Tema 3", just: "Los árboles de decisión son una técnica clásica de aprendizaje supervisado." },
+            { q: "Indica las afirmaciones verdaderas sobre ID3 y C4.5:", opts: ["A. ID3 permite numéricos en atributos.", "B. C4.5 permite numéricos en salida.", "C. ID3 y C4.5 permiten nominales en salida.", "D. C4.5 permite numéricos y nominales en entrada."], correct: [2, 3], type: "multiple", topic: "Tema 3", just: "La salida es categórica; C4.5 admite entradas numéricas, ID3 no." },
+            { q: "Es adecuado usar árboles de decisión si:", opts: ["A. No se conoce la clase.", "B. Función objetivo con salida discreta.", "C. Varios atributos de salida.", "D. Datos con errores."], correct: [1, 3], type: "multiple", topic: "Tema 3", just: "Son adecuados para salidas discretas y robustos ante errores." },
+            { q: "Indica cuál es correcta:", opts: ["A. El método de selección de atributos especifica una heurística.", "B. Algoritmo básico obtiene un método de selección.", "C. El método codicioso es de selección.", "D. C4.5 no utiliza selección."], correct: [0], type: "single", topic: "Tema 3", just: "La selección determina el criterio para particionar mejor los ejemplos." },
+            { q: "Atributos con gran número de valores requieren utilizar:", opts: ["A. Ganancia información.", "B. Proporción ganancia.", "C. Índice Gini.", "D. LDM."], correct: [1], type: "single", topic: "Tema 3", just: "La proporción de ganancia penaliza atributos con demasiadas ramas." },
+            { q: "Indica correctas sobre ID3:", opts: ["A. Método codicioso (greedy).", "B. Atributo mayor información útil.", "C. Usa proporción ganancia.", "D. Espacio hipótesis incompleto."], correct: [0, 1], type: "multiple", topic: "Tema 3", just: "ID3 usa ganancia simple y no retrocede en sus decisiones." },
+            { q: "Sobre métodos de aprendizaje integrado:", opts: ["A. Stacking algoritmos paralelo.", "B. Bagging algoritmos iguales paralelo.", "C. Random forest es boosting.", "D. Boosting entrena en serie."], correct: [0, 1], type: "multiple", topic: "Tema 3", just: "Stacking y Bagging son paralelos; Boosting es secuencial." },
+            { q: "Indica correctas sobre C4.5:", opts: ["A. Usa proporción ganancia.", "B. Usa prepoda.", "C. Poda con datos de prueba.", "D. Realiza pospoda."], correct: [0, 3], type: "multiple", topic: "Tema 3", just: "C4.5 evoluciona de ID3 con proporción de ganancia y pospoda." },
+            { q: "Sobre validación cruzada:", opts: ["A. Datos validación y entrenamiento.", "B. Divide en dos subconjuntos.", "C. No evalúa poda.", "D. No conviene con pocos datos."], correct: [0, 1], type: "multiple", topic: "Tema 3", just: "Divide los datos para estimar la precisión y estabilidad." },
+            { q: " Sobre medidas de precisión:", opts: ["A. Tasa error: mal clasificados / total.", "B. Más instancias, mayor intervalo.", "C. C4.5 usa entrenamiento para error.", "D. Más nivel confianza, intervalo menor."], correct: [0, 1], type: "multiple", topic: "Tema 3", just: "Define la tasa de error y el comportamiento de los intervalos de confianza." }
+        ],
+        T4: [
+            { q: "Identificar síntomas de 3 enfermedades conocidas requiere:", opts: ["A. Árboles.", "B. Apriori.", "C. Recubrimiento secuencial.", "D. PRISM."], correct: [0, 2, 3], type: "multiple", topic: "Tema 4", just: "Se trata de clasificación supervisada ya que las clases son conocidas." },
+            { q: "Identificar relaciones entre síntomas de enfermedades requiere:", opts: ["A. Árboles.", "B. Apriori.", "C. Recubrimiento secuencial.", "D. PRISM."], correct: [1], type: "single", topic: "Tema 4", just: "Es una tarea de reglas de asociación para descubrir patrones." },
+            { q: "Indica las verdaderas:", opts: ["A. Clasificación predice clase.", "B. Asociación predice atributos o clase.", "C. Asociación buscan pares frecuentes.", "D. Mismo objetivo."], correct: [0, 1, 2], type: "multiple", topic: "Tema 4", just: "Clasificación predice clase; asociación busca cualquier patrón frecuente." },
+            { q: "% ejemplos que cumplen regla respecto al total es:", opts: ["A. Cobertura.", "B. Soporte.", "C. Confianza.", "D. Cubierta."], correct: [1], type: "single", topic: "Tema 4", just: "El soporte mide qué tan frecuente es la regla en el dataset." },
+            { q: "% ejemplos que cumplen regla respecto a los que solo cumplen antecedente es:", opts: ["A. Cobertura.", "B. Soporte.", "C. Confianza.", "D. Cubierta."], correct: [2], type: "single", topic: "Tema 4", just: "La confianza mide la fiabilidad condicional de la regla." },
+            { q: "¿Qué algoritmos aprenden reglas de clasificación?", opts: ["A. PRISM.", "B. C4.5.", "C. Apriori.", "D. ID3."], correct: [0, 1, 3], type: "multiple", topic: "Tema 4", just: "PRISM genera reglas directas; ID3/C4.5 generan árboles mapeables." },
+            { q: "Indica la correcta:", opts: ["A. No se mapean árboles a reglas.", "B. Recubrimiento secuencial aprende una regla por iteración.", "C. Exige cubrir todos los positivos siempre.", "D. Apriori es secuencial."], correct: [1], type: "single", topic: "Tema 4", just: "El proceso aprende una regla, quita ejemplos y repite." },
+            { q: "Indica las correctas:", opts: ["A. Parámetro todas las clases.", "B. Añade un par atributo-valor por iteración.", "C. Devuelve una regla.", "D. Elimina ejemplos cubiertos."], correct: [1, 3], type: "multiple", topic: "Tema 4", just: "Mecánica básica del algoritmo de recubrimiento secuencial." },
+            { q: "Sobre PRISM:", opts: ["A. Recubrimiento secuencial.", "B. Usa confianza.", "C. Específica a general.", "D. Simple."], correct: [0, 1, 3], type: "multiple", topic: "Tema 4", just: "PRISM es un recubridor secuencial basado en precisión." },
+            { q: " Sobre Apriori:", opts: ["A. Genera ítem-sets.", "B. Usa confianza para evaluar reglas.", "C. No genera reglas.", "D. Valora ítem-sets con confianza."], correct: [0, 1], type: "multiple", topic: "Tema 4", just: "Genera ítem-sets frecuentes (soporte) y luego reglas (confianza)." }
+        ],
+        T5: [
+            { q: "¿Cuál no es correcta sobre redes neuronales?", opts: ["A. Fundamento biológico.", "B. Alto paralelismo.", "C. Robustez fallos.", "D. Obtener reglas directo."], correct: [3], type: "single", topic: "Tema 5", just: "Son 'cajas negras'; no se extrae conocimiento en reglas fácilmente." },
+            { q: "Indica la respuesta correcta. En una red neuronal:", opts: ["A. Nodos entrada procesan.", "B. Nodos ocultos comunican exterior.", "C. Objetivo: determinar pesos.", "D. Ninguna."], correct: [2], type: "single", topic: "Tema 5", just: "Aprender es ajustar los pesos para minimizar el error." },
+            { q: "En el perceptrón:", opts: ["A. Salida binaria.", "B. Activación no lineal.", "C. Una neurona entrada.", "D. Sin activación."], correct: [0], type: "single", topic: "Tema 5", just: "El perceptrón simple usa una función de tipo escalón (binaria)." },
+            { q: "Sobre regla aprendizaje perceptrón:", opts: ["A. Corrección error.", "B. Pesos proporcionales error.", "C. Pesos proporcionales entrada.", "D. Garantizado si separable."], correct: [0, 1, 2, 3], type: "multiple", topic: "Tema 5", just: "Principios del ajuste de pesos en el perceptrón simple." },
+            { q: "Red neuronal multicapa:", opts: ["A. Alimentación atrás.", "B. Arquitectura feed-forward.", "C. Una sola capa.", "D. Solo problemas lineales."], correct: [1], type: "single", topic: "Tema 5", just: "Son redes unidireccionales donde la info fluye hacia adelante." },
+            { q: "¿Qué funciones son no-lineales?", opts: ["A. Identidad.", "B. Escalón.", "C. Sigmoidal.", "D. Tangente hiperbólica."], correct: [1, 2, 3], type: "multiple", topic: "Tema 5", just: "La identidad es lineal; las demás introducen no-linealidad." },
+            { q: "Sobre retropropagación (backprop):", opts: ["A. Error hacia atrás.", "B. Descenso gradiente.", "C. Error cuadrático medio.", "D. Mismas fórmulas todas capas."], correct: [0, 1, 2], type: "multiple", topic: "Tema 5", just: "Backprop ajusta pesos de salida a entrada según el gradiente." },
+            { q: "Sobre redes recurrentes:", opts: ["A. Emulan almacenamiento.", "B. Emulan asociación.", "C. Salidas alimentan entradas.", "D. Hopfield es recurrente."], correct: [0, 1, 2, 3], type: "multiple", topic: "Tema 5", just: "Poseen ciclos que permiten comportamiento de memoria." },
+            { q: "Sobre Hopfield (1):", opts: ["A. Estado por pesos.", "B. Almacenar estados.", "C. Almacenar memorias fundamentales.", "D. No precisa comprobación."], correct: [1, 2], type: "multiple", topic: "Tema 5", just: "Buscan memorias estables llamadas atractores." },
+            { q: " Sobre Hopfield (2):", opts: ["A. Bidireccionales asociativas.", "B. Reconocimiento imágenes.", "C. Siempre estable.", "D. Gran cantidad info pocas neuronas."], correct: [0, 1], type: "multiple", topic: "Tema 5", just: "Son BAM (Bidirectional Associative Memory) para patrones." }
+        ],
+        T6: [
+            { q: "Ramas que pertenecen al ML clásico:", opts: ["A. Supervisado.", "B. Ensemble.", "C. Deep Learning.", "D. Refuerzo."], correct: [0], type: "single", topic: "Tema 6", just: "El clásico incluye supervisado, no supervisado y semisupervisado." },
+            { q: "Indica correctas sobre Autoencoders:", opts: ["A. Capas par.", "B. Asimétricas.", "C. Compresión imágenes.", "D. Convolucionales profundas."], correct: [2], type: "multiple", topic: "Tema 6", just: "Se usan para comprimir y reconstruir datos de forma simétrica." },
+            { q: "Sobre Naïve Bayes:", opts: ["A. Redes creencias.", "B. Redes Bayesianas.", "C. Características dependientes.", "D. Capas recurrentes."], correct: [0, 1], type: "multiple", topic: "Tema 6", just: "Es una red de creencias simple que asume independencia." },
+            { q: "Sobre GANs:", opts: ["A. Convolucional+Deconvolucional siempre.", "B. Convolucional+Prealimentada posible.", "C. Generativa+Discriminativa.", "D. No aptas Deepfake."], correct: [1, 2], type: "multiple", topic: "Tema 6", just: "Compuestas por una red que crea y otra que evalúa." },
+            { q: "Incorrectas sobre Refuerzo:", opts: ["A. Siempre evolutivos.", "B. Vehículos autónomos.", "C. Nunca dataset.", "D. Software comercial."], correct: [0, 2], type: "multiple", topic: "Tema 6", just: "Existen algoritmos no evolutivos (Q) y sí pueden usar datasets." },
+            { q: "Incorrectas si Epsilon = 0.9:", opts: ["A. Explora 90% entorno.", "B. 10% probabilidad explorar.", "C. 90% probabilidad no explotar.", "D. Solo primera iteración."], correct: [0, 1, 3], type: "multiple", topic: "Tema 6", just: "Epsilon define la probabilidad por paso de explorar vs explotar." },
+            { q: "Sobre LSTM:", opts: ["A. Mejora MLP.", "B. Puertas entrada, salida, olvido.", "C. Menos expresivas que GRU.", "D. Reconocimiento voz."], correct: [1, 3], type: "multiple", topic: "Tema 6", just: "Puertas gestionan memoria; ideales para audio/secuencias." },
+            { q: "Señala correctas sobre TensorFlow:", opts: ["A. Alternativa Keras.", "B. Solo Python.", "C. Lite para móviles.", "D. Mecánica."], correct: [2], type: "multiple", topic: "Tema 6", just: "TensorFlow es multiplataforma; Lite optimiza para móviles." },
+            { q: "Señala las correctas:", opts: ["A. Q-Learning etiquetados.", "B. Q-Learning sobreestimación valor.", "C. Double Q-Learning dos redes misma arquitectura.", "D. Double Q-Learning sobreestimación siempre."], correct: [1, 2], type: "multiple", topic: "Tema 6", just: "Double Q-Learning resuelve el sesgo de sobreestimación." },
+            { q: " Señala las correctas (2):", opts: ["A. Deconvolucionales imagen desde etiqueta.", "B. DCIGN autoencoders.", "C. CNN no aptas facial.", "D. Última siempre deconvolucionadora."], correct: [0], type: "multiple", topic: "Tema 6", just: "Las deconvolucionales permiten obtener imágenes sintéticas." }
+        ],
+        T7: [
+            { q: "Sobre Clustering Aglomerativo:", opts: ["A. Top-down.", "B. Fusiona 2 clústeres.", "C. Cada objeto un clúster inicio.", "D. Fin todos en mismo clúster."], correct: [1, 2, 3], type: "multiple", topic: "Tema 7", just: "Son bottom-up; fusionan grupos iterativamente hasta la raíz." },
+            { q: "Sobre k-means:", opts: ["A. Exclusivo.", "B. Centroide es promedio.", "C. Distancia Euclídea común.", "D. No iterativo."], correct: [0, 1, 2], type: "multiple", topic: "Tema 7", just: "Algoritmo exclusivo basado en distancias medias de puntos." },
+            { q: "FALSA respecto al clustering:", opts: ["A. No supervisado.", "B. Datos no etiquetados.", "C. Clasificación.", "D. Patrones inusuales."], correct: [2], type: "single", topic: "Tema 7", just: "El clustering agrupa por similitud, no es clasificación supervisada." },
+            { q: "Sobre Manhattan:", opts: ["A. Minkowski p=1.", "B. Minkowski p=2.", "C. Suma diferencias absolutas.", "D. Raíz cuadrados."], correct: [0, 2], type: "multiple", topic: "Tema 7", just: "La distancia de Manhattan suma diferencias absolutas." },
+            { q: "Limitaciones k-means:", opts: ["A. Conocer k.", "B. Depende centroides iniciales.", "C. Mínimo global siempre.", "D. Sensible ruidos."], correct: [0, 1, 3], type: "multiple", topic: "Tema 7", just: "Sensible a outliers y a la posición de inicio." },
+            { q: "¿Cuál usa lógica difusa?", opts: ["A. k-means.", "B. EM.", "C. Fuzzy C-means.", "D. Aglomerativo."], correct: [2], type: "single", topic: "Tema 7", just: "FCM permite que los objetos pertenezcan a varios grupos." },
+            { q: "Proceso k-means:", opts: ["A. Centros aleatorios.", "B. Fin si no cambian.", "C. Asignar por cercanía.", "D. Recalcular centroides."], correct: [0, 1, 2, 3], type: "multiple", topic: "Tema 7", just: "Ciclo estándar: centros -> asignar -> promediar -> repetir." },
+            { q: "Sobre Jerárquicos:", opts: ["A. Utilidad categoría.", "B. Divisorio inicio objeto/clúster.", "C. Matriz similitud.", "D. Enlace promedio."], correct: [0, 2, 3], type: "multiple", topic: "Tema 7", just: "Usan medidas de enlace y matrices de proximidad." },
+            { q: "Sobre EM:", opts: ["A. Basado densidades.", "B. Mezclas finitas.", "C. Parámetros función probabilista.", "D. Esperanza calcula probabilidades."], correct: [1, 2, 3], type: "multiple", topic: "Tema 7", just: "Estimación de mezclas de distribuciones de probabilidad." },
+            { q: " Sobre Fuzzy C-means:", opts: ["A. Instancia en +1 clúster.", "B. Entradas difusas.", "C. Clústeres son conjuntos difusos.", "D. Jerárquicos."], correct: [0, 2], type: "multiple", topic: "Tema 7", just: "Permite solapamiento modelando grupos como conjuntos difusos." }
+        ],
+        T8: [
+            { q: "Valoraciones de usuarios para recomendar usan:", opts: ["A. Demográfico.", "B. Colaborativo.", "C. Basado contenidos.", "D. Basado usuarios."], correct: [1], type: "single", topic: "Tema 8", just: "Colaborativo = gustos compartidos entre personas." },
+            { q: "Información descriptiva para recomendar usa:", opts: ["A. Demográfico.", "B. Colaborativo.", "C. Basado contenidos.", "D. Basado usuarios."], correct: [2], type: "single", topic: "Tema 8", just: "Contenido = metadatos de los productos." },
+            { q: "Correctas sobre representación perfil:", opts: ["A. Árboles o reglas.", "B. Técnicas clustering.", "C. Nunca clustering.", "D. Nunca explícita."], correct: [0, 1], type: "multiple", topic: "Tema 8", just: "Se usan modelos inductivos y grupos de perfiles." },
+            { q: "Indica las correctas:", opts: ["A. Colab ítems calcula similitud ítems.", "B. Colab ítems similitud usuarios.", "C. Contenido similitud ítems.", "D. Colab usuarios similitud ítems."], correct: [0, 2], type: "multiple", topic: "Tema 8", just: "Colab ítem y Contenido comparan productos entre sí." },
+            { q: "Slope One es algoritmo de:", opts: ["A. Demográfico.", "B. Colaborativo usuarios.", "C. Contenido.", "D. Colaborativo ítems."], correct: [1], type: "single", topic: "Tema 8", just: "Algoritmo eficiente para filtrado colaborativo de usuario." },
+            { q: "Predicción Slope One usa:", opts: ["A. Media valoraciones.", "B. Media diferencia valoraciones entre ítems.", "C. Mediana.", "D. Máximo."], correct: [1], type: "single", topic: "Tema 8", just: "Usa desviaciones medias de votos entre pares de ítems." },
+            { q: "Sobre Colaborativo ítem-a-ítem:", opts: ["A. Ítems similares.", "B. Usuarios similares.", "C. Metadatos.", "D. Datos binarios."], correct: [0, 3], type: "multiple", topic: "Tema 8", just: "Busca productos parecidos basándose en historiales de compra." },
+            { q: "¿Sistemas con problemas para ítems nuevos?", opts: ["A. Colab usuarios.", "B. Contenido.", "C. Colab ítems.", "D. Ninguno."], correct: [0, 2], type: "multiple", topic: "Tema 8", just: "Los colaborativos necesitan votos previos (Cold Start)." },
+            { q: "Sobre TF-IDF:", opts: ["A. Basado contenidos.", "B. Similitud coseno.", "C. Función TF-IDF para similitud.", "D. Favorece largos."], correct: [0, 1], type: "multiple", topic: "Tema 8", just: "Mide relevancia de palabras; el coseno mide parecido vectorial." },
+            { q: " Problemas recomendadores contenido:", opts: ["A. No siempre interesan similares.", "B. Ítem no valorado no se recomienda.", "C. Sin info subjetiva.", "D. No a usuarios atípicos."], correct: [0, 2], type: "multiple", topic: "Tema 8", just: "Sufren de sobre-especialización y falta de subjetividad." }
+        ],
+        T9: [
+            { q: "Indica cuáles de las siguientes afirmaciones son correctas respecto a los problemas de búsqueda de estados:", opts: ["A. Únicamente dos descriptores.", "B. (Opción repetida).", "C. Juegos y robótica.", "D. Camino inicio a objetivo."], correct: [2, 3], type: "multiple", topic: "Tema 9", just: "Requiere estado, operación y algoritmo; base de robótica y juegos." },
+            { q: "1 inicio, muchos objetivos. ¿Qué búsqueda aplicar?", opts: ["A. Hacia adelante.", "B. Hacia atrás."], correct: [0], type: "single", topic: "Tema 9", just: "Mejor ir de pocos (inicio) a muchos (objetivos)." },
+            { q: "Para justificar el motivo de un razonamiento:", opts: ["A. Hacia adelante.", "B. Hacia atrás."], correct: [1], type: "single", topic: "Tema 9", just: "Atrás simula el 'por qué' del pensamiento humano." },
+            { q: "Sobre búsqueda a ciegas:", opts: ["A. Amplitud LIFO.", "B. Profundidad corta.", "C. Profundidad sin info.", "D. Profundidad iterativa combina amplitud/profundidad."], correct: [2, 3], type: "multiple", topic: "Tema 9", just: "La ciega no usa conocimiento extra; la iterativa une ventajas." },
+            { q: "Sobre búsqueda heurística:", opts: ["A. Info sobre problema.", "B. Garantiza óptima siempre.", "C. Aceleración búsqueda.", "D. Qué nodo hijo primero."], correct: [0, 2, 3], type: "multiple", topic: "Tema 9", just: "Usa conocimiento para limitar el espacio y acelerar el proceso." },
+            { q: "Indica la afirmación correcta relacionada con la búsqueda heurística:", opts: ["A. Escalada máxima sin mesetas.", "B. Escalada simple mejor entre todos.", "C. 'Mejor el primero' problemas memoria.", "D. Heurístico A* no sobreestima origen."], correct: [2], type: "single", topic: "Tema 9", just: "Best-First mantiene todos los nodos frontera en memoria." },
+            { q: "Si no se dispone de info útil:", opts: ["A. Profundidad.", "B. Mejor el primero.", "C. Escalada.", "D. Ninguno."], correct: [0], type: "single", topic: "Tema 9", just: "Sin info (heurística) se recurre a la búsqueda a ciegas." },
+            { q: "Si se dispone de info útil:", opts: ["A. Profundidad iterativa.", "B. Profundidad acotada.", "C. Mejor el primero.", "D. Ninguno."], correct: [2], type: "single", topic: "Tema 9", just: "Se aplican algoritmos informados como 'mejor el primero'." },
+            { q: "Sobre Minimax:", opts: ["A. Búsqueda juegos.", "B. Desarrolla todo espacio.", "C. Suma no nula.", "D. Min gana siempre."], correct: [0, 1], type: "multiple", topic: "Tema 9", just: "Algoritmo para juegos de suma cero que expande jugadas." },
+            { q: " Minimizar coste búsqueda es:", opts: ["A. Minimizar expansión.", "B. Minimizar control.", "C. Minimizar suma ambos.", "D. Minimizar expansión + heurístico."], correct: [2], type: "single", topic: "Tema 9", just: "Coste total = tiempo de generar + tiempo de decidir." }
+        ],
+        T10: [
+            { q: "No se sabe con certeza si consecuente es real:", opts: ["A. Variables difusas.", "B. Conjuntos difusos.", "C. Factores certeza.", "D. Inferencia bayesiana."], correct: [2, 3], type: "multiple", topic: "Tema 10", just: "Incertidumbre (verdad/falsedad) usa Bayes o Certeza." },
+            { q: "No se puede precisar valor exacto variables:", opts: ["A. Factores certeza.", "B. Bayes.", "C. Lógica difusa.", "D. Grados certeza."], correct: [2], type: "single", topic: "Tema 10", just: "La imprecisión (vaguedad) usa lógica difusa." },
+            { q: "Indica las ciertas:", opts: ["A. Bayes muchas probabilidades.", "B. Bayes coste bajo.", "C. Factores certeza menos coste Bayes.", "D. CF puede ser negativo."], correct: [0, 2, 3], type: "multiple", topic: "Tema 10", just: "Bayes es complejo; CF es heurístico, más simple y admite negativos." },
+            { q: "Regla AND, factor certeza consecuente:", opts: ["A. Producto del máximo.", "B. Producto del mínimo.", "C. Sin factores.", "D. Ninguna."], correct: [1], type: "single", topic: "Tema 10", just: "AND toma la evidencia más débil (mínimo)." },
+            { q: "Indica las correctas:", opts: ["A. Reglas lenguaje cotidiano.", "B. Variables numéricas.", "C. Conjuntos difusos.", "D. Pertenencia binaria."], correct: [0, 2], type: "multiple", topic: "Tema 10", just: "Usa variables lingüísticas y grados de pertenencia." },
+            { q: "Indica las correctas (2):", opts: ["A. Variable lingüística valores términos.", "B. Modificadores modelan adjetivos.", "C. Modificadores modifican forma.", "D. Reglas lingüísticas."], correct: [0, 2, 3], type: "multiple", topic: "Tema 10", just: "Modificadores son adverbios que alteran el conjunto." },
+            { q: "Indica las correctas (3):", opts: ["A. Entradas precisas.", "B. Salidas precisas.", "C. Base reglas difusas.", "D. Codificación, inferencia, decodificación."], correct: [0, 1, 2, 3], type: "multiple", topic: "Tema 10", just: "Estructura estándar de un sistema de control difuso." },
+            { q: "Métodos grado verdad premisa a conclusión:", opts: ["A. Composición.", "B. Implicación.", "C. Modificadores.", "D. Decodificación."], correct: [1], type: "single", topic: "Tema 10", just: "La implicación aplica el antecedente al consecuente." },
+            { q: "Método centroide es de:", opts: ["A. Composición.", "B. Implicación.", "C. Decodificación.", "D. Codificación."], correct: [2], type: "single", topic: "Tema 10", just: "Obtiene un valor preciso del área difusa final." },
+            { q: " ¿A qué refiere método min-max?", opts: ["A. Implicación y composición.", "B. Composición.", "C. Bayesiano.", "D. Decodificación."], correct: [0], type: "single", topic: "Tema 10", just: "Mínimo para implicar, máximo para agregar." }
+        ]
+    };
+
+    let quizData = [];
+    let currentIdx = 0;
+    let userAnswers = [];
+    let validatedArr = [];
+
+    function initExam() {
+        quizData = [];
+        Object.keys(allQuestions).forEach(key => {
+            let pool = [...allQuestions[key]];
+            for(let i=0; i<3; i++) {
+                let rand = Math.floor(Math.random() * pool.length);
+                quizData.push(pool.splice(rand, 1)[0]);
+            }
+        });
+        quizData.sort(() => Math.random() - 0.5);
+        userAnswers = new Array(quizData.length).fill(null).map(() => []);
+        validatedArr = new Array(quizData.length).fill(false);
+        render();
+    }
+
+    function render() {
+        const q = quizData[currentIdx];
+        const isValidated = validatedArr[currentIdx];
+        document.getElementById('q-meta').innerText = `Pregunta ${currentIdx + 1} de 30 | ${q.topic}`;
+        document.getElementById('q-text').innerText = q.q;
+        document.getElementById('q-hint').innerText = q.type === "multiple" ? "(Selección múltiple)" : "";
+        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / 30) * 100}%`;
+        
+        const container = document.getElementById('options-container');
+        container.innerHTML = "";
+        q.opts.forEach((opt, i) => {
+            const div = document.createElement('div');
+            const isSelected = userAnswers[currentIdx].includes(i);
+            let statusClass = "";
+            if (isValidated) {
+                if (q.correct.includes(i)) statusClass = "correct-ans";
+                else if (isSelected) statusClass = "wrong-ans";
+                div.classList.add("disabled");
+            } else if (isSelected) statusClass = "selected";
+
+            div.className = `option-item ${statusClass}`;
+            div.innerHTML = `<input type="${q.type === 'multiple' ? 'checkbox' : 'radio'}" ${isSelected ? 'checked' : ''} ${isValidated ? 'disabled' : ''}> <span>${opt}</span>`;
+            if (!isValidated) div.onclick = () => selectOption(i);
+            container.appendChild(div);
+        });
+
+        document.getElementById('feedback-area').style.display = isValidated ? "block" : "none";
+        if (isValidated) {
+            const correct = checkCorrectness(currentIdx);
+            document.getElementById('feedback-status').innerText = correct ? "✓ ¡Correcto!" : "✗ Revisión necesaria";
+            document.getElementById('feedback-status').style.color = correct ? "var(--success)" : "var(--error)";
+            document.getElementById('justification-text').innerText = q.just;
+        }
+
+        document.getElementById('btn-prev').disabled = currentIdx === 0;
+        document.getElementById('btn-validate').style.display = isValidated ? "none" : "block";
+        document.getElementById('btn-next').disabled = !isValidated;
+        document.getElementById('btn-next').innerText = currentIdx === 29 ? "Finalizar" : "Siguiente";
+    }
+
+    function selectOption(idx) {
+        if (quizData[currentIdx].type === "single") userAnswers[currentIdx] = [idx];
+        else {
+            const pos = userAnswers[currentIdx].indexOf(idx);
+            if (pos > -1) userAnswers[currentIdx].splice(pos, 1);
+            else userAnswers[currentIdx].push(idx);
+        }
+        render();
+    }
+
+    function validateCurrent() {
+        if (userAnswers[currentIdx].length === 0) return alert("Selecciona al menos una respuesta.");
+        validatedArr[currentIdx] = true;
+        render();
+    }
+
+    function checkCorrectness(idx) {
+        return userAnswers[idx].sort().join(',') === quizData[idx].correct.sort().join(',');
+    }
+
+    function changeQuestion(step) {
+        if (step === 1 && currentIdx === 29) return showResults();
+        currentIdx += step;
+        render();
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        let score = 0;
+        const failedTopics = new Set();
+        quizData.forEach((q, i) => {
+            if (checkCorrectness(i)) score++;
+            else failedTopics.add(q.topic);
+        });
+        document.getElementById('final-score').innerText = `${score}/30`;
+        const list = document.getElementById('failed-topics');
+        list.innerHTML = "";
+        failedTopics.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
+        if (failedTopics.size === 0) list.innerHTML = "<li>¡Excelente! Dominas todos los temas perfectamente.</li>";
+        const evalMsg = score >= 15 ? "¡Aprobado! Buen trabajo." : "Necesitas repasar más temas para asegurar el aprobado.";
+        document.getElementById('evaluation-text').innerText = evalMsg;
+    }
+
+    initExam();
+</script>
+</body>
+</html>

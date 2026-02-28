@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario: Tema 04 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b; 
+            --card-bg: #f8fafc;
+            --primary: #f7b212;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --accent: #3b82f6;
+            --success: #15803d;
+            --error: #b91c1c;
+            --feedback-bg: #f1f5f9;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 90%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 40px;
+            position: relative;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-family: 'Arvo', serif;
+            font-size: 1.6rem;
+            margin: 0;
+            color: var(--bg-color);
+        }
+
+        .question-number {
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent);
+            background-color: #eff6ff;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #fefce8;
+        }
+
+        .option-item.correct-ans {
+            border-color: var(--success);
+            background-color: #f0fdf4;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .option-item.wrong-ans {
+            border-color: var(--error);
+            background-color: #fef2f2;
+            color: var(--error);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        input { margin-right: 12px; }
+
+        .feedback-area {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: var(--feedback-bg);
+            border-left: 4px solid var(--accent);
+            display: none;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .justification {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-light);
+        }
+
+        .nav-buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-validate { background: var(--primary); color: #000; flex-grow: 1; }
+        .btn-next { background: var(--bg-color); color: white; }
+        .btn-prev { background: #e2e8f0; color: var(--text-light); }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        #result-screen { text-align: center; display: none; }
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 6px solid var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="progress-bar-container"><div id="progress-fill"></div></div>
+    
+    <div id="quiz-screen">
+        <header>
+            <span class="question-number" id="q-count"></span>
+            <h1>Tema 4: Reglas</h1>
+        </header>
+
+        <div id="q-text" class="question-text"></div>
+        <div class="options-list" id="options-container"></div>
+
+        <div class="feedback-area" id="feedback-area">
+            <span class="feedback-title" id="feedback-status"></span>
+            <p class="justification" id="justification-text"></p>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-prev" id="btn-prev" onclick="changeQuestion(-1)">Anterior</button>
+            <button class="btn-validate" id="btn-validate" onclick="validateCurrent()">Validar Respuesta</button>
+            <button class="btn-next" id="btn-next" onclick="changeQuestion(1)" disabled>Siguiente</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1>¡Test Completado!</h1>
+        <div class="score-circle" id="final-score"></div>
+        <p>Has finalizado el estudio de Reglas de Clasificación y Asociación.</p>
+        <div style="text-align: left; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 20px;">
+            <h3>Sugerencias de Repaso:</h3>
+            <ul id="suggested-topics"></ul>
+        </div>
+        
+        <button class="btn-next" style="margin-top: 20px; width: 100%;" onclick="location.reload()">Reiniciar Test</button>
+        <button class="btn-prev" style="margin-top: 10px; width: 100%; border: 2px solid #e2e8f0;" onclick="window.location.href='index.html'">Ir al Menú Principal</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "1. Si en un problema se desea identificar los síntomas correspondientes a tres enfermedades conocidas, las técnicas apropiadas son (selecciona las adecuadas):",
+            options: ["A. Árboles de decisión.", "B. Algoritmo apriori.", "C. Algoritmo de recubrimiento secuencial.", "D. Algoritmo PRISM."],
+            correct: [0, 2, 3],
+            type: "multiple",
+            topic: "4.2. Reglas de clasificación y asociación",
+            justification: "Como las clases (enfermedades) son conocidas, se trata de un problema de aprendizaje supervisado de clasificación. Árboles de decisión, recubrimiento secuencial y PRISM son técnicas de clasificación."
+        },
+        {
+            question: "2. Si en un problema se desea identificar relaciones entre síntomas de personas que presentan ciertas enfermedades, las técnicas apropiadas son:",
+            options: ["A. Árboles de decisión.", "B. Algoritmo apriori.", "C. Algoritmo de recubrimiento secuencial.", "D. Algoritmo PRISM."],
+            correct: 1,
+            type: "single",
+            topic: "4.2. Reglas de asociación",
+            justification: "Identificar relaciones o patrones entre atributos (síntomas) sin predecir una clase específica es una tarea de descubrimiento de patrones mediante reglas de asociación, para lo cual Apriori es el algoritmo indicado."
+        },
+        {
+            question: "3. Indica cuáles de las siguientes afirmaciones son verdaderas:",
+            options: [
+                "A. Las reglas de clasificación predicen la clase.",
+                "B. Las reglas de asociación predicen combinaciones de atributos o la propia clase.",
+                "C. Los algoritmos de reglas de asociación buscan combinaciones de pares atributo-valor con cierta frecuencia.",
+                "D. Las reglas de asociación tienen el mismo objetivo que las de clasificación."
+            ],
+            correct: [0, 1, 2],
+            type: "multiple",
+            topic: "4.2. Definiciones de Reglas",
+            justification: "Las reglas de clasificación se centran en la clase, mientras que las de asociación descubren cualquier combinación frecuente de pares atributo-valor. No tienen el mismo objetivo."
+        },
+        {
+            question: "4. Si se quiere conocer el porcentaje de ejemplos que cumplen una regla respecto del total de ejemplos, se aplica la medida de:",
+            options: ["A. Cobertura.", "B. Soporte.", "C. Confianza.", "D. Cubierta."],
+            correct: 1,
+            type: "single",
+            topic: "4.2. Medidas de evaluación",
+            justification: "El soporte es el cociente entre el número de ejemplos que cumplen antecedente y consecuente entre el número total de ejemplos."
+        },
+        {
+            question: "5. Si se quiere conocer el porcentaje de ejemplos que cumplen una regla respecto de los ejemplos que sólo cumplen el antecedente, se aplica la medida de:",
+            options: ["A. Cobertura.", "B. Soporte.", "C. Confianza.", "D. Cubierta."],
+            correct: 2,
+            type: "single",
+            topic: "4.2. Medidas de evaluación",
+            justification: "La confianza es la probabilidad condicional de que se cumpla el consecuente dado que se cumple el antecedente de la regla."
+        },
+        {
+            question: "6. ¿Cuáles de los siguientes algoritmos se puede emplear para el aprendizaje de reglas de clasificación?",
+            options: ["A. PRISM.", "B. C4.5.", "C. Apriori.", "D. ID3."],
+            correct: [0, 1, 3],
+            type: "multiple",
+            topic: "4.3. Algoritmos de clasificación",
+            justification: "PRISM genera reglas directamente. C4.5 e ID3 generan árboles de decisión que pueden ser mapeados posteriormente a un conjunto de reglas equivalente."
+        },
+        {
+            question: "7. Indica cuál de las siguientes afirmaciones es correcta:",
+            options: [
+                "A. No es posible mapear árboles de decisión a reglas.",
+                "B. Los algoritmos de recubrimiento secuencial aprenden una regla en cada iteración.",
+                "C. En cada iteración, el recubrimiento secuencial exige que la regla cubra todos los ejemplos positivos.",
+                "D. Apriori es un algoritmo de recubrimiento secuencial."
+            ],
+            correct: 1,
+            type: "single",
+            topic: "4.3. Recubrimiento secuencial",
+            justification: "El recubrimiento secuencial es un proceso iterativo donde se aprende una regla con buena precisión en cada paso y luego se eliminan los ejemplos que esta cubre."
+        },
+        {
+            question: "8. Indica cuáles de las siguientes afirmaciones son correctas:",
+            options: [
+                "A. El recubrimiento secuencial tiene como parámetro todas las clases.",
+                "B. El procedimiento básico de aprendizaje de una regla añade un único par atributo-valor en cada iteración.",
+                "C. El procedimiento de recubrimiento secuencial devuelve una única regla.",
+                "D. El algoritmo de recubrimiento secuencial elimina los ejemplos cubiertos por la regla generada en cada iteración."
+            ],
+            correct: [1, 3],
+            type: "multiple",
+            topic: "4.3. Funcionamiento de Algoritmos",
+            justification: "En la búsqueda 'general-a-específico', se añade un par atributo-valor cada vez. Tras cada iteración del bucle principal, se eliminan los ejemplos cubiertos por la nueva regla."
+        },
+        {
+            question: "9. Indica cuáles de las siguientes afirmaciones son correctas respecto al algoritmo PRISM:",
+            options: [
+                "A. Es un algoritmo de recubrimiento secuencial.",
+                "B. Utiliza la medida de precisión o confianza para generar las reglas.",
+                "C. Parte de la regla más específica alcanzando la más general.",
+                "D. Es un algoritmo de generación de conjuntos de reglas de los más simples."
+            ],
+            correct: [0, 1, 3],
+            type: "multiple",
+            topic: "4.3. Algoritmo PRISM",
+            justification: "PRISM es un algoritmo simple de recubrimiento secuencial que utiliza la confianza para elegir la mejor restricción. Parte de la regla más general a la más específica."
+        },
+        {
+            question: "10. Indica cuáles de las siguientes afirmaciones son verdaderas respecto al algoritmo apriori:",
+            options: [
+                "A. Genera ítem-sets.",
+                "B. Utiliza la medida de confianza para evaluar las reglas obtenidas.",
+                "C. No genera reglas sino ítem-sets.",
+                "D. Valora los ítem-sets generados mediante una medida de confianza."
+            ],
+            correct: [0, 1],
+            type: "multiple",
+            topic: "4.4. Algoritmo Apriori",
+            justification: "Apriori genera ítem-sets frecuentes basados en soporte y, a partir de ellos, genera reglas que evalúa mediante la confianza."
+        }
+    ];
+
+    let currentIdx = 0;
+    const userAnswers = new Array(quizData.length).fill(null).map(() => []);
+    const validatedArr = new Array(quizData.length).fill(false);
+
+    function render() {
+        const q = quizData[currentIdx];
+        const isValidated = validatedArr[currentIdx];
+        
+        document.getElementById('q-count').innerText = `Pregunta ${currentIdx + 1} de ${quizData.length}`;
+        document.getElementById('q-text').innerText = q.question;
+        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / quizData.length) * 100}%`;
+        
+        const container = document.getElementById('options-container');
+        container.innerHTML = "";
+
+        q.options.forEach((opt, i) => {
+            const div = document.createElement('div');
+            const isSelected = userAnswers[currentIdx].includes(i);
+            
+            let statusClass = "";
+            if (isValidated) {
+                const isCorrect = Array.isArray(q.correct) ? q.correct.includes(i) : q.correct === i;
+                if (isCorrect) statusClass = "correct-ans";
+                else if (isSelected) statusClass = "wrong-ans";
+                div.classList.add("disabled");
+            } else if (isSelected) {
+                statusClass = "selected";
+            }
+
+            div.className = `option-item ${statusClass}`;
+            const inputType = q.type === 'multiple' ? 'checkbox' : 'radio';
+            div.innerHTML = `<input type="${inputType}" ${isSelected ? 'checked' : ''} ${isValidated ? 'disabled' : ''}> <span>${opt}</span>`;
+            if (!isValidated) div.onclick = () => selectOption(i);
+            container.appendChild(div);
+        });
+
+        document.getElementById('feedback-area').style.display = isValidated ? "block" : "none";
+        if (isValidated) {
+            const isCorrect = checkCorrectness(currentIdx);
+            document.getElementById('feedback-status').innerText = isCorrect ? "✓ ¡Correcto!" : "✗ Incorrecto";
+            document.getElementById('feedback-status').style.color = isCorrect ? "var(--success)" : "var(--error)";
+            document.getElementById('justification-text').innerText = q.justification;
+        }
+
+        document.getElementById('btn-prev').disabled = currentIdx === 0;
+        document.getElementById('btn-validate').style.display = isValidated ? "none" : "block";
+        document.getElementById('btn-next').disabled = !isValidated;
+        document.getElementById('btn-next').innerText = currentIdx === quizData.length - 1 ? "Finalizar" : "Siguiente";
+    }
+
+    function selectOption(idx) {
+        if (quizData[currentIdx].type === "single") {
+            userAnswers[currentIdx] = [idx];
+        } else {
+            const pos = userAnswers[currentIdx].indexOf(idx);
+            if (pos > -1) userAnswers[currentIdx].splice(pos, 1);
+            else userAnswers[currentIdx].push(idx);
+        }
+        render();
+    }
+
+    function validateCurrent() {
+        if (userAnswers[currentIdx].length === 0) return alert("Selecciona al menos una respuesta.");
+        validatedArr[currentIdx] = true;
+        render();
+    }
+
+    function checkCorrectness(idx) {
+        const q = quizData[idx];
+        const user = userAnswers[idx].sort().join(',');
+        const correct = Array.isArray(q.correct) ? q.correct.sort().join(',') : q.correct.toString();
+        return user === correct;
+    }
+
+    function changeQuestion(step) {
+        if (step === 1 && currentIdx === quizData.length - 1) return showResults();
+        currentIdx += step;
+        render();
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        let score = 0;
+        const failedTopics = new Set();
+        quizData.forEach((q, i) => {
+            if (checkCorrectness(i)) score++;
+            else failedTopics.add(q.topic);
+        });
+        document.getElementById('final-score').innerText = `${score}/10`;
+        const list = document.getElementById('suggested-topics');
+        list.innerHTML = "";
+        failedTopics.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
+        if (failedTopics.size === 0) list.innerHTML = "<li>¡Excelente! Has dominado el tema de Reglas.</li>";
+    }
+
+    render();
+</script>
+</body>
+</html>

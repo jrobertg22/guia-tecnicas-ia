@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario: Tema 02 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b; /* Azul pizarra suave */
+            --card-bg: #f8fafc;
+            --primary: #f7b212;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --accent: #3b82f6;
+            --success: #15803d;
+            --error: #b91c1c;
+            --feedback-bg: #f1f5f9;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 90%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 40px;
+            position: relative;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-family: 'Arvo', serif;
+            font-size: 1.6rem;
+            margin: 0;
+            color: var(--bg-color);
+        }
+
+        .question-number {
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent);
+            background-color: #eff6ff;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #fefce8;
+        }
+
+        .option-item.correct-ans {
+            border-color: var(--success);
+            background-color: #f0fdf4;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .option-item.wrong-ans {
+            border-color: var(--error);
+            background-color: #fef2f2;
+            color: var(--error);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        input { margin-right: 12px; }
+
+        .feedback-area {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: var(--feedback-bg);
+            border-left: 4px solid var(--accent);
+            display: none;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .justification {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-light);
+        }
+
+        .nav-buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-validate { background: var(--primary); color: #000; flex-grow: 1; }
+        .btn-next { background: var(--bg-color); color: white; }
+        .btn-prev { background: #e2e8f0; color: var(--text-light); }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        #result-screen { text-align: center; display: none; }
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 6px solid var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="progress-bar-container"><div id="progress-fill"></div></div>
+    
+    <div id="quiz-screen">
+        <header>
+            <span class="question-number" id="q-count"></span>
+            <h1>Tema 2: Implementación en Python</h1>
+        </header>
+
+        <div id="q-text" class="question-text"></div>
+        <div class="options-list" id="options-container"></div>
+
+        <div class="feedback-area" id="feedback-area">
+            <span class="feedback-title" id="feedback-status"></span>
+            <p class="justification" id="justification-text"></p>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-prev" id="btn-prev" onclick="changeQuestion(-1)">Anterior</button>
+            <button class="btn-validate" id="btn-validate" onclick="validateCurrent()">Validar Respuesta</button>
+            <button class="btn-next" id="btn-next" onclick="changeQuestion(1)" disabled>Siguiente</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1>¡Test Completado!</h1>
+        <div class="score-circle" id="final-score"></div>
+        <p>Has finalizado el repaso de las herramientas de programación para IA.</p>
+        <div style="text-align: left; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 20px;">
+            <h3>Sugerencias de Repaso:</h3>
+            <ul id="suggested-topics"></ul>
+        </div>
+        
+        <button class="btn-next" style="margin-top: 20px; width: 100%;" onclick="location.reload()">Reiniciar Test</button>
+        <button class="btn-prev" style="margin-top: 10px; width: 100%; border: 2px solid #e2e8f0;" onclick="window.location.href='index.html'">Ir al Menú Principal</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "1. Indica la respuesta correcta:",
+            options: [
+                "A. Python es un lenguaje fuertemente tipado y de tipado estático.",
+                "B. Python es un lenguaje de programación declarativo.",
+                "C. Python es un lenguaje de programación imperativo, fuertemente tipado, de tipado dinámico.",
+                "D. Python es un lenguaje de programación multiparadigma y débilmente tipado."
+            ],
+            correct: 2,
+            topic: "2.3. El lenguaje Python (Paradigmas y Tipado)",
+            justification: "Python es imperativo (las sentencias modifican el estado), fuertemente tipado (no permite violaciones de tipo sin casting explícito) y dinámico (una variable puede cambiar de tipo)."
+        },
+        {
+            question: "2. Indica el resultado por pantalla de la siguiente sentencia en Python: print(int(2 + 2j))",
+            options: [
+                "A. 2.",
+                "B. 2+2j.",
+                "C. 0.",
+                "D. Resultará un error."
+            ],
+            correct: 3,
+            topic: "2.4. La sintaxis de Python (Casting de números)",
+            justification: "En Python, no es posible realizar un casting directo (conversión) de un número complejo a un número entero; esto lanza una excepción."
+        },
+        {
+            question: "3. Si en Python la variable x es una cadena str cuyo contenido es \"Bienvenidos\", ¿cuál será el resultado de la siguiente sentencia? print(x[-4:-2])",
+            options: [
+                "A. [-4-3-2].",
+                "B. Error.",
+                "C. id.",
+                "D. -6."
+            ],
+            correct: 2,
+            topic: "2.4. La sintaxis de Python (Slicing de cadenas)",
+            justification: "Contando desde el final (-1 es 's'), la posición -4 es 'i' y la -2 es 'o'. El rango es exclusive del derecho, por lo que toma 'i' (-4) y 'd' (-3), resultando en 'id'."
+        },
+        {
+            question: "4. Indica la respuesta incorrecta. Cuando hablamos de Python:",
+            options: [
+                "A. Las listas son colecciones ordenadas y cuyos elementos pueden ser modificados.",
+                "B. Las tuplas son colecciones no ordenadas y cuyos elementos no pueden ser modificados.",
+                "C. Los conjuntos son colecciones no ordenadas y cuyos elementos no pueden estar duplicados.",
+                "D. Los diccionarios son colecciones no ordenadas de elementos clave-valor que pueden ser modificados."
+            ],
+            correct: 1,
+            topic: "2.5. Colecciones de datos (Definiciones)",
+            justification: "La opción B es incorrecta porque las tuplas SÍ son colecciones ordenadas (sus elementos mantienen una secuencia), aunque sean inmutables."
+        },
+        {
+            question: "5. Si en un programa en Python existe una variable x de tipo tupla y realizamos la asignación y = x, señala la opción correcta:",
+            options: [
+                "A. Al modificar un elemento de y, el mismo elemento en x se verá modificado.",
+                "B. Al modificar un elemento de y, el mismo elemento en x no se verá modificado.",
+                "C. No podemos modificar ningún elemento de y, por ser una tupla.",
+                "D. Ninguna de las anteriores es correcta."
+            ],
+            correct: 2,
+            topic: "2.5. Colecciones de datos (Inmutabilidad de tuplas)",
+            justification: "Las tuplas son inmutables por definición. No se puede alterar, añadir o eliminar ningún elemento una vez creada la colección."
+        },
+        {
+            question: "6. Si en un programa en Python existe una variable x de tipo lista y realizamos la asignación y = x, señala la opción correcta:",
+            options: [
+                "A. Al modificar un elemento de y, el mismo elemento en x se verá modificado.",
+                "B. Al modificar un elemento de y, el mismo elemento en x no se verá modificado.",
+                "C. No podemos modificar ningún elemento de y, por ser una lista.",
+                "D. Ninguna de las anteriores es correcta."
+            ],
+            correct: 0,
+            topic: "2.5. Colecciones de datos (Asignación por referencia)",
+            justification: "En Python, al asignar una lista a otra variable, se hace por referencia. Ambas apuntan al mismo espacio de memoria, por lo que modificar 'y' afecta directamente a 'x'."
+        },
+        {
+            question: "7. ¿Cuál de las siguientes preguntas es correcta?",
+            options: [
+                "A. TensorFlow fue desarrollada por Google Brain.",
+                "B. Pandas permite la carga sencilla de datasets en CSV.",
+                "C. Keras es una librería especialmente enfocada para trabajar con redes neuronales artificiales.",
+                "D. Todas las anteriores."
+            ],
+            correct: 3,
+            topic: "2.6. Librerías útiles para el análisis de datos",
+            justification: "Todas las afirmaciones son correctas según las descripciones de las librerías estándar para IA en Python."
+        },
+        {
+            question: "8. ¿Con qué función se puede importar un dataset en formato CSV desde un archivo local o una URL?",
+            options: [
+                "A. pandas.importdataset().",
+                "B. pandas.readcsv().",
+                "C. pandas.readurl().",
+                "D. pandas.importcsv()."
+            ],
+            correct: 1,
+            topic: "2.8. Importación de datos (Pandas)",
+            justification: "Aunque en el código real es read_csv(), según las opciones del test del documento, la función indicada para la carga de datos es pandas.readcsv()."
+        },
+        {
+            question: "9. ¿Cuál es el objetivo de TensorFlow Lite?",
+            options: [
+                "A. Para el uso de librerías gratuitas.",
+                "B. TensorFlow Lite no existe.",
+                "C. Para su uso con el lenguaje Go.",
+                "D. Para su uso en dispositivos móviles con reducida capacidad de cálculo."
+            ],
+            correct: 3,
+            topic: "2.9. Machine Learning en dispositivos",
+            justification: "TensorFlow Lite está diseñada específicamente para ejecutar modelos de IA en terminales móviles o dispositivos 'Edge Computing' (IoT) con recursos limitados."
+        },
+        {
+            question: "10. Para mostrar gráficos por pantalla aplicando técnicas machine learning con Python, emplearía:",
+            options: [
+                "A. Keras.",
+                "B. Scikit-learn.",
+                "C. Matplotlib.",
+                "D. SciPy."
+            ],
+            correct: 2,
+            topic: "2.6. Librerías de Visualización",
+            justification: "Matplotlib es la biblioteca base y más popular en Python para la creación de gráficos y diagramas en 2D."
+        }
+    ];
+
+    let currentIdx = 0;
+    const userAnswers = new Array(quizData.length).fill(null).map(() => []);
+    const validatedArr = new Array(quizData.length).fill(false);
+
+    function render() {
+        const q = quizData[currentIdx];
+        const isValidated = validatedArr[currentIdx];
+        
+        document.getElementById('q-count').innerText = `Pregunta ${currentIdx + 1} de ${quizData.length}`;
+        document.getElementById('q-text').innerText = q.question;
+        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / quizData.length) * 100}%`;
+        
+        const container = document.getElementById('options-container');
+        container.innerHTML = "";
+
+        q.options.forEach((opt, i) => {
+            const div = document.createElement('div');
+            const isSelected = userAnswers[currentIdx].includes(i);
+            
+            let statusClass = "";
+            if (isValidated) {
+                if (i === q.correct) statusClass = "correct-ans";
+                else if (isSelected) statusClass = "wrong-ans";
+                div.classList.add("disabled");
+            } else if (isSelected) {
+                statusClass = "selected";
+            }
+
+            div.className = `option-item ${statusClass}`;
+            div.innerHTML = `<input type="radio" ${isSelected ? 'checked' : ''} ${isValidated ? 'disabled' : ''}> <span>${opt}</span>`;
+            if (!isValidated) div.onclick = () => selectOption(i);
+            container.appendChild(div);
+        });
+
+        document.getElementById('feedback-area').style.display = isValidated ? "block" : "none";
+        if (isValidated) {
+            const isCorrect = userAnswers[currentIdx][0] === q.correct;
+            document.getElementById('feedback-status').innerText = isCorrect ? "✓ ¡Correcto!" : "✗ Incorrecto";
+            document.getElementById('feedback-status').style.color = isCorrect ? "var(--success)" : "var(--error)";
+            document.getElementById('justification-text').innerText = q.justification;
+        }
+
+        document.getElementById('btn-prev').disabled = currentIdx === 0;
+        document.getElementById('btn-validate').style.display = isValidated ? "none" : "block";
+        document.getElementById('btn-next').disabled = !isValidated;
+        document.getElementById('btn-next').innerText = currentIdx === quizData.length - 1 ? "Finalizar" : "Siguiente";
+    }
+
+    function selectOption(idx) {
+        userAnswers[currentIdx] = [idx];
+        render();
+    }
+
+    function validateCurrent() {
+        if (userAnswers[currentIdx].length === 0) return alert("Por favor selecciona una respuesta.");
+        validatedArr[currentIdx] = true;
+        render();
+    }
+
+    function changeQuestion(step) {
+        if (step === 1 && currentIdx === quizData.length - 1) return showResults();
+        currentIdx += step;
+        render();
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        let score = 0;
+        const failedTopics = new Set();
+        quizData.forEach((q, i) => {
+            if (userAnswers[i][0] === q.correct) score++;
+            else failedTopics.add(q.topic);
+        });
+        document.getElementById('final-score').innerText = `${score}/10`;
+        const list = document.getElementById('suggested-topics');
+        list.innerHTML = "";
+        failedTopics.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
+        if (failedTopics.size === 0) list.innerHTML = "<li>¡Excelente! Dominas perfectamente las bases de Python para IA.</li>";
+    }
+
+    render();
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repasar Temas - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b;
+            --title-yellow: #f7b212;
+            --text-white: #ffffff;
+            --accent-blue: #3a80e6;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header { text-align: center; margin-bottom: 50px; }
+        h1 { font-family: 'Arvo', serif; font-size: 3rem; color: var(--title-yellow); margin: 0; }
+        .subtitle { font-size: 1.5rem; opacity: 0.8; }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .topic-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--title-yellow);
+        }
+
+        .hourglass-icon {
+            width: 60px;
+            height: 60px;
+            fill: var(--accent-blue);
+            margin-bottom: 15px;
+        }
+
+        .topic-title { font-weight: 600; font-size: 1.1rem; line-height: 1.4; }
+
+        .btn-home {
+            margin-top: 50px;
+            padding: 12px 30px;
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Material de Repaso</h1>
+        <div class="subtitle">Técnicas de Inteligencia Artificial</div>
+    </header>
+
+    <main class="topics-grid">
+		
+		<a href="repasar-tema01.html" class="topic-card">
+			<svg class="hourglass-icon" viewBox="0 0 100 100">
+				<polygon points="20,10 80,10 50,50" />
+				<polygon points="20,90 80,90 50,50" />
+			</svg>
+			<span class="topic-title">Tema 01 - Introducción</span>
+		</a>
+		<a href="repasar-tema02.html" class="topic-card">
+			<svg class="hourglass-icon" viewBox="0 0 100 100">
+				<polygon points="20,10 80,10 50,50" />
+				<polygon points="20,90 80,90 50,50" />
+			</svg>
+			<span class="topic-title">Tema 02 - Python</span>
+		</a>
+		<a href="repasar-tema03.html" class="topic-card">
+			<svg class="hourglass-icon" viewBox="0 0 100 100">
+				<polygon points="20,10 80,10 50,50" />
+				<polygon points="20,90 80,90 50,50" />
+			</svg>
+			<span class="topic-title">Tema 03 - Árboles de decisión</span>
+		</a>
+		<a href="repasar-tema04.html" class="topic-card">
+			<svg class="hourglass-icon" viewBox="0 0 100 100">
+				<polygon points="20,10 80,10 50,50" />
+				<polygon points="20,90 80,90 50,50" />
+			</svg>
+			<span class="topic-title">Tema 04 - Reglas</span>
+		</a>
+		<a href="repasar-tema05.html" class="topic-card">
+			<svg class="hourglass-icon" viewBox="0 0 100 100">
+				<polygon points="20,10 80,10 50,50" />
+				<polygon points="20,90 80,90 50,50" />
+			</svg>
+			<span class="topic-title">Tema 05 - Redes neuronales artificiales</span>
+		</a>
+		<a href="repasar-tema06.html" class="topic-card">
+			<svg class="hourglass-icon" viewBox="0 0 100 100">
+				<polygon points="20,10 80,10 50,50" />
+				<polygon points="20,90 80,90 50,50" />
+			</svg>
+			<span class="topic-title">Tema 06 - Deep learning</span>
+		</a>
+		<a href="repasar-tema07.html" class="topic-card">
+			<svg class="hourglass-icon" viewBox="0 0 100 100">
+				<polygon points="20,10 80,10 50,50" />
+				<polygon points="20,90 80,90 50,50" />
+			</svg>
+			<span class="topic-title">Tema 07 - Clustering. Agrupamiento o clasificación no supervisada</span>
+		</a>
+		<a href="repasar-tema08.html" class="topic-card">
+			<svg class="hourglass-icon" viewBox="0 0 100 100">
+				<polygon points="20,10 80,10 50,50" />
+				<polygon points="20,90 80,90 50,50" />
+			</svg>
+			<span class="topic-title">Tema 08 - Sistemas de recomendación</span>
+		</a>
+		<a href="repasar-tema09.html" class="topic-card">
+			<svg class="hourglass-icon" viewBox="0 0 100 100">
+				<polygon points="20,10 80,10 50,50" />
+				<polygon points="20,90 80,90 50,50" />
+			</svg>
+			<span class="topic-title">Tema 09 - Resolución de problemas mediante búsqueda</span>
+		</a>
+		<a href="repasar-tema10.html" class="topic-card">
+			<svg class="hourglass-icon" viewBox="0 0 100 100">
+				<polygon points="20,10 80,10 50,50" />
+				<polygon points="20,90 80,90 50,50" />
+			</svg>
+			<span class="topic-title">Tema 10 - Gestión de la incertidumbre e imprecisión en sistemas expertos</span>
+		</a>
+    </main>
+
+    <a href="index.html" class="btn-home">Volver al Inicio</a>
+</body>
+</html>

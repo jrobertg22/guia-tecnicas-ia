@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Tema 05 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b;
+            --card-bg: #ffffff;
+            --primary: #f7b212;
+            --text-dark: #1e293b;
+            --accent: #3b82f6;
+            --code-bg: #f1f5f9;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .content-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); border-bottom: 4px solid var(--primary); display: inline-block; margin-bottom: 20px; font-size: 2rem; }
+        h2 { color: var(--accent); margin-top: 35px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.4rem; }
+        
+        .concept-box {
+            background: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .neuron-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .neuron-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            border-top: 4px solid var(--accent);
+        }
+
+        .neuron-card h3 { margin-top: 0; color: var(--accent); font-size: 1.1rem; }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+		
+		.important {
+            background-color: #fdf2e9;
+            border-left: 5px solid #e67e22;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .concept-box {
+            background-color: #ebf5fb;
+            border: 1px solid #d6eaf8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+		
+        .btn-back { background: #e2e8f0; color: #64748b; }
+        .btn-quiz { background: var(--primary); color: #000; }
+
+        .highlight {
+            color: #b91c1c;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <header>
+        <span class="topic-tag">Guía de Estudio: Técnicas de Inteligencia Artificial</span>
+		<h1>Tema 05: Redes Neuronales Artificiales</h1>
+    </header>
+
+    <h2>5.2. Introducción. Fundamento biológico</h2>
+    <ul>
+        <li><strong>Fundamento Biológico:</strong> El modelo computacional de las redes neuronales se basa en el funcionamiento del cerebro humano. Las neuronas biológicas reciben estímulos a través de múltiples receptores (dendritas) y transmiten impulsos nerviosos mediante un único transmisor (axón), produciendo conexiones llamadas sinapsis.</li>
+        <li><strong>Proceso de Aprendizaje:</strong> Ante nueva información, el cerebro procesa y almacena datos creando conexiones que se fortalecen si la respuesta es correcta, o se debilitan/olvidan si es incorrecta.</li>
+        <li><strong>Características clave:</strong> 
+            <ul>
+                <li>El procesamiento de la información es <strong>no lineal, global y simultáneo</strong>.</li>
+                <li>Son muy <strong>robustas frente al ruido</strong> y datos erróneos.</li>
+                <li>Son modelos de "caja negra": los pesos aprendidos son difíciles de interpretar, lo que ha impulsado investigaciones en Inteligencia Artificial Explicable (XAI).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>5.3. La neurona artificial. El perceptrón</h2>
+    <p>La neurona artificial emula a la biológica: recibe múltiples entradas (dendritas) y tiene una única salida (axón) que puede ramificarse.</p>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Pesos y Aprendizaje:</strong> La relevancia de cada entrada está determinada por <strong>pesos</strong>. El objetivo fundamental del aprendizaje de la red es escoger los pesos que mejor ajusten las entradas a las salidas esperadas.</li>
+            <li><strong>El Perceptrón:</strong> Es la red neuronal artificial más sencilla, formada por una sola capa (o una única neurona en el perceptrón simple). Actúa como un clasificador o discriminador lineal, tratando de separar vectores trazando un hiperplano.</li>
+            <li><strong>Funciones de activación:</strong> Para determinar si la neurona se activa tras sumar las entradas ponderadas, se utilizan funciones como signo, escalón, sigmoide, tangente hiperbólica o ReLU.</li>
+            <li><strong>Regla de aprendizaje:</strong> Actualiza iterativamente los pesos calculando el <strong>error</strong>, que es la diferencia entre la salida esperada y la real.</li>
+        </ul>
+    </div>
+
+    <h2>5.4. Redes neuronales multicapa</h2>
+    <ul>
+        <li><strong>Arquitectura <em>Feedforward</em>:</strong> Son redes de alimentación hacia adelante (unidireccionales) que incorporan al menos una <strong>capa de neuronas intermedia u oculta</strong> entre la entrada y la salida. En aplicaciones comerciales clásicas, suelen tener 1 o 2 capas ocultas.</li>
+        <li><strong>Retropropagación del error (Back-propagation):</strong> Es un método común de entrenamiento donde todas las neuronas de una capa se conectan con las adyacentes. Se basa en calcular el error en la salida y propagarlo hacia atrás para reajustar los pesos usando el <strong>gradiente del error</strong>.</li>
+        <li><strong>Potencial:</strong> Una red con retropropagación de dos o tres niveles tiene un enorme potencial para aproximar funciones complejas y se usa ampliamente en reconocimiento y clasificación de patrones.</li>
+    </ul>
+
+    <h2>5.5. Redes neuronales recurrentes. Redes Hopfield</h2>
+    <div class="important">
+        <strong>Redes Recurrentes:</strong> A diferencia de las <em>feedforward</em>, emulan la memoria asociativa humana formando un bucle donde <strong>las salidas alimentan de nuevo a las entradas</strong> de la red en cada iteración, hasta alcanzar la estabilidad.
+    </div>
+    <ul>
+        <li><strong>Red Hopfield:</strong> Es una red recurrente monocapa y autoasociativa, capaz de memorizar informaciones ("memorias fundamentales"). Su objetivo es estabilizarse recuperando información completa a partir de entradas incompletas.</li>
+        <li><strong>Limitaciones:</strong> Las redes Hopfield pueden estabilizarse en un estado que no es una memoria fundamental, y poseen una limitación de capacidad (requieren muchas conexiones para almacenar poca información). Tampoco asocian informaciones diferentes, tarea reservada para memorias bidireccionales.</li>
+    </ul>
+
+    <h2>5.6. Hacia el deep learning (Aprendizaje Profundo)</h2>
+    <p>Las redes de retropropagación clásicas pierden eficiencia cuando el número de nodos es elevado, lo que hace ineficiente la computación.</p>
+    <ul>
+        <li><strong>Concepto:</strong> El <em>Deep Learning</em> resuelve estos problemas empleando redes neuronales con decenas, cientos o miles de nodos y capas.</li>
+        <li><strong>Ventaja:</strong> Lidia eficazmente con Big Data e incorpora aprendizaje no supervisado en las capas intermedias, permitiendo a los algoritmos aprender y extraer características complejas automáticamente junto con la clasificación en la misma solución.</li>
+    </ul>
+
+    <h2>5.7. Aplicaciones y ejemplos de implementación</h2>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Aplicaciones:</strong> Uso generalizado en identificación de objetos en imágenes, conducción autónoma, diagnóstico médico, detección de fraude, NLP (Procesamiento de Lenguaje Natural) y traducción automática.</li>
+            <li><strong>Carga Computacional vs Precisión:</strong> Aunque las redes (MLP) ofrecen gran precisión, exigen alto costo computacional. En desarrollos prácticos (como en móviles o IoT), a menudo algoritmos clásicos como SVM o Random Forest pueden igualar o superar su rendimiento para problemas más sencillos con mucha menos carga.</li>
+            <li><strong>Ejemplo Práctico:</strong> Evaluando el dataset <em>Iris de Fisher</em> mediante <code>scikit-learn</code>, una Máquina de Soporte Vectorial (SVM) puede lograr resultados ligeramente superiores en precisión y desviación estándar que un Perceptrón Multicapa (MLP) con dos capas ocultas, demostrando que arquitecturas complejas no siempre son la respuesta única.</li>
+        </ul>
+    </div>
+
+
+    <div class="nav-footer">
+        <a href="repasar.html" class="btn btn-back">← Volver al listado</a>
+        <a href="tema05.html" class="btn btn-quiz">Ir al Test del Tema →</a>
+    </div>
+</div>
+
+</body>
+</html>

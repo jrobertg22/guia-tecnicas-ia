@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa de Repaso: Tema 06 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b;
+            --card-bg: #ffffff;
+            --primary: #f7b212;
+            --text-dark: #1e293b;
+            --accent: #3b82f6;
+            --highlight-bg: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); margin: 0; font-size: 2.2rem; }
+        .topic-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        h2 { color: var(--accent); margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.5rem; }
+        h3 { color: var(--bg-color); font-size: 1.2rem; margin-top: 25px; }
+
+        .concept-box {
+            background: var(--highlight-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 4px solid var(--accent);
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+		
+		
+		.important {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .concept-box {
+            background-color: #ebf5fb;
+            border: 1px solid #d6eaf8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+		
+        .btn-back { background: #e2e8f0; color: #64748b; }
+        .btn-quiz { background: var(--primary); color: #000; }
+		
+		/* Estilos específicos para el Mapa Conceptual */
+		.mapa-conceptual-container {
+			background: #f8fafc;
+			border: 2px solid #3b82f6;
+			border-radius: 15px;
+			padding: 30px;
+			margin: 40px 0;
+			box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+		}
+
+		.mapa-titulo {
+			display: block;
+			text-align: center;
+			font-weight: 700;
+			color: #1e293b;
+			text-transform: uppercase;
+			margin-bottom: 25px;
+			font-size: 1rem;
+			letter-spacing: 1px;
+		}
+
+		.kdd-grid {
+			display: grid;
+			grid-template-columns: repeat(5, 1fr);
+			gap: 10px;
+			align-items: center;
+		}
+
+		.kdd-step {
+			background: #ffffff;
+			border: 1px solid #e2e8f0;
+			padding: 15px 10px;
+			border-radius: 8px;
+			text-align: center;
+			font-size: 0.85rem;
+			font-weight: 600;
+			position: relative;
+		}
+
+		.kdd-step::after {
+			content: "→";
+			position: absolute;
+			right: -12px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: #3b82f6;
+			font-weight: bold;
+		}
+
+		.kdd-step:last-child::after { content: ""; }
+
+		.learning-types {
+			display: flex;
+			justify-content: space-around;
+			margin-top: 30px;
+			border-top: 1px dashed #cbd5e1;
+			padding-top: 20px;
+		}
+
+		.type-box {
+			text-align: center;
+			flex: 1;
+		}
+
+		.type-label {
+			display: block;
+			color: #3b82f6;
+			font-weight: 700;
+			margin-bottom: 5px;
+		}
+		
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <header>
+        <span class="topic-tag">Guía de Estudio: Técnicas de Inteligencia Artificial</span>
+		<h1>Tema 01: Introducción a la Inteligencia Artificial</h1>
+    </header>
+	
+	<h2>1.2. Aproximación a los conceptos de Inteligencia Artificial, Aprendizaje Automático y Minería de Datos</h2>
+	
+	<h3>Conceptos Clave</h3>
+	<ul>
+		<li><strong>Inteligencia Artificial (IA):</strong> Disciplina científica dedicada a crear programas informáticos que ejecutan operaciones comparables a las de la mente humana, como el aprendizaje, el razonamiento lógico, la toma de decisiones o la resolución de problemas. Históricamente, Alan Turing definió el comportamiento inteligente en una máquina como la capacidad de lograr un rendimiento similar al humano en tareas cognitivas (Test de Turing).</li>
+		<li><strong>Aprendizaje Automático (Machine Learning):</strong> Es una rama de la IA referida a la construcción de programas que mejoran automáticamente su rendimiento en una tarea determinada mediante la experiencia.</li>
+		<li><strong>Minería de Datos:</strong> Es un campo de aplicación eminentemente práctico que emplea técnicas de aprendizaje automático para descubrir y extraer conocimiento y patrones útiles a partir de grandes volúmenes de datos (Big Data), alojados en bases de datos, <em>data warehouses</em> o <em>data lakes</em>.</li>
+	</ul>
+
+	<h3>Interés y Aplicaciones</h3>
+	<p>La IA y la minería de datos tienen innumerables aplicaciones prácticas en nuestro día a día y en la industria:</p>
+	<ul>
+		<li><strong>Medicina:</strong> Predicción y diagnóstico de enfermedades como el Alzheimer o el glaucoma, y sistemas para emparejar donantes y receptores de trasplantes.</li>
+		<li><strong>Educación:</strong> Sistemas tutores inteligentes que personalizan los contenidos según el estilo o progreso del alumno.</li>
+		<li><strong>Marketing y Negocios:</strong> Sistemas CRM para gestión de clientes, análisis de solvencia empresarial y posicionamiento de productos.</li>
+		<li><strong>Banca:</strong> Apoyo en la toma de decisiones para la concesión de préstamos y la detección del uso fraudulento de tarjetas de crédito.</li>
+		<li><strong>Sistemas Recomendadores:</strong> Plataformas como Amazon, Netflix o Spotify predicen los intereses de un usuario basándose en el comportamiento de usuarios similares.</li>
+	</ul>
+
+	<h2>1.3. Definición de Aprendizaje, Tareas Básicas y Ejemplos</h2>
+
+	<h3>Definición de Aprendizaje</h3>
+	<div class="important">
+		<strong>Definición formal (Tom Mitchell, 1997):</strong><br>
+		«Un programa de ordenador aprende de la <strong>experiencia (E)</strong> con respecto a una clase de <strong>tareas (T)</strong> y una medida de <strong>rendimiento (P)</strong>, si su rendimiento en las tareas T, medido en base a la medida P, mejora con la experiencia E».
+	</div>
+
+	<h3>Elementos del Aprendizaje de un Concepto</h3>
+	<p>Los ordenadores son muy eficaces aprendiendo <em>conceptos</em> (clases), los cuales se extraen a partir de la experiencia:</p>
+	<ul>
+		<li><strong>Instancia:</strong> Una ilustración específica de un objeto o evento. El conjunto de instancias conforma los <em>datos de entrenamiento</em>. Las instancias que pertenecen al concepto a aprender se llaman <strong>ejemplos</strong>, y las que no, <strong>no-ejemplos</strong>.</li>
+		<li><strong>Atributos:</strong> Las características compartidas o específicas que describen a las instancias.</li>
+		<li><strong>Clase:</strong> El concepto final o la categoría que se quiere aprender o predecir.</li>
+	</ul>
+
+	<h3>Tareas Básicas</h3>
+	<div class="concept-box">
+		<ul>
+			<li><strong>Clasificación:</strong> Identificar a qué clase pertenece un objeto o instancia.</li>
+			<li><strong>Generalización:</strong> Clasificar una instancia desconocida examinando los atributos que tiene en común con ejemplos aprendidos previamente.</li>
+			<li><strong>Discriminación:</strong> Identificar que una instancia NO es miembro de una clase por falta de atributos comunes.</li>
+		</ul>
+	</div>
+
+	<h3>Tipos de Aprendizaje</h3>
+	<ul>
+		<li><strong>Aprendizaje Supervisado:</strong> Pretende caracterizar un concepto a partir de instancias etiquetadas o conocidas. Se basa en una etapa de entrenamiento para crear un modelo de clasificación (ej. diagnosticar una enfermedad a partir de pacientes previos con síntomas y diagnósticos conocidos usando árboles de decisión).</li>
+		<li><strong>Aprendizaje No-Supervisado:</strong> Pretende caracterizar un concepto desconocido cuando no existen clases definidas previamente. Una técnica común es el <strong>clustering</strong> (agrupamiento), que agrupa instancias según su similitud, útil por ejemplo para la segmentación de mercados.</li>
+	</ul>
+
+	<h3>Retos del Aprendizaje</h3>
+	<ul>
+		<li><strong>Bias inductivo:</strong> Los criterios y suposiciones que el algoritmo aplica para seleccionar la mejor hipótesis y poder generalizar.</li>
+		<li><strong>Sobreajuste (Overfitting):</strong> Ocurre cuando la solución aprendida es demasiado específica y se ajusta excesivamente a los datos de entrenamiento, perdiendo la capacidad de generalizar correctamente con datos nuevos.</li>
+	</ul>
+
+	<h2>1.4. Etapas en el Descubrimiento de Conocimiento (KDD)</h2>
+	<p>El término <strong>KDD (Knowledge Discovery in Databases)</strong> se refiere al procedimiento completo, ordenado e iterativo necesario para extraer conocimiento útil y desconocido a partir de bases de datos. Es importante recalcar que <strong>la minería de datos es tan solo una etapa dentro del procedimiento global KDD</strong>.</p>
+
+	<p>Las etapas típicas de un procedimiento KDD son:</p>
+	<ol>
+		<li><strong>Integración de los datos:</strong> Combinación de múltiples y diferentes fuentes de datos.</li>
+		<li><strong>Selección de los datos:</strong> Escoger exclusivamente el conjunto de datos (instancias o atributos) que se consideran relevantes para el análisis, a menudo con ayuda de expertos.</li>
+		<li><strong>Pre-procesamiento (Limpieza de datos):</strong> Tratamiento de datos ruidosos, inconsistentes, duplicados o con valores desconocidos (por ejemplo, eliminando valores estadísticamente atípicos u <em>outliers</em>).</li>
+		<li><strong>Transformación de los datos:</strong> Normalizar, discretizar o convertir formatos de los datos (por ejemplo, convertir datos nominales a numéricos) para adaptar la información al algoritmo.</li>
+		<li><strong>Minería de datos:</strong> Ejecución real de las técnicas y algoritmos de inteligencia artificial para extraer los patrones ocultos en los datos procesados.</li>
+		<li><strong>Interpretación y evaluación de los resultados:</strong> Examen de la salida (apoyándose frecuentemente en técnicas de visualización) para determinar si el conocimiento descubierto es verdaderamente útil e interesante, y así proceder a su aplicación final.</li>
+	</ol>
+	
+	<div class="mapa-conceptual-container">
+	<span class="mapa-titulo">Mapa Síntesis: El Ecosistema de la IA y KDD</span>
+	
+	<div style="text-align: center; margin-bottom: 20px;">
+		<p style="font-size: 0.9rem; color: #64748b;"><strong>IA Fuerte</strong> (Conciencia) vs <strong>IA Débil</strong> (Simulación/Utilidad)</p>
+	</div>
+
+	<div class="kdd-grid">
+		<div class="kdd-step">1. Selección<br><small>(Datos relevantes)</small></div>
+		<div class="kdd-step">2. Preproceso<br><small>(Limpieza)</small></div>
+		<div class="kdd-step">3. Transformación<br><small>(Reducción)</small></div>
+		<div class="kdd-step">4. Minería<br><small>(Algoritmos IA)</small></div>
+		<div class="kdd-step">5. Interpretación<br><small>(Conocimiento)</small></div>
+	</div>
+
+	<div class="learning-types">
+		<div class="type-box">
+			<span class="type-label">Aprendizaje Supervisado</span>
+			<small>Datos etiquetados / Clasificación</small>
+		</div>
+		<div class="type-box">
+			<span class="type-label">Aprendizaje No Supervisado</span>
+			<small>Datos sin etiquetar / Clustering</small>
+		</div>
+	</div>
+
+    <div class="nav-footer">
+        <a href="repasar.html" class="btn btn-back">← Volver al listado</a>
+        <a href="tema02.html" class="btn btn-quiz">Ir al Test del Tema →</a>
+    </div>
+</div>
+
+</body>
+</html>

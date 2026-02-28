@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio: Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b;
+            --main-title-color: #f7b212;
+            --text-color: #ffffff;
+            --green-icon: #ffb1c1;
+            --blue-icon: #3a80e6; /* Un poco más claro que el fondo */
+            --orange-icon: #ef6c3a;
+            --hover-yellow: #ffeb3b;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Merriweather', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-family: 'Arvo', serif;
+            font-weight: 700;
+            font-size: 5rem;
+            color: var(--main-title-color);
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text-color);
+            margin: 10px 0 0 0;
+        }
+
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 100px; /* Espaciado entre columnas */
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--hover-yellow);
+            transform: translateY(-5px);
+        }
+
+        .icon {
+            margin-bottom: 20px;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-item:hover .icon {
+            opacity: 0.9;
+        }
+
+        /* SVG Icon styling */
+        svg {
+            display: block;
+        }
+
+        /* Arcos y formas específicas */
+        .shape {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Alinear abajo para el arco */
+        }
+
+        .green-arc {
+            width: 100px;
+            height: 50px;
+            border-radius: 50px 50px 0 0;
+            background-color: var(--green-icon);
+            position: relative;
+        }
+
+        .green-arc::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25px;
+            width: 50px;
+            height: 25px;
+            border-radius: 25px 25px 0 0;
+            background-color: var(--bg-color);
+        }
+
+        .hourglass {
+            fill: var(--blue-icon);
+        }
+
+        .orange-quarter-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 0 100px 0 0;
+            background-color: var(--orange-icon);
+        }
+
+        .nav-item-text {
+            font-size: 1.3rem;
+            font-weight: 400;
+            white-space: nowrap;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 900px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+            .main-nav {
+                flex-direction: column;
+                align-items: center;
+                gap: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Técnicas de IA</h1>
+        <h2>Guía de Estudio</h2>
+    </header>
+
+    <main class="main-nav">
+        <a href="examenes.html" class="nav-item">
+            <div class="icon shape">
+                <div class="green-arc"></div>
+            </div>
+            <span class="nav-item-text">Examenes Por Tema</span>
+        </a>
+
+        <a href="repasar.html" class="nav-item">
+            <div class="icon">
+                <svg width="100" height="100" viewBox="0 0 100 100" version="1.1">
+                    <polygon class="hourglass" points="0,0 100,0 50,50 0,0" />
+                    <polygon class="hourglass" points="0,100 100,100 50,50 0,100" />
+                </svg>
+            </div>
+            <span class="nav-item-text">Repasar Temas</span>
+        </a>
+
+        <a href="examen-final.html" class="nav-item">
+            <div class="icon shape">
+                <div class="orange-quarter-circle"></div>
+            </div>
+            <span class="nav-item-text">Examen Final de Tests</span>
+        </a>
+		
+		<a href="examen-final2.html" class="nav-item">
+            <div class="icon shape">
+                <div class="orange-quarter-circle"></div>
+            </div>
+            <span class="nav-item-text">Examen de Refuerzo</span>
+        </a>
+    </main>
+
+    <footer>
+        &copy; 2026 Guía de Estudio de Técnicas de IA. Todos los derechos reservados.
+    </footer>
+
+</body>
+</html>

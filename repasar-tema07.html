@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa de Repaso: Tema 07</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b;
+            --card-bg: #ffffff;
+            --primary: #f7b212;
+            --text-dark: #1e293b;
+            --accent: #3b82f6;
+            --highlight-bg: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); margin: 0; font-size: 2.2rem; }
+        .topic-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        h2 { color: var(--accent); margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.5rem; }
+        h3 { color: var(--bg-color); font-size: 1.2rem; margin-top: 25px; }
+
+        .concept-box {
+            background: var(--highlight-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 4px solid var(--accent);
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+		
+		
+		.important {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .concept-box {
+            background-color: #ebf5fb;
+            border: 1px solid #d6eaf8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+		
+        .btn-back { background: #e2e8f0; color: #64748b; }
+        .btn-quiz { background: var(--primary); color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <header>
+        <span class="topic-tag">Guía de Estudio: Técnicas de Inteligencia Artificial</span>
+        <h1>Tema 07: Clustering o Agrupamiento</h1>
+    </header>
+    <h2>7.2. Conceptos. Tipos de algoritmos de clustering. Medida de distancia</h2>
+    <ul>
+        <li><strong>Concepto Principal:</strong> El clustering es un método de <strong>aprendizaje no supervisado</strong> que busca caracterizar conceptos desconocidos agrupando objetos similares cuando la clase de los mismos no se conoce a priori. El usuario final determina la calidad del agrupamiento según la utilidad para sus necesidades.</li>
+        <li><strong>Tipos de algoritmos:</strong>
+            <ul>
+                <li><strong>Exclusivos:</strong> Cada objeto pertenece únicamente a un clúster.</li>
+                <li><strong>Jerárquicos:</strong> Generan una estructura jerárquica de clústeres en forma de árbol.</li>
+                <li><strong>Solapados:</strong> Utilizan conjuntos difusos donde un objeto puede pertenecer a varios clústeres con diferentes grados.</li>
+                <li><strong>Probabilistas:</strong> Calculan la probabilidad de que una instancia pertenezca a cada clúster.</li>
+            </ul>
+        </li>
+        <li><strong>Medidas de distancia:</strong> Son fundamentales, siendo la <strong>distancia euclídea</strong> la más utilizada habitualmente. Para calcular la similitud entre clústeres (conectividad o <em>linkage</em>) se utiliza:
+            <ul>
+                <li><strong>Enlace sencillo (single-linkage):</strong> Distancia entre los dos puntos más cercanos de diferentes clústeres.</li>
+                <li><strong>Enlace completo (complete-linkage):</strong> Distancia mayor entre cualquier punto de uno y otro clúster.</li>
+                <li><strong>Enlace promedio (average-linkage):</strong> Distancia media entre cualquier punto del primer clúster y del segundo.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>7.3. Agrupamiento exclusivo. El algoritmo k-means</h2>
+    <div class="important">
+        <strong>Agrupamiento Exclusivo:</strong> Los objetos se asignan a grupos de forma estricta, perteneciendo exclusivamente a un solo clúster. El <strong>algoritmo k-means</strong> es su máximo representante.
+    </div>
+    <ul>
+        <li><strong>Funcionamiento iterativo:</strong> 1) Se seleccionan aleatoriamente <em>k</em> objetos como centroides iniciales. 2) Se asigna el resto de objetos al clúster de su centroide más cercano o similar. 3) Se recalcula la posición del centroide como la media de los puntos asignados al clúster. 4) Se repite hasta que los centroides no varíen.</li>
+        <li><strong>Limitaciones:</strong> Es muy sensible al posicionamiento inicial de los centroides y exige predefinir el número <em>k</em>, lo que con valores muy altos puede derivar en <strong>sobreajuste (overfitting)</strong>. Además, solo es aplicable cuando se manejan valores numéricos reales (para poder calcular medias).</li>
+        <li><strong>Algoritmos alternativos:</strong> Para agrupamientos de formas irregulares o basados en densidad, destacan <strong>mean-shift</strong> y <strong>DBSCAN</strong>, capaces de detectar valores atípicos (outliers) e ignorar formas geométricas estrictas.</li>
+    </ul>
+
+    <h2>7.4. Agrupamiento jerárquico. Algoritmo jerárquico aglomerativo</h2>
+    <p>Construyen una jerarquía representada visualmente como un árbol o <strong>dendrograma</strong>. Para decidir dónde dividir o conglomerar utilizan la medida de "utilidad de la categoría".</p>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Aproximación Divisoria (top-down):</strong> Parte de un gran clúster raíz con todos los objetos y lo divide recursivamente en clústeres más pequeños.</li>
+            <li><strong>Aproximación Aglomerativa (bottom-up):</strong> Comienza generando un clúster individual por cada objeto. En cada iteración, se fusionan los dos clústeres menos distantes entre sí (recalculando posteriormente la similitud) hasta que todos los puntos acaban agrupados en un clúster único que forma la raíz.</li>
+            <li><strong>Efecto del enlace:</strong> El enlace simple tiende a generar clústeres "encadenados", mientras que el enlace completo produce clústeres compactos y es menos sensible a los datos atípicos (outliers).</li>
+        </ul>
+    </div>
+
+    <h2>7.5. Agrupamiento probabilista. El algoritmo EM</h2>
+    <ul>
+        <li><strong>Concepto:</strong> En vez de ubicar un objeto de modo exclusivo en un clúster, el modelo de <strong>mezclas finitas (finite mixtures)</strong> asume <em>k</em> distribuciones de probabilidad y calcula la probabilidad de pertenencia de cada instancia a cada distribución.</li>
+        <li><strong>Algoritmo EM (Expectation-Maximization):</strong> Itera alternando dos etapas: 
+            <ol>
+                <li><strong>Esperanza:</strong> Calcula las probabilidades de pertenencia a los clústeres con los parámetros actuales.</li>
+                <li><strong>Maximización:</strong> Determina nuevos parámetros para maximizar la verosimilitud (ajuste).</li>
+            </ol>
+        </li>
+        <li>A menudo, se modelan estas distribuciones probabilísticas en forma de gaussianas, denominándose <strong>EM-GMM</strong>. Es simple y general, pero puede caer en óptimos locales y tener un coste computacional elevado.</li>
+    </ul>
+
+    <h2>7.6. Agrupamiento solapado. El algoritmo Fuzzy C-means</h2>
+    <div class="important">
+        <strong>Agrupamiento Solapado (Overlapping):</strong> Un objeto puede pertenecer a <strong>más de un clúster al mismo tiempo</strong>, expresándose esto mediante un "grado de pertenencia" representado en una matriz divisoria.
+    </div>
+    <ul>
+        <li><strong>Algoritmo Fuzzy C-means:</strong> Funciona minimizando iterativamente una función objetivo que tiene en cuenta el grado de pertenencia ($p_{ij}$) y la distancia entre el objeto y el centro del clúster ($c_j$).</li>
+        <li><strong>Diferencia con EM:</strong> Aunque ambos lidian con asignaciones no exclusivas, <em>Fuzzy C-means</em> suele modelar clústeres de forma circular (como k-means), mientras que <em>EM</em> emplea funciones de densidad probabilística.</li>
+    </ul>
+
+    <h2>7.7. Aplicaciones y ejemplos de implementación</h2>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Aplicaciones prácticas:</strong> Segmentación de mercado (CRM y comercio electrónico para agrupar clientes según comportamiento), clasificación de características biológicas o médicas (enfermedades raras), compresión de imágenes y, muy destacadamente, en la <strong>detección de casos anómalos</strong> (fraudes de seguros o tarjetas de crédito).</li>
+            <li><strong>Implementación en Python:</strong> Se utiliza típicamente un conjunto de librerías base como <code>scikit-learn</code>, <code>numpy</code> y <code>matplotlib</code>. En <em>scikit-learn</em>, es fácil invocar modelos como <code>KMeans</code>, <code>MeanShift</code>, <code>AgglomerativeClustering</code>, o <code>GaussianMixture</code>. También se ilustra el uso de <code>DBSCAN</code>, en el que el ajuste del hiperparámetro <strong>épsilon (eps)</strong> es vital para delimitar las fronteras de los grupos irregulares; si es muy alto fusiona las clases, y si es adecuado detecta los clústeres y aísla los outliers.</li>
+        </ul>
+    </div>
+
+    <div class="nav-footer">
+        <a href="repasar.html" class="btn btn-back">← Menú de Temas</a>
+        <a href="tema07.html" class="btn btn-quiz">Ir al Test del Tema →</a>
+    </div>
+</div>
+
+</body>
+</html>

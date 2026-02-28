@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa de Repaso: Tema 06 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b;
+            --card-bg: #ffffff;
+            --primary: #f7b212;
+            --text-dark: #1e293b;
+            --accent: #3b82f6;
+            --highlight-bg: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        header { border-bottom: 2px solid #eee; margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { font-family: 'Arvo', serif; color: var(--bg-color); margin: 0; font-size: 2.2rem; }
+        .topic-tag { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        h2 { color: var(--accent); margin-top: 40px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.5rem; }
+        h3 { color: var(--bg-color); font-size: 1.2rem; margin-top: 25px; }
+
+        .concept-box {
+            background: var(--highlight-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 4px solid var(--accent);
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+		
+		
+		.important {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .concept-box {
+            background-color: #ebf5fb;
+            border: 1px solid #d6eaf8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+		
+        .btn-back { background: #e2e8f0; color: #64748b; }
+        .btn-quiz { background: var(--primary); color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <header>
+        <span class="topic-tag">Guía de Estudio: Técnicas de Inteligencia Artificial</span>
+		<h1>Tema 03: Árboles de Decisión</h1>
+    </header>
+
+
+    <h2>3.2. Introducción. Representación del conocimiento mediante árboles de decisión</h2>
+    <ul>
+        <li><strong>Concepto:</strong> Es una técnica de aprendizaje supervisado, robusta frente a datos ruidosos, que toma la forma de un árbol.</li>
+        <li><strong>Representación:</strong> El árbol se interpreta como una serie de condiciones consecutivas (cada rama es una conjunción <em>AND</em> y el árbol una disyunción <em>OR</em>) que pueden ser mapeadas fácilmente a reglas lógicas.</li>
+        <li><strong>Aplicabilidad:</strong> Es adecuado cuando las instancias se representan mediante pares atributo-valor, la función objetivo tiene valores de salida discretos (categorías) y los datos pueden contener errores o valores desconocidos.</li>
+    </ul>
+
+    <h2>3.3. Descripción de la tarea de inducción</h2>
+    <p>La tarea de inducción consiste en encontrar en el espacio de hipótesis (todos los árboles posibles) el árbol que mejor encaje con los datos de ejemplo clasificados.</p>
+    <ul>
+        <li>Se requiere un <strong>método de selección de atributos</strong> para determinar qué criterio ramifica el árbol. Si el atributo es discreto, se crea una rama por cada valor; si es numérico, se establece un umbral de separación.</li>
+        <li>Emplea una estrategia de <strong>búsqueda codiciosa (greedy)</strong> o método "divide-y-vencerás", que avanza siempre hacia adelante sin retroceder para reconsiderar decisiones previas.</li>
+    </ul>
+
+    <h2>3.4. Algoritmo básico de aprendizaje de árboles de decisión: ID3</h2>
+    <div class="important">
+        <strong>Algoritmo ID3:</strong> Construye árboles de arriba a abajo (top-down) utilizando un método de selección basado en la teoría de la información.
+    </div>
+    <ul>
+        <li><strong>Entropía:</strong> Mide la heterogeneidad o impureza de un conjunto de ejemplos. Es 0 si todos pertenecen a la misma clase y 1 si hay igual número de ejemplos positivos y negativos.</li>
+        <li><strong>Ganancia de Información:</strong> ID3 utiliza esta métrica para seleccionar atributos. Mide la reducción esperada de entropía tras dividir los ejemplos según un atributo. El atributo con mayor ganancia se sitúa en el nodo.</li>
+    </ul>
+
+    <h2>3.5. Espacio de búsqueda y bias inductivo</h2>
+    <ul>
+        <li><strong>Espacio de búsqueda:</strong> ID3 realiza una búsqueda en escalada (hill climbing), evaluando un único árbol a la vez desde el más sencillo al más complejo, corriendo el riesgo de converger en óptimos locales.</li>
+        <li><strong>Bias inductivo:</strong> Son los criterios para generalizar. El bias de ID3 prefiere <strong>árboles cortos frente a los largos</strong> y busca situar los atributos con mayor ganancia de información más cerca de la raíz.</li>
+    </ul>
+
+    <h2>3.6. Métodos de selección de atributos</h2>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Ganancia de información (ID3):</strong> Tiende a favorecer erróneamente atributos con un gran número de valores distintos.</li>
+            <li><strong>Proporción de ganancia (Gain Ratio / C4.5):</strong> Compensa el defecto anterior dividiendo por la "información de la división", penalizando así a atributos que distribuyen uniformemente a los ejemplos en muchas ramas.</li>
+            <li><strong>Índice Gini (CART):</strong> Mide la impureza de los datos; el algoritmo busca el atributo que maximice la reducción de esta impureza (menor índice Gini).</li>
+            <li><strong>Longitud de Descripción Mínima (MDL):</strong> Selecciona el árbol que requiere un menor número de bits para codificarse.</li>
+        </ul>
+    </div>
+
+    <h2>3.7. Sobreajuste y poda de árboles</h2>
+    <p>El <strong>sobreajuste (overfitting)</strong> se da cuando una hipótesis compleja encaja perfectamente en los datos de entrenamiento (incluso el ruido), pero fracasa al generalizar con instancias futuras.</p>
+    <ul>
+        <li><strong>Solución (Poda):</strong> Puede realizarse directamente sobre el árbol o traduciéndolo primero a un conjunto de reglas, que luego se podan individualmente eliminando precondiciones.</li>
+        <li><strong>Validación cruzada (Cross-validation):</strong> Se utiliza para estimar la precisión y decidir hasta dónde podar. Divide los datos en un conjunto de entrenamiento (ej. 2/3) y otro de validación (ej. 1/3). Si hay pocos datos, se usa la validación cruzada de <em>k</em> iteraciones (k-fold).</li>
+    </ul>
+
+    <h2>3.8. Medidas de la precisión de la clasificación. Curva ROC</h2>
+    <ul>
+        <li><strong>Intervalos de confianza:</strong> Dado que la predicción es un evento de Bernoulli (éxito/error), se aplican intervalos de confianza mediante distribución normal para estimar la tasa de éxito real en futuras instancias.</li>
+        <li><strong>Curva ROC:</strong> Alternativa a la precisión global. Traza la <strong>Sensibilidad (TPR)</strong> frente al <strong>Ratio de falsos positivos (FPR o 1-Especificidad)</strong> a diferentes umbrales. El área bajo la curva varía de 0,5 (azar) a 1 (clasificación perfecta).</li>
+    </ul>
+
+    <h2>3.9. Simplificación de árboles de decisión mediante poda: algoritmo C4.5</h2>
+    <p>C4.5 es una mejora de ID3 propuesta por Quinlan. A diferencia de su predecesor:</p>
+    <ul>
+        <li>Permite manejar atributos con <strong>valores continuos</strong> (mediante umbrales) y datos ausentes.</li>
+        <li>Utiliza la <strong>proporción de ganancia</strong> como método de selección de atributos.</li>
+        <li>Realiza una <strong>poda pesimista (pospoda)</strong>, empleando los mismos datos de entrenamiento para validar, pero penalizando estadísticamente la estimación de error utilizando el límite superior del intervalo de confianza para mitigar el sesgo optimista.</li>
+    </ul>
+
+    <h2>3.10. Ensemble Learning y Random Forest</h2>
+    <p>El aprendizaje integrado consiste en combinar varios algoritmos ineficientes/inestables (como árboles de decisión) para corregir los errores mutuos y superar el rendimiento de cualquier algoritmo individual. Existen tres enfoques:</p>
+    <div class="concept-box">
+        <ul>
+            <li><strong>Stacking (Apilamiento):</strong> Entrena <em>diferentes</em> algoritmos en paralelo con los mismos datos y promedia sus salidas usando un meta-modelo (ej. FWLS en e-commerce).</li>
+            <li><strong>Bagging (Embolsamiento):</strong> Entrena el <em>mismo</em> algoritmo en paralelo utilizando subconjuntos aleatorios de datos. Su máximo exponente es el <strong>Random Forest</strong> (bosque aleatorio).</li>
+            <li><strong>Boosting (Refuerzo):</strong> Entrena algoritmos de manera <em>secuencial (en serie)</em>, dando prioridad en cada iteración a los ejemplos que el algoritmo anterior clasificó mal (ej. AdaBoost, XGBoost).</li>
+        </ul>
+    </div>
+
+    <h2>3.11. Aplicaciones y ejemplos de implementación</h2>
+    <ul>
+        <li><strong>Casos de uso general:</strong> Diagnóstico médico, detección de spam web, y concesión de préstamos bancarios.</li>
+        <li><strong>Ventaja del Random Forest:</strong> Se emplea ampliamente en el reconocimiento facial de teléfonos móviles porque sus requisitos computacionales son inferiores a los de las redes neuronales, permitiendo el procesamiento en tiempo real.</li>
+        <li><strong>Implementación en Python:</strong> Al usar <code>scikit-learn</code>, se emplea el algoritmo CART (solo con variables numéricas) para los árboles. Comúnmente, estos clasificadores se evalúan y comparan con la <strong>regresión logística</strong> usando validaciones cruzadas estratificadas para medir y contrastar su precisión.</li>
+    </ul>
+
+    <div class="important-note">
+        <strong>Dato Clave:</strong> El algoritmo Random Forest es muy popular en móviles (ej. reconocimiento facial en cámaras) porque requiere menos potencia computacional que una red neuronal profunda.
+    </div>
+
+    <div class="nav-footer">
+        <a href="repasar.html" class="btn btn-back">← Volver al listado</a>
+        <a href="tema03.html" class="btn btn-quiz">Ir al Test del Tema →</a>
+    </div>
+</div>
+
+</body>
+</html>

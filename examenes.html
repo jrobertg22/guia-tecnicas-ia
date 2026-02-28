@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exámenes - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+			--bg-color: #1e293b;
+            --title-yellow: #f7b212;
+            --text-white: #ffffff;
+            --arc-orange: #ef6c3a;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Merriweather', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-family: 'Arvo', serif;
+            font-size: 4.5rem;
+            color: var(--title-yellow);
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        /* Cuadrícula de Temas */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 40px 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 20px;
+        }
+
+        .topic-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s ease;
+            text-align: center;
+        }
+
+        .topic-item:hover {
+            transform: scale(1.05);
+        }
+
+        /* El arco naranja (Semi-anillo) */
+        .arc-container {
+            width: 120px;
+            height: 60px;
+            background-color: var(--arc-orange);
+            border-radius: 120px 120px 0 0;
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .arc-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 25px;
+            background-color: var(--bg-color);
+            border-radius: 50px 50px 0 0;
+        }
+
+        .topic-name {
+            font-size: 1.1rem;
+            font-weight: 400;
+            line-height: 1.3;
+            max-width: 180px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .topics-grid { grid-template-columns: repeat(3, 1fr); }
+            h1 { font-size: 3rem; }
+        }
+
+        @media (max-width: 600px) {
+            .topics-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+		
+		.btn-home {
+            margin-top: 50px;
+            padding: 12px 30px;
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Técnicas de IA</h1>
+        <div class="subtitle">Examenes</div>
+    </header>
+
+    <main class="topics-grid">
+        <a href="tema01.html" class="topic-item">
+            <div class="arc-container"></div>
+            <span class="topic-name">Tema 01 - Introducción</span>
+        </a>
+
+        <a href="tema02.html" class="topic-item">
+            <div class="arc-container"></div>
+            <span class="topic-name">Tema 02 - Python para la implementación de técnicas de inteligencia artificial</span>
+        </a>
+
+        <a href="tema03.html" class="topic-item">
+            <div class="arc-container"></div>
+            <span class="topic-name">Tema 03 - Árboles de decisión</span>
+        </a>
+
+        <a href="tema04.html" class="topic-item">
+            <div class="arc-container"></div>
+            <span class="topic-name">Tema 04 - Reglas</span>
+        </a>
+
+        <a href="tema05.html" class="topic-item">
+            <div class="arc-container"></div>
+            <span class="topic-name">Tema 05 - Redes neuronales artificiales</span>
+        </a>
+
+        <a href="tema06.html" class="topic-item">
+            <div class="arc-container"></div>
+            <span class="topic-name">Tema 06 - Deep learning</span>
+        </a>
+
+        <a href="tema07.html" class="topic-item">
+            <div class="arc-container) "></div>
+            <span class="topic-name">Tema 07 - Clustering. Agrupamiento o clasificación no supervisada</span>
+        </a>
+
+        <a href="tema08.html" class="topic-item">
+            <div class="arc-container"></div>
+            <span class="topic-name">Tema 08 - Sistemas de recomendación</span>
+        </a>
+
+        <a href="tema09.html" class="topic-item">
+            <div class="arc-container"></div>
+            <span class="topic-name">Tema 09 - Resolución de problemas mediante búsqueda</span>
+        </a>
+
+        <a href="tema10.html" class="topic-item">
+            <div class="arc-container"></div>
+            <span class="topic-name">Tema 10 - Gestión de la incertidumbre e imprecisión en sistemas</span>
+        </a>
+    </main>
+	
+	<a href="index.html" class="btn-home">Volver al Inicio</a>
+</body>
+</html>

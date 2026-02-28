@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen de Refuerzo Conceptual: Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b; 
+            --card-bg: #f8fafc;
+            --primary: #f7b212;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --accent: #3b82f6;
+            --success: #15803d;
+            --error: #b91c1c;
+            --feedback-bg: #f1f5f9;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 95%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 40px;
+            position: relative;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        header { text-align: center; margin-bottom: 25px; }
+        h1 { font-family: 'Arvo', serif; font-size: 1.6rem; margin: 0; color: var(--bg-color); }
+        .question-info { font-weight: 600; color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 8px; display: block; }
+
+        .question-text { font-size: 1.2rem; line-height: 1.5; margin-bottom: 20px; font-weight: 600; }
+        .options-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+        .option-item { border: 2px solid #e2e8f0; border-radius: 10px; padding: 12px 18px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; font-size: 0.95rem; }
+        .option-item:hover:not(.disabled) { border-color: var(--accent); background-color: #eff6ff; }
+        .option-item.selected { border-color: var(--primary); background-color: #fefce8; }
+        .option-item.correct-ans { border-color: var(--success); background-color: #f0fdf4; color: var(--success); font-weight: 600; }
+        .option-item.wrong-ans { border-color: var(--error); background-color: #fef2f2; color: var(--error); }
+        .option-item.disabled { cursor: default; }
+
+        .feedback-area { margin-top: 20px; padding: 15px; border-radius: 10px; background: var(--feedback-bg); border-left: 4px solid var(--accent); display: none; }
+        .feedback-title { font-weight: 700; display: block; margin-bottom: 5px; }
+
+        .nav-buttons { margin-top: 25px; display: flex; justify-content: space-between; gap: 10px; }
+        button { padding: 12px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-validate { background: var(--primary); color: #000; flex-grow: 1; }
+        .btn-next { background: var(--bg-color); color: white; }
+        .btn-prev { background: #e2e8f0; color: var(--text-light); }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        #result-screen { text-align: center; display: none; }
+        .score-circle { width: 120px; height: 120px; border-radius: 50%; border: 8px solid var(--primary); display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: 700; margin: 20px auto; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="progress-bar-container"><div id="progress-fill"></div></div>
+    
+    <div id="quiz-screen">
+        <header>
+            <span class="question-info" id="q-meta"></span>
+            <h1>Examen de Refuerzo IA</h1>
+        </header>
+        <div id="q-text" class="question-text"></div>
+        <div class="options-list" id="options-container"></div>
+        <div class="feedback-area" id="feedback-area">
+            <span class="feedback-title" id="feedback-status"></span>
+            <p id="justification-text" style="font-size: 0.9rem; margin: 5px 0;"></p>
+        </div>
+        <div class="nav-buttons">
+            <button class="btn-prev" id="btn-prev" onclick="changeQuestion(-1)">Anterior</button>
+            <button class="btn-validate" id="btn-validate" onclick="validateCurrent()">Validar Respuesta</button>
+            <button class="btn-next" id="btn-next" onclick="changeQuestion(1)" disabled>Siguiente</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1>Evaluación Finalizada</h1>
+        <div class="score-circle" id="final-score"></div>
+        <p id="evaluation-text"></p>
+        <div style="text-align: left; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 20px;">
+            <h3>Recomendaciones por tema:</h3>
+            <ul id="failed-topics"></ul>
+        </div>
+        <button class="btn-next" style="margin-top: 20px; width: 100%;" onclick="location.reload()">Generar Nuevo Examen</button>
+        <button class="btn-prev" style="margin-top: 10px; width: 100%; border: 2px solid #e2e8f0;" onclick="window.location.href='index.html'">Volver al Inicio</button>
+    </div>
+</div>
+
+<script>
+    const questionBank = {
+        T1: [
+            { q: "¿Qué escuela de pensamiento de la IA sostiene que las máquinas pueden simular procesos cerebrales sin tener conciencia?", opts: ["IA Fuerte", "IA Débil", "Conexionismo", "Simbólica"], correct: 1, just: "La IA Débil se enfoca en la utilidad y simulación del comportamiento inteligente sin requerir estados mentales reales." },
+            { q: "En el proceso KDD, ¿cuál es el objetivo de la fase de 'Transformación'?", opts: ["Limpiar datos ruidosos", "Seleccionar variables relevantes", "Reducir dimensiones o encontrar variables invariantes", "Interpretar el conocimiento"], correct: 2, just: "La transformación busca representaciones de datos más eficientes para los algoritmos de minería." },
+            { q: "¿Cómo se define el aprendizaje inductivo?", opts: ["Deducir hechos particulares de leyes generales", "Aprender leyes generales a partir de ejemplos particulares", "Simular el comportamiento biológico", "Programar reglas lógicas fijas"], correct: 1, just: "La inducción es el pilar del ML: generalizar a partir de la experiencia previa (datos)." },
+            { q: "¿Cuál es la principal diferencia entre clasificación y descripción en minería de datos?", opts: ["La clasificación es no supervisada", "La descripción predice valores numéricos", "La clasificación es predictiva y la descripción es descriptiva", "No hay diferencia"], correct: 2, just: "La clasificación busca predecir la clase de datos futuros; la descripción explica patrones en datos actuales." },
+            { q: "Un sistema experto se diferencia de un algoritmo de ML clásico en que:", opts: ["No usa reglas", "Utiliza el conocimiento explícito de un especialista humano", "Siempre aprende solo", "Solo usa redes neuronales"], correct: 1, just: "Los SE emulan el razonamiento de un experto mediante bases de conocimientos y motores de inferencia." },
+            { q: "El Test de Turing se centra principalmente en medir:", opts: ["La velocidad de procesamiento", "La capacidad de sentir emociones", "El comportamiento inteligente (comunicación humana)", "La precisión matemática"], correct: 2, just: "Turing propuso que si una máquina es indistinguible de un humano en una conversación, es inteligente." },
+            { q: "En aprendizaje automático, las 'instancias' son:", opts: ["Las reglas lógicas", "Los ejemplos individuales del dataset", "Los atributos de entrada", "Los pesos de la red"], correct: 1, just: "Cada fila o ejemplo de un dataset se denomina instancia o caso." },
+            { q: "¿Qué paradigma de la IA se basa en la manipulación de símbolos para resolver problemas?", opts: ["Heurístico-Simbólico", "Bioinspirado", "Conexionista", "Deep Learning"], correct: 0, just: "El enfoque simbólico trata la inteligencia como una manipulación de símbolos con significado." },
+            { q: "El aprendizaje supervisado requiere obligatoriamente:", opts: ["Datos sin etiquetas", "Un agente en un entorno", "Ejemplos etiquetados con el valor objetivo", "Solo reglas lógicas"], correct: 2, just: "Supervisado significa que el modelo conoce la respuesta correcta durante el entrenamiento." },
+            { q: "¿Cuál es la fase final del proceso KDD?", opts: ["Minería de datos", "Evaluación e Interpretación", "Selección", "Preprocesamiento"], correct: 1, just: "Tras extraer patrones, se debe interpretar si son útiles y válidos para el usuario." }
+        ],
+        T2: [
+            { q: "¿Qué significa que Python sea un lenguaje de 'Tipado Dinámico'?", opts: ["Que las variables cambian de valor rápido", "Que no es necesario declarar el tipo de dato al crear la variable", "Que solo usa números", "Que los tipos son inmutables"], correct: 1, just: "En Python, el tipo se determina en tiempo de ejecución según el valor asignado." },
+            { q: "¿Cuál de las siguientes librerías es esencial para el manejo de arrays multidimensionales y álgebra lineal?", opts: ["Pandas", "Matplotlib", "NumPy", "Scrapy"], correct: 2, just: "NumPy es la base de todo el cálculo numérico y matricial en Python." },
+            { q: "¿Cuál es la principal ventaja de un Diccionario en Python?", opts: ["Mantiene el orden de inserción", "Permite acceso por clave en lugar de índice", "Es inmutable", "No permite valores duplicados"], correct: 1, just: "Los diccionarios funcionan como mapas clave-valor para búsquedas eficientes." },
+            { q: "En Pandas, un objeto bidimensional con filas y columnas se denomina:", opts: ["Series", "Array", "DataFrame", "Tensor"], correct: 2, just: "El DataFrame es la estructura principal de Pandas para datos tabulares." },
+            { q: "¿Qué librería de Python se considera la sucesora de Keras y está integrada en TensorFlow?", opts: ["Theano", "PyTorch", "tf.keras", "SciPy"], correct: 2, just: "Keras es ahora la API de alto nivel estándar dentro de TensorFlow." },
+            { q: "Si intentas modificar un elemento de una Tupla en Python:", opts: ["Se borra la tupla", "Se modifica el valor", "Se genera un TypeError", "Se convierte en lista"], correct: 2, just: "Las tuplas son inmutables; una vez creadas, no pueden cambiarse." },
+            { q: "¿Para qué sirve el entorno REPL de Python?", opts: ["Para compilar archivos .exe", "Para ejecutar código de forma interactiva línea a línea", "Para diseñar interfaces gráficas", "Para gestionar bases de datos"], correct: 1, just: "REPL (Read-Eval-Print Loop) es el modo interactivo del intérprete de Python." },
+            { q: "El operador '**' en Python se utiliza para:", opts: ["Multiplicación", "División entera", "Potencia", "Módulo"], correct: 2, just: "Por ejemplo, 2**3 devuelve 8." },
+            { q: "¿Qué comando se utiliza para instalar librerías externas en Python?", opts: ["install", "pip install", "get", "python add"], correct: 1, just: "pip es el gestor de paquetes estándar de Python." },
+            { q: "¿Cuál es la función de la librería Scikit-learn?", opts: ["Diseño de videojuegos", "Análisis de sentimientos", "Algoritmos de Machine Learning clásico", "Cálculo tensorial profundo"], correct: 2, just: "Es la librería líder para regresión, clasificación y clustering clásico." }
+        ],
+        T3: [
+            { q: "¿Qué mide la Entropía en el contexto de los árboles de decisión?", opts: ["La velocidad del algoritmo", "El grado de desorden o impureza de la información", "El número de ramas", "La profundidad del árbol"], correct: 1, just: "A mayor desorden en las clases de un nodo, mayor es su entropía." },
+            { q: "El algoritmo ID3 utiliza como métrica principal para elegir atributos:", opts: ["Índice Gini", "Ganancia de Información", "Proporción de Ganancia", "Error cuadrático"], correct: 1, just: "ID3 busca maximizar la reducción de la entropía mediante la ganancia de información." },
+            { q: "¿Cuál es la principal mejora del algoritmo C4.5 respecto a ID3?", opts: ["Es más lento", "Permite manejar atributos continuos (numéricos)", "No permite poda", "Solo usa variables binarias"], correct: 1, just: "C4.5 introdujo el manejo de valores numéricos, valores ausentes y la poda del árbol." },
+            { q: "¿Qué técnica consiste en detener el crecimiento de un árbol antes de que llegue a las hojas puras?", opts: ["Pospoda", "Prepoda", "Boosting", "Slicing"], correct: 1, just: "La prepoda evita el sobreajuste al no permitir que el árbol se vuelva demasiado complejo." },
+            { q: "En un árbol de decisión, los nodos finales que contienen la predicción se llaman:", opts: ["Raíces", "Ramas", "Hojas", "Padres"], correct: 2, just: "Las hojas representan la decisión final o la etiqueta de clase asignada." },
+            { q: "¿Qué es el sobreajuste (overfitting) en un árbol?", opts: ["Cuando el árbol es muy pequeño", "Cuando el modelo memoriza el ruido de los datos de entrenamiento", "Cuando el árbol no aprende nada", "Cuando el árbol tiene solo una rama"], correct: 1, just: "El sobreajuste implica alta precisión en entrenamiento pero baja en datos nuevos reales." },
+            { q: "Random Forest es un ejemplo de:", opts: ["Algoritmo simple", "Aprendizaje Integrado (Ensemble)", "Red Neuronal", "Búsqueda ciega"], correct: 1, just: "Random Forest combina múltiples árboles de decisión para mejorar la robustez." },
+            { q: "La Proporción de Ganancia (Gain Ratio) se introdujo para corregir:", opts: ["Árboles muy profundos", "El sesgo de la Ganancia de Información hacia atributos con muchos valores", "Errores de sintaxis", "La falta de memoria"], correct: 1, just: "Evita que atributos como 'ID_Cliente' (con valores únicos) sean elegidos erróneamente como los mejores." },
+            { q: "Un árbol de decisión es 'robusto frente a errores' porque:", opts: ["Nunca se equivoca", "Puede manejar datos con ruido sin degradar drásticamente su rendimiento", "Es muy rápido", "Usa poca memoria"], correct: 1, just: "La estructura jerárquica permite filtrar errores locales en los datos de entrenamiento." },
+            { q: "¿Qué representa una Curva ROC?", opts: ["La profundidad del árbol", "La relación entre sensibilidad y especificidad de un clasificador", "El número de hojas", "La ganancia de información"], correct: 1, just: "Es una herramienta fundamental para evaluar el rendimiento de clasificadores binarios." }
+        ],
+        T4: [
+            { q: "¿Cuál es la estructura básica de una regla de conocimiento?", opts: ["Y si X entonces Z", "SI antecedente ENTONCES consecuente", "Entrada -> Proceso -> Salida", "Dato + Dato = Información"], correct: 1, just: "Es la forma lógica estándar de representar el conocimiento modular." },
+            { q: "¿Qué mide el 'Soporte' de una regla de asociación?", opts: ["La confianza del experto", "La frecuencia con la que aparece la combinación en el dataset", "La importancia del antecedente", "El error del modelo"], correct: 1, just: "El soporte indica qué tan representativo es un patrón en el total de los datos." },
+            { q: "El algoritmo PRISM destaca por generar reglas que:", opts: ["Son muy complejas", "Tienen alta precisión cubriendo subconjuntos de datos", "Solo sirven para asociación", "No usan variables"], correct: 1, just: "PRISM es un algoritmo de recubrimiento secuencial enfocado en la precisión de las reglas de clasificación." },
+            { q: "¿Qué diferencia a las Reglas de Asociación de las de Clasificación?", opts: ["Las de asociación no tienen consecuente", "Las de asociación pueden predecir cualquier atributo, no solo la clase", "Son lo mismo", "Las de clasificación no usan datos"], correct: 1, just: "Las reglas de asociación descubren cualquier relación frecuente entre pares atributo-valor." },
+            { q: "En el algoritmo Apriori, un 'ítem-set frecuente' es aquel que:", opts: ["Se repite siempre", "Supera un umbral mínimo de soporte", "Tiene solo un elemento", "Es elegido por el programador"], correct: 1, just: "Apriori poda el espacio de búsqueda ignorando conjuntos que no alcanzan el soporte mínimo." },
+            { q: "La medida 'Lift' (Elevación) mayor a 1 en asociación indica:", opts: ["Que los elementos son independientes", "Que existe una relación positiva y útil entre los elementos", "Que la regla es falsa", "Que hay un error en los datos"], correct: 1, just: "Un Lift > 1 significa que el antecedente y el consecuente aparecen juntos más de lo esperado por azar." },
+            { q: "¿Qué técnica utiliza el 'recubrimiento secuencial'?", opts: ["Aprender todas las reglas a la vez", "Aprender una regla, eliminar los ejemplos que cubre y repetir", "Dividir el árbol en ramas", "Usar redes neuronales"], correct: 1, just: "Es la lógica de 'divide y vencerás' aplicada a la generación de reglas." },
+            { q: "La 'Confianza' de una regla X -> Y se define como:", opts: ["P(X Y)", "P(Y | X)", "P(X | Y)", "P(total)"], correct: 1, just: "Es la probabilidad de que ocurra el consecuente dado que se cumple el antecedente." },
+            { q: "¿Qué ventaja principal ofrecen las reglas frente a los árboles?", opts: ["Son más rápidas", "Son más modulares y fáciles de entender por humanos", "Usan más memoria", "No requieren datos"], correct: 1, just: "Cada regla es una unidad de conocimiento independiente y explicable." },
+            { q: "Un problema común de los algoritmos de reglas es:", opts: ["Que no encuentran nada", "La explosión combinatoria de posibles reglas", "Que son muy simples", "Solo funcionan con números"], correct: 1, just: "Con muchos atributos, el número de posibles reglas crece exponencialmente." }
+        ],
+        T5: [
+            { q: "¿Cuál es la función de los 'Pesos' en una neurona artificial?", opts: ["Contar el número de entradas", "Determinar la importancia de cada señal de entrada", "Almacenar la etiqueta de clase", "Apagar la neurona"], correct: 1, just: "El aprendizaje de la red consiste precisamente en ajustar estos pesos." },
+            { q: "La función de activación en una neurona sirve para:", opts: ["Multiplicar las entradas", "Introducir no linealidad y determinar la salida", "Guardar datos", "Sumar los pesos"], correct: 1, just: "Sin funciones no lineales, la red solo podría resolver problemas lineales simples." },
+            { q: "¿Qué limitación fundamental tiene el Perceptrón Simple?", opts: ["Es muy lento", "Solo puede resolver problemas linealmente separables", "No usa pesos", "No tiene entradas"], correct: 1, just: "Minsky y Papert demostraron que no podía resolver problemas como la función XOR." },
+            { q: "El algoritmo de Backpropagation se basa en:", opts: ["Aumentar el error", "El gradiente del error para ajustar los pesos hacia atrás", "La búsqueda aleatoria", "Reglas lógicas fijas"], correct: 1, just: "Propaga la señal de error desde la salida hacia la entrada para minimizarlo." },
+            { q: "¿Qué caracteriza a una red 'Feed-Forward'?", opts: ["Tiene bucles infinitos", "La información fluye en un solo sentido, de entrada a salida", "No tiene capas ocultas", "Es bidireccional siempre"], correct: 1, just: "Es la arquitectura estándar donde no hay retroalimentación entre capas." },
+            { q: "Las Redes de Hopfield se consideran:", opts: ["Feed-Forward", "Memorias asociativas recurrentes", "Árboles de decisión", "Algoritmos genéticos"], correct: 1, just: "Son redes autoasociativas capaces de recuperar patrones a partir de datos ruidosos." },
+            { q: "La 'Capa Oculta' en una red neuronal permite:", opts: ["Esconder datos al usuario", "Extraer características y patrones complejos no lineales", "Acelerar el hardware", "No sirve para nada"], correct: 1, just: "Las capas ocultas son las que otorgan a la red su capacidad de representación profunda." },
+            { q: "¿Cuál es un valor típico de salida de la función Sigmoide?", opts: ["Cualquier número real", "Entre -1 y 1", "Entre 0 y 1", "Solo 0 o 1"], correct: 2, just: "La sigmoide comprime cualquier valor de entrada al rango (0, 1)." },
+            { q: "El 'Aprendizaje' en redes neuronales es un proceso de:", opts: ["Deducción", "Optimización para minimizar una función de coste", "Memorización de tablas", "Búsqueda ciega"], correct: 1, just: "Se busca el conjunto de pesos que dé el menor error posible." },
+            { q: "Las Redes Recurrentes (RNN) son ideales para:", opts: ["Imágenes estáticas", "Datos secuenciales o series temporales", "Tablas de bases de datos", "No existen"], correct: 1, just: "Su estructura con ciclos permite 'recordar' estados anteriores en una secuencia." }
+        ],
+        T6: [
+            { q: "¿Cuál es el objetivo principal de las Redes Convolucionales (CNN)?", opts: ["Analizar texto", "Reconocimiento de patrones espaciales en imágenes", "Predecir la bolsa", "Comprimir audio"], correct: 1, just: "Las CNN usan filtros (convoluciones) para detectar rasgos visuales jerárquicos." },
+            { q: "En Deep Learning, ¿qué hace una red LSTM?", opts: ["Comprimir imágenes", "Gestionar memoria a largo plazo en secuencias", "Jugar al ajedrez", "Multiplicar matrices rápido"], correct: 1, just: "Long Short-Term Memory resuelve el problema del desvanecimiento del gradiente en RNNs." },
+            { q: "¿Qué son las GAN (Redes Generativas Antagónicas)?", opts: ["Redes que no aprenden", "Dos redes que compiten: una genera y otra discrimina", "Redes con una sola capa", "Algoritmos de búsqueda"], correct: 1, just: "La competición permite generar datos sintéticos (imágenes, audio) muy realistas." },
+            { q: "En Aprendizaje por Refuerzo, el dilema 'Exploración vs Explotación' se refiere a:", opts: ["Elegir entre hardware o software", "Probar nuevas acciones vs repetir acciones conocidas exitosas", "Limpiar datos o no", "Usar Python o R"], correct: 1, just: "El agente debe decidir si arriesgarse a aprender algo nuevo o usar lo que sabe que funciona." },
+            { q: "Un Autoencoder se utiliza principalmente para:", opts: ["Predecir el clima", "Reducción de dimensionalidad y aprendizaje de rasgos", "Generar reglas de asociación", "Crear árboles"], correct: 1, just: "Su estructura de 'reloj de arena' fuerza a la red a aprender una representación compacta." },
+            { q: "¿Qué librería desarrolló Google Brain para cálculos con tensores?", opts: ["Scikit-learn", "PyTorch", "TensorFlow", "Pandas"], correct: 2, just: "TensorFlow es el motor detrás de la mayoría de aplicaciones de Deep Learning actuales." },
+            { q: "El algoritmo Q-Learning es un método de:", opts: ["Aprendizaje Supervisado", "Aprendizaje por Refuerzo libre de modelo", "Clustering", "Búsqueda heurística"], correct: 1, just: "Aprende una política óptima basándose en recompensas del entorno." },
+            { q: "Las unidades GRU son una variación simplificada de:", opts: ["CNN", "LSTM", "Perceptrón", "A*"], correct: 1, just: "Las Gated Recurrent Units son más eficientes que las LSTM al tener menos puertas." },
+            { q: "En una CNN, el 'Pooling' sirve para:", opts: ["Aumentar el tamaño de la imagen", "Reducir la resolución espacial y el número de parámetros", "Añadir color", "Entrenar los pesos"], correct: 1, just: "El pooling (como Max Pooling) ayuda a que la red sea invariante a pequeñas traslaciones." },
+            { q: "AlphaGo es famoso por:", opts: ["Vencer al campeón de Ajedrez", "Vencer al campeón mundial de Go usando Deep RL", "Ser el primer sistema experto", "No usar redes neuronales"], correct: 1, just: "Fue un hito que demostró la potencia del aprendizaje por refuerzo profundo." }
+        ],
+        T7: [
+            { q: "¿Cuál es la característica principal del clustering?", opts: ["Usa etiquetas de clase", "Es aprendizaje no supervisado basado en similitud", "Solo usa reglas SI-ENTONCES", "Predice valores futuros"], correct: 1, just: "Agrupa datos que no tienen etiquetas previas según qué tan parecidos son." },
+            { q: "¿Cómo funciona el algoritmo K-means?", opts: ["Crea un dendrograma", "Asigna puntos al centroide más cercano de forma iterativa", "Usa probabilidades gaussianas", "No necesita definir K"], correct: 1, just: "Es un algoritmo exclusivo que busca minimizar la distancia dentro de los grupos." },
+            { q: "En clustering jerárquico, ¿qué muestra un Dendrograma?", opts: ["La red de neuronas", "La jerarquía de fusiones o divisiones de grupos", "El error del modelo", "Las reglas de asociación"], correct: 1, just: "Es un diagrama de árbol que visualiza cómo se agrupan las instancias." },
+            { q: "El algoritmo EM (Expectation-Maximization) es de tipo:", opts: ["Exclusivo", "Jerárquico", "Probabilista", "Difuso"], correct: 2, just: "Asume que los datos son una mezcla de distribuciones de probabilidad." },
+            { q: "¿Qué permite el clustering difuso (Fuzzy C-means)?", opts: ["Que cada punto sea un clúster", "Que un punto pertenezca a varios clústeres con diferentes grados", "Que no haya clústeres", "Solo funciona con texto"], correct: 1, just: "Usa lógica difusa para manejar el solapamiento entre grupos." },
+            { q: "La distancia Euclídea es un caso de la distancia de Minkowski con:", opts: ["p = 1", "p = 2", "p = 0", "p = infinito"], correct: 1, just: "La fórmula de Minkowski con p=2 equivale a la distancia geométrica común." },
+            { q: "¿Qué es el 'Enlace Simple' (Single Linkage) en jerárquico?", opts: ["Distancia máxima entre grupos", "Distancia mínima entre los puntos más cercanos de dos grupos", "Distancia entre centroides", "No existe"], correct: 1, just: "Considera la menor distancia posible entre cualquier par de elementos de dos grupos." },
+            { q: "Un inconveniente de K-means es:", opts: ["Es muy lento", "Es sensible a los centroides iniciales y a valores atípicos", "No usa números", "Solo crea un clúster"], correct: 1, just: "Dependiendo de dónde empiecen los centros, el resultado final puede variar." },
+            { q: "El clustering 'Divisivo' es un enfoque:", opts: ["Bottom-up", "Top-down", "Aleatorio", "Modular"], correct: 1, just: "Empieza con un solo grupo grande y lo va dividiendo sucesivamente." },
+            { q: "¿Para qué sirve el clustering en Marketing?", opts: ["Para fijar precios", "Para segmentar clientes con comportamientos similares", "Para programar la web", "Para despedir empleados"], correct: 1, just: "Permite crear campañas personalizadas para grupos específicos de consumidores." }
+        ],
+        T8: [
+            { q: "Un sistema de recomendación Colaborativo se basa en:", opts: ["Las etiquetas del producto", "Las valoraciones y gustos de otros usuarios similares", "El precio del ítem", "La fecha de compra"], correct: 1, just: "Usa la 'sabiduría de la multitud' para predecir intereses." },
+            { q: "La recomendación Basada en Contenido utiliza:", opts: ["Votos de amigos", "Metadatos y descripción del ítem (ej. género, autor)", "Clustering de usuarios", "Búsqueda ciega"], correct: 1, just: "Recomienda cosas parecidas a las que el usuario ya consumió y le gustaron." },
+            { q: "¿Qué es el problema del 'Arranque en frío' (Cold Start)?", opts: ["Cuando el servidor se apaga", "Dificultad de recomendar a nuevos usuarios o ítems sin historial", "Cuando el algoritmo es lento", "Solo ocurre en invierno"], correct: 1, just: "Sin datos previos, los sistemas colaborativos no pueden calcular similitudes." },
+            { q: "¿Para qué se usa el modelo TF-IDF?", opts: ["Para sumar números", "Para dar peso a las palabras según su relevancia en un texto", "Para redes neuronales", "Para buscar rutas"], correct: 1, just: "Es fundamental en recomendadores basados en contenido textual." },
+            { q: "Un sistema Híbrido se diseña para:", opts: ["Usar menos memoria", "Combinar técnicas (colaborativo + contenido) y paliar sus debilidades", "Ser más difícil de programar", "Solo recomendar una cosa"], correct: 1, just: "Al combinar enfoques se resuelven problemas como el Cold Start o la especialización excesiva." },
+            { q: "En filtrado colaborativo, 'Item-Item' suele ser mejor que 'User-User' porque:", opts: ["Los usuarios cambian de gusto, pero los ítems son estáticos", "Es más fácil de programar", "No usa matemáticas", "Solo lo usa Amazon"], correct: 0, just: "Las relaciones entre ítems son más estables y escalables en grandes sistemas." },
+            { q: "La 'Similitud del Coseno' mide:", opts: ["La distancia en kilómetros", "El ángulo entre dos vectores de características", "El tiempo de ejecución", "El número de usuarios"], correct: 1, just: "Es una métrica estándar para comparar qué tan parecidos son dos perfiles o ítems." },
+            { q: "Slope One es un algoritmo popular por su:", opts: ["Complejidad", "Simplicidad y eficiencia en colaborativo basado en ítems", "Uso de imágenes", "No ser preciso"], correct: 1, just: "Es fácil de implementar y da buenos resultados con pocos requisitos de cálculo." },
+            { q: "La 'Especialización excesiva' es un problema típico de:", opts: ["Filtrado Colaborativo", "Recomendación Basada en Contenido", "Sistemas Híbridos", "Búsqueda"], correct: 1, just: "El sistema solo recomienda cosas idénticas a las ya vistas, sin descubrir nada nuevo." },
+            { q: "¿Qué técnica ayuda a manejar la 'dispersión' (sparsity) en la matriz de datos?", opts: ["Borrar usuarios", "Factorización de matrices / SVD", "Aumentar el precio", "Usar una sola columna"], correct: 1, just: "Permite estimar valores vacíos en matrices donde la mayoría de usuarios no han valorado la mayoría de ítems." }
+        ],
+        T9: [
+            { q: "En IA, ¿qué es un 'Operador'?", opts: ["Una persona que usa el sistema", "Una acción que permite pasar de un estado a otro", "Un número fijo", "El resultado final"], correct: 1, just: "Los operadores definen las reglas de transición en el espacio de búsqueda." },
+            { q: "La búsqueda en Amplitud (BFS) garantiza:", opts: ["Encontrar cualquier solución", "Encontrar la solución óptima (camino más corto)", "Usar muy poca memoria", "Ser la más rápida siempre"], correct: 1, just: "Al explorar nivel por nivel, la primera vez que llega al objetivo es por el camino más corto." },
+            { q: "¿Cuál es el principal riesgo de la búsqueda en Profundidad (DFS)?", opts: ["Usa mucha memoria", "Puede caer en ramas infinitas si no hay control", "Es muy lenta", "Solo sirve para juegos"], correct: 1, just: "Si el grafo es muy profundo o tiene ciclos, puede no terminar nunca." },
+            { q: "Una función Heurística h(n) es:", opts: ["Una regla exacta", "Una estimación del coste desde el nodo actual al objetivo", "El coste real acumulado", "Un error del sistema"], correct: 1, just: "Sirve para guiar la búsqueda de forma 'inteligente' sin explorar todo el árbol." },
+            { q: "El algoritmo A* es óptimo siempre que la heurística sea:", opts: ["Compleja", "Admisible (que nunca sobreestime el coste real)", "Positiva", "Mayor que g(n)"], correct: 1, just: "Una heurística admisible garantiza que A* encuentre el camino de menor coste." },
+            { q: "El algoritmo Minimax se aplica en:", opts: ["Búsqueda de rutas en mapas", "Juegos de dos jugadores de suma cero", "Sistemas expertos médicos", "Clustering"], correct: 1, just: "Maximiza nuestra ventaja asumiendo que el rival minimizará nuestro éxito." },
+            { q: "¿Para qué sirve la Poda Alfa-Beta?", opts: ["Para borrar el árbol", "Para reducir el número de nodos explorados en Minimax sin cambiar el resultado", "Para ganar siempre", "Para jugar más lento"], correct: 1, just: "Ignora ramas que se sabe que no afectarán a la decisión final del algoritmo." },
+            { q: "La búsqueda 'Hacia Atrás' (Backward) es recomendable cuando:", opts: ["Hay pocos estados objetivos y muchos iniciales", "No hay objetivos", "El mapa es muy grande", "Solo hay un estado inicial"], correct: 0, just: "Es más eficiente retroceder desde la meta si el punto de partida es incierto o múltiple." },
+            { q: "El 'Coste de la Estrategia de Control' es:", opts: ["El precio del software", "El tiempo dedicado a decidir qué nodo expandir a continuación", "El tiempo de generar nodos", "La suma de g+h"], correct: 1, just: "Es el tiempo 'intelectual' del algoritmo para elegir la ruta." },
+            { q: "Un ejemplo de búsqueda en la vida real es:", opts: ["Ver la tele", "El cálculo de rutas en un GPS", "Escribir un email", "Guardar un archivo"], correct: 1, just: "Los GPS usan variaciones de búsqueda heurística para encontrar el camino más rápido." }
+        ],
+        T10: [
+            { q: "En sistemas expertos, la 'Incertidumbre' se refiere a:", opts: ["Datos con decimales", "Duda sobre la veracidad de un hecho o regla", "Falta de memoria", "Código mal escrito"], correct: 1, just: "Ocurre cuando no sabemos con 100% de seguridad si algo es cierto." },
+            { q: "¿Qué sistema famoso introdujo los 'Factores de Certeza' (CF)?", opts: ["Deep Blue", "MYCIN", "AlphaGo", "ChatGPT"], correct: 1, just: "MYCIN fue un sistema experto médico pionero en gestionar la incertidumbre." },
+            { q: "En Lógica Difusa, el grado de pertenencia de un elemento a un conjunto es:", opts: ["Siempre 0 o 1", "Un valor real entre 0 y 1", "Un número entero", "Cualquier texto"], correct: 1, just: "A diferencia de la lógica booleana, admite verdades parciales." },
+            { q: "¿Qué es una 'Variable Lingüística'?", opts: ["Una variable de programación normal", "Una variable cuyos valores son palabras como 'frío' o 'calor'", "Un error de traducción", "Una variable secreta"], correct: 1, just: "Permiten modelar el conocimiento humano de forma intuitiva." },
+            { q: "El proceso de 'Fuzzification' (Codificación) consiste en:", opts: ["Borrar los datos", "Convertir entradas precisas en grados de pertenencia difusos", "Traducir a inglés", "Multiplicar por cero"], correct: 1, just: "Es el primer paso para que un sistema difuso procese entradas numéricas del mundo real." },
+            { q: "En inferencia difusa, el método 'Centroide' se usa para:", opts: ["Elegir la regla más larga", "La decodificación (obtener un valor preciso de salida)", "Sumar los antecedentes", "Dibujar el gráfico"], correct: 1, just: "Calcula el centro de gravedad del área resultante para dar una orden de control precisa." },
+            { q: "¿Qué hace un 'Modificador' (Hedge) en lógica difusa?", opts: ["Borra la regla", "Altera la función de pertenencia (ej. 'muy', 'poco')", "Cambia el nombre de la variable", "No hace nada"], correct: 1, just: "Modifican matemáticamente el conjunto (ej. elevando al cuadrado para 'muy')." },
+            { q: "La Inferencia Bayesiana se basa en:", opts: ["La opinión del programador", "Probabilidades condicionadas y el Teorema de Bayes", "Reglas fijas", "Azar puro"], correct: 1, just: "Actualiza la creencia en una hipótesis conforme se recibe nueva evidencia." },
+            { q: "Una ventaja de la lógica difusa en control industrial es:", opts: ["Es más barata", "No requiere un modelo matemático exacto del proceso", "Es más rápida de procesar", "Siempre es perfecta"], correct: 1, just: "Permite controlar sistemas complejos basándose en reglas de experiencia humana." },
+            { q: "Un valor de Factores de Certeza (CF) de -1 significa:", opts: ["Certeza absoluta de que es verdad", "Falsedad absoluta demostrada", "Ignorancia total", "Dato erróneo"], correct: 1, just: "En la escala de MYCIN, -1 es incredulidad total y +1 es creencia total." }
+        ]
+    };
+
+    let quizData = [];
+    let currentIdx = 0;
+    let userAnswers = [];
+    let validatedArr = [];
+
+    function initExam() {
+        quizData = [];
+        // Seleccionar 3 preguntas aleatorias por tema
+        Object.keys(questionBank).forEach(tema => {
+            let pool = [...questionBank[tema]];
+            for(let i=0; i<3; i++) {
+                let rand = Math.floor(Math.random() * pool.length);
+                quizData.push(pool.splice(rand, 1)[0]);
+            }
+        });
+        // Mezclar las 30 preguntas finales
+        quizData.sort(() => Math.random() - 0.5);
+        userAnswers = new Array(quizData.length).fill(null);
+        validatedArr = new Array(quizData.length).fill(false);
+        render();
+    }
+
+    function render() {
+        const q = quizData[currentIdx];
+        const isValidated = validatedArr[currentIdx];
+        document.getElementById('q-meta').innerText = `Pregunta ${currentIdx + 1} de 30 `;
+        document.getElementById('q-text').innerText = q.q;
+        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / 30) * 100}%`;
+        
+        const container = document.getElementById('options-container');
+        container.innerHTML = "";
+        q.opts.forEach((opt, i) => {
+            const div = document.createElement('div');
+            const isSelected = userAnswers[currentIdx] === i;
+            let statusClass = "";
+            if (isValidated) {
+                if (i === q.correct) statusClass = "correct-ans";
+                else if (isSelected) statusClass = "wrong-ans";
+                div.classList.add("disabled");
+            } else if (isSelected) statusClass = "selected";
+
+            div.className = `option-item ${statusClass}`;
+            div.innerHTML = `<input type="radio" ${isSelected ? 'checked' : ''} ${isValidated ? 'disabled' : ''}> <span>${opt}</span>`;
+            if (!isValidated) div.onclick = () => selectOption(i);
+            container.appendChild(div);
+        });
+
+        document.getElementById('feedback-area').style.display = isValidated ? "block" : "none";
+        if (isValidated) {
+            const correct = userAnswers[currentIdx] === q.correct;
+            document.getElementById('feedback-status').innerText = correct ? "✓ ¡Correcto!" : "✗ Respuesta Incorrecta";
+            document.getElementById('feedback-status').style.color = correct ? "var(--success)" : "var(--error)";
+            document.getElementById('justification-text').innerText = q.just;
+        }
+
+        document.getElementById('btn-prev').disabled = currentIdx === 0;
+        document.getElementById('btn-validate').style.display = isValidated ? "none" : "block";
+        document.getElementById('btn-next').disabled = !isValidated;
+        document.getElementById('btn-next').innerText = currentIdx === 29 ? "Ver Resultados" : "Siguiente";
+    }
+
+    function selectOption(idx) {
+        userAnswers[currentIdx] = idx;
+        render();
+    }
+
+    function validateCurrent() {
+        if (userAnswers[currentIdx] === null) return alert("Selecciona una opción.");
+        validatedArr[currentIdx] = true;
+        render();
+    }
+
+    function changeQuestion(step) {
+        if (step === 1 && currentIdx === 29) return showResults();
+        currentIdx += step;
+        render();
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        let score = 0;
+        const failedTopics = new Set();
+        quizData.forEach((q, i) => {
+            if (userAnswers[i] === q.correct) score++;
+            else failedTopics.add(q.topic);
+        });
+        document.getElementById('final-score').innerText = `${score}/30`;
+        const list = document.getElementById('failed-topics');
+        list.innerHTML = "";
+        failedTopics.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
+        if (failedTopics.size === 0) list.innerHTML = "<li>¡Excelente! Has demostrado un dominio total de la materia.</li>";
+        const evalMsg = score >= 15 ? "¡Aprobado! Has superado el examen de refuerzo." : "Necesitas profundizar más en los temas señalados.";
+        document.getElementById('evaluation-text').innerText = evalMsg;
+    }
+
+    initExam();
+</script>
+</body>
+</html>

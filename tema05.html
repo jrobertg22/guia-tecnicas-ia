@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario: Tema 05 - Técnicas de IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e293b; 
+            --card-bg: #f8fafc;
+            --primary: #f7b212;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --accent: #3b82f6;
+            --success: #15803d;
+            --error: #b91c1c;
+            --feedback-bg: #f1f5f9;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 90%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 40px;
+            position: relative;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-family: 'Arvo', serif;
+            font-size: 1.6rem;
+            margin: 0;
+            color: var(--bg-color);
+        }
+
+        .question-number {
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent);
+            background-color: #eff6ff;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #fefce8;
+        }
+
+        .option-item.correct-ans {
+            border-color: var(--success);
+            background-color: #f0fdf4;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .option-item.wrong-ans {
+            border-color: var(--error);
+            background-color: #fef2f2;
+            color: var(--error);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        input { margin-right: 12px; }
+
+        .feedback-area {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: var(--feedback-bg);
+            border-left: 4px solid var(--accent);
+            display: none;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .justification {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-light);
+        }
+
+        .nav-buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-validate { background: var(--primary); color: #000; flex-grow: 1; }
+        .btn-next { background: var(--bg-color); color: white; }
+        .btn-prev { background: #e2e8f0; color: var(--text-light); }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        #result-screen { text-align: center; display: none; }
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 6px solid var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="progress-bar-container"><div id="progress-fill"></div></div>
+    
+    <div id="quiz-screen">
+        <header>
+            <span class="question-number" id="q-count"></span>
+            <h1>Tema 5: Redes Neuronales Artificiales</h1>
+        </header>
+
+        <div id="q-text" class="question-text"></div>
+        <div class="options-list" id="options-container"></div>
+
+        <div class="feedback-area" id="feedback-area">
+            <span class="feedback-title" id="feedback-status"></span>
+            <p class="justification" id="justification-text"></p>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-prev" id="btn-prev" onclick="changeQuestion(-1)">Anterior</button>
+            <button class="btn-validate" id="btn-validate" onclick="validateCurrent()">Validar Respuesta</button>
+            <button class="btn-next" id="btn-next" onclick="changeQuestion(1)" disabled>Siguiente</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1>¡Test Completado!</h1>
+        <div class="score-circle" id="final-score"></div>
+        <p>Has finalizado el repaso sobre Redes Neuronales Artificiales.</p>
+        <div style="text-align: left; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 20px;">
+            <h3>Sugerencias de Repaso:</h3>
+            <ul id="suggested-topics"></ul>
+        </div>
+        
+        <button class="btn-next" style="margin-top: 20px; width: 100%;" onclick="location.reload()">Reiniciar Test</button>
+        <button class="btn-prev" style="margin-top: 10px; width: 100%; border: 2px solid #e2e8f0;" onclick="window.location.href='index.html'">Ir al Menú Principal</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "1. ¿Cuál de las siguientes afirmaciones no es correcta respecto de las redes neuronales artificiales?",
+            options: [
+                "A. Se basan en un fundamento biológico.",
+                "B. Son sistemas con alto nivel de paralelismo.",
+                "C. Presentan robustez ante fallos.",
+                "D. Una vez entrenada la red, podemos obtener de ella el conocimiento en forma de reglas de manera directa."
+            ],
+            correct: 3,
+            type: "single",
+            topic: "5.2. Introducción a Redes Neuronales",
+            justification: "A diferencia de los árboles de decisión, las redes neuronales son 'cajas negras'. El conocimiento se almacena en los pesos de las conexiones, por lo que no se puede extraer conocimiento en forma de reglas lógicas directamente."
+        },
+        {
+            question: "2. Indica la respuesta correcta. En una red neuronal:",
+            options: [
+                "A. El conjunto de nodos de entrada procesan la información de entrada.",
+                "B. Los nodos ocultos se comunican con el exterior de la red.",
+                "C. El objetivo del aprendizaje es determinar el valor de los pesos.",
+                "D. Ninguna de las anteriores."
+            ],
+            correct: 2,
+            type: "single",
+            topic: "5.3. La neurona artificial",
+            justification: "El proceso de aprendizaje de una red neuronal consiste fundamentalmente en ajustar los pesos de las conexiones para minimizar el error en las predicciones."
+        },
+        {
+            question: "3. Indica la respuesta correcta. En el perceptrón:",
+            options: [
+                "A. La salida es binaria.",
+                "B. Se utiliza una función de activación no lineal.",
+                "C. Solo existe una neurona de entrada.",
+                "D. No se utiliza una función de activación."
+            ],
+            correct: 0,
+            type: "single",
+            topic: "5.3. El perceptrón simple",
+            justification: "El perceptrón simple utiliza una función de activación de tipo escalón, lo que genera una salida discreta o binaria (normalmente 0/1 o -1/1)."
+        },
+        {
+            question: "4. Indica cuáles de las siguientes afirmaciones son correctas respecto a la regla de aprendizaje del perceptrón:",
+            options: [
+                "A. Es una regla de aprendizaje por corrección de error.",
+                "B. La variación de los pesos es proporcional al error cometido.",
+                "C. La variación de los pesos es proporcional a la entrada.",
+                "D. El aprendizaje está garantizado si los datos son linealmente separables."
+            ],
+            correct: [0, 1, 2, 3],
+            type: "multiple",
+            topic: "5.3. Regla de aprendizaje",
+            justification: "La regla del perceptrón ajusta los pesos basándose en el error (valor deseado menos obtenido) y la señal de entrada. Teóricamente, converge siempre que las clases puedan separarse por una línea."
+        },
+        {
+            question: "5. Indica la respuesta correcta. Una red neuronal multicapa:",
+            options: [
+                "A. Es una red de alimentación hacia atrás.",
+                "B. Es una red con una arquitectura feed-forward.",
+                "C. Tiene una sola capa de neuronas.",
+                "D. Solo puede resolver problemas linealmente separables."
+            ],
+            correct: 1,
+            type: "single",
+            topic: "5.4. Redes multicapa",
+            justification: "Las redes multicapa (MLP) son típicamente arquitecturas de alimentación hacia adelante (feed-forward), donde la información fluye de la entrada a la salida sin ciclos."
+        },
+        {
+            question: "6. ¿Cuáles de las siguientes funciones de activación son no-lineales?",
+            options: [
+                "A. Identidad.",
+                "B. Escalón.",
+                "C. Sigmoidal.",
+                "D. Tangente hiperbólica."
+            ],
+            correct: [1, 2, 3],
+            type: "multiple",
+            topic: "5.4. Funciones de activación",
+            justification: "La función identidad es lineal. Las funciones escalón, sigmoidal y tangente hiperbólica introducen la no-linealidad necesaria para resolver problemas complejos."
+        },
+        {
+            question: "7. Indica cuáles de las siguientes afirmaciones son correctas respecto al algoritmo de retropropagación del error:",
+            options: [
+                "A. El error se propaga hacia atrás, desde la capa de salida hacia la entrada.",
+                "B. Se aplica un método de descenso de gradiente.",
+                "C. Se utiliza el error cuadrático medio.",
+                "D. Se utilizan las mismas fórmulas para calcular los pesos de salida y los de capas ocultas."
+            ],
+            correct: [0, 1, 2],
+            type: "multiple",
+            topic: "5.4. Algoritmo Backpropagation",
+            justification: "El algoritmo utiliza descenso de gradiente para minimizar el error cuadrático medio. Las fórmulas varían entre capas, ya que las ocultas no tienen un 'valor objetivo' directo."
+        },
+        {
+            question: "8. Indica cuáles de las siguientes afirmaciones son correctas respecto de las redes recurrentes:",
+            options: [
+                "A. Emulan la capacidad de almacenamiento de la memoria humana.",
+                "B. Emulan la capacidad de asociación de la memoria humana.",
+                "C. Las salidas de la red alimentan las entradas.",
+                "D. La red Hopfield es una red recurrente."
+            ],
+            correct: [0, 1, 2, 3],
+            type: "multiple",
+            topic: "5.5. Redes recurrentes",
+            justification: "Las redes recurrentes introducen ciclos de retroalimentación (feedback). Son capaces de 'recordar' información previa, comportándose como memorias asociativas."
+        },
+        {
+            question: "9. Indica cuáles de las siguientes afirmaciones son correctas respecto de las redes Hopfield:",
+            options: [
+                "A. El estado de la red viene determinado por los pesos de los enlaces.",
+                "B. El objetivo es que la red sea capaz de almacenar unos determinados estados.",
+                "C. El objetivo es que la red sea capaz de almacenar memorias fundamentales.",
+                "D. No es preciso comprobar que la red sea capaz de almacenar memorias fundamentales."
+            ],
+            correct: [1, 2],
+            type: "multiple",
+            topic: "5.5. Redes de Hopfield",
+            justification: "El estado de la red lo definen los valores de activación de las neuronas, no los pesos. Su propósito es almacenar 'memorias fundamentales' estables que actúan como atractores."
+        },
+        {
+            question: "10. Indica cuáles de las siguientes afirmaciones son correctas respecto de las redes Hopfield:",
+            options: [
+                "A. Son redes bidireccionales asociativas.",
+                "B. Se utilizan en reconocimiento de imágenes.",
+                "C. Siempre alcanzan un estado estable correspondiente a una memoria fundamental.",
+                "D. Con pocas neuronas son capaces de almacenar gran cantidad de información."
+            ],
+            correct: [0, 1],
+            type: "multiple",
+            topic: "5.5. Propiedades de Hopfield",
+            justification: "Son memorias asociativas bidireccionales (BAM). Pueden reconocer imágenes ruidosas, pero no siempre alcanzan la memoria deseada (pueden caer en estados espurios) y su capacidad de almacenamiento es limitada (aprox. 15% del número de neuronas)."
+        }
+    ];
+
+    let currentIdx = 0;
+    const userAnswers = new Array(quizData.length).fill(null).map(() => []);
+    const validatedArr = new Array(quizData.length).fill(false);
+
+    function render() {
+        const q = quizData[currentIdx];
+        const isValidated = validatedArr[currentIdx];
+        
+        document.getElementById('q-count').innerText = `Pregunta ${currentIdx + 1} de ${quizData.length}`;
+        document.getElementById('q-text').innerText = q.question;
+        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / quizData.length) * 100}%`;
+        
+        const container = document.getElementById('options-container');
+        container.innerHTML = "";
+
+        q.options.forEach((opt, i) => {
+            const div = document.createElement('div');
+            const isSelected = userAnswers[currentIdx].includes(i);
+            
+            let statusClass = "";
+            if (isValidated) {
+                const isCorrect = Array.isArray(q.correct) ? q.correct.includes(i) : q.correct === i;
+                if (isCorrect) statusClass = "correct-ans";
+                else if (isSelected) statusClass = "wrong-ans";
+                div.classList.add("disabled");
+            } else if (isSelected) {
+                statusClass = "selected";
+            }
+
+            div.className = `option-item ${statusClass}`;
+            const inputType = q.type === 'multiple' ? 'checkbox' : 'radio';
+            div.innerHTML = `<input type="${inputType}" ${isSelected ? 'checked' : ''} ${isValidated ? 'disabled' : ''}> <span>${opt}</span>`;
+            if (!isValidated) div.onclick = () => selectOption(i);
+            container.appendChild(div);
+        });
+
+        document.getElementById('feedback-area').style.display = isValidated ? "block" : "none";
+        if (isValidated) {
+            const isCorrect = checkCorrectness(currentIdx);
+            document.getElementById('feedback-status').innerText = isCorrect ? "✓ ¡Correcto!" : "✗ Incorrecto";
+            document.getElementById('feedback-status').style.color = isCorrect ? "var(--success)" : "var(--error)";
+            document.getElementById('justification-text').innerText = q.justification;
+        }
+
+        document.getElementById('btn-prev').disabled = currentIdx === 0;
+        document.getElementById('btn-validate').style.display = isValidated ? "none" : "block";
+        document.getElementById('btn-next').disabled = !isValidated;
+        document.getElementById('btn-next').innerText = currentIdx === quizData.length - 1 ? "Finalizar" : "Siguiente";
+    }
+
+    function selectOption(idx) {
+        if (quizData[currentIdx].type === "single") {
+            userAnswers[currentIdx] = [idx];
+        } else {
+            const pos = userAnswers[currentIdx].indexOf(idx);
+            if (pos > -1) userAnswers[currentIdx].splice(pos, 1);
+            else userAnswers[currentIdx].push(idx);
+        }
+        render();
+    }
+
+    function validateCurrent() {
+        if (userAnswers[currentIdx].length === 0) return alert("Selecciona al menos una respuesta.");
+        validatedArr[currentIdx] = true;
+        render();
+    }
+
+    function checkCorrectness(idx) {
+        const q = quizData[idx];
+        const user = userAnswers[idx].sort().join(',');
+        const correct = Array.isArray(q.correct) ? q.correct.sort().join(',') : q.correct.toString();
+        return user === correct;
+    }
+
+    function changeQuestion(step) {
+        if (step === 1 && currentIdx === quizData.length - 1) return showResults();
+        currentIdx += step;
+        render();
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        let score = 0;
+        const failedTopics = new Set();
+        quizData.forEach((q, i) => {
+            if (checkCorrectness(i)) score++;
+            else failedTopics.add(q.topic);
+        });
+        document.getElementById('final-score').innerText = `${score}/10`;
+        const list = document.getElementById('suggested-topics');
+        list.innerHTML = "";
+        failedTopics.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
+        if (failedTopics.size === 0) list.innerHTML = "<li>¡Excelente! Eres un experto en Redes Neuronales.</li>";
+    }
+
+    render();
+</script>
+</body>
+</html>
