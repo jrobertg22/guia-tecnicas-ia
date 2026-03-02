@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examen de Refuerzo Conceptual V2: Técnicas de IA</title>
+    <title>Examen de Refuerzo Conceptual V3: Técnicas de IA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -82,7 +82,9 @@
         button:disabled { opacity: 0.3; cursor: not-allowed; }
 
         #result-screen { text-align: center; display: none; }
-        .score-circle { width: 120px; height: 120px; border-radius: 50%; border: 8px solid var(--primary); display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: 700; margin: 20px auto; }
+        .score-circle { width: 140px; height: 140px; border-radius: 50%; border: 8px solid var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 20px auto; }
+        .grade-val { font-size: 2.2rem; font-weight: 800; line-height: 1; }
+        .grade-label { font-size: 0.7rem; text-transform: uppercase; color: var(--text-light); margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -110,7 +112,11 @@
 
     <div id="result-screen">
         <h1>Evaluación Finalizada</h1>
-        <div class="score-circle" id="final-score"></div>
+        <div class="score-circle">
+            <div class="grade-val" id="final-grade">0.00</div>
+            <div class="grade-label">Calificación</div>
+        </div>
+        <div id="status-badge" style="font-weight: 700; font-size: 1.2rem; margin-bottom: 10px;"></div>
         <p id="evaluation-text"></p>
         <div style="text-align: left; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-top: 20px;">
             <h3>Recomendaciones por tema:</h3>
@@ -250,15 +256,12 @@
     let userAnswers = [];
     let validatedArr = [];
 
-    // Algoritmo Fisher-Yates para barajar opciones
     function shuffleOptions(qObj, temaKey) {
         let options = qObj.opts.map((text, index) => ({ text, isCorrect: index === qObj.correct }));
-        
         for (let i = options.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [options[i], options[j]] = [options[j], options[i]];
         }
-        
         return {
             q: qObj.q,
             opts: options.map(o => o.text),
@@ -270,7 +273,6 @@
 
     function initExam() {
         quizData = [];
-        // Seleccionamos 3 al azar por tema y barajamos sus respuestas
         Object.keys(questionBank).forEach(tema => {
             let pool = [...questionBank[tema]];
             for(let i=0; i<3; i++) {
@@ -279,8 +281,6 @@
                 quizData.push(shuffleOptions(rawQ, tema));
             }
         });
-        
-        // Barajamos el orden de las 30 preguntas
         quizData.sort(() => Math.random() - 0.5);
         userAnswers = new Array(quizData.length).fill(null);
         validatedArr = new Array(quizData.length).fill(false);
@@ -346,18 +346,34 @@
     function showResults() {
         document.getElementById('quiz-screen').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
-        let score = 0;
+        let correctCount = 0;
         const failedTopics = new Set();
         quizData.forEach((q, i) => {
-            if (userAnswers[i] === q.correct) score++;
+            if (userAnswers[i] === q.correct) correctCount++;
             else failedTopics.add(q.topic);
         });
-        document.getElementById('final-score').innerText = `${score}/30`;
+
+        // Cálculo de calificación 1-10 con 2 decimales
+        const grade = (correctCount / 30) * 10;
+        const finalGradeStr = grade.toFixed(2);
+        const isApproved = grade >= 5.0; // Umbral de aprobación estándar
+
+        document.getElementById('final-grade').innerText = finalGradeStr;
+        const statusBadge = document.getElementById('status-badge');
+        statusBadge.innerText = isApproved ? "ESTADO: APROBADO" : "ESTADO: NO APROBADO";
+        statusBadge.style.color = isApproved ? "var(--success)" : "var(--error)";
+
         const list = document.getElementById('failed-topics');
         list.innerHTML = "";
         failedTopics.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
-        if (failedTopics.size === 0) list.innerHTML = "<li>¡Sin fallos! Dominio total.</li>";
-        document.getElementById('evaluation-text').innerText = score >= 15 ? "¡Aprobado!" : "Sigue repasando.";
+        
+        if (failedTopics.size === 0) {
+            list.innerHTML = "<li>¡Excelente! Dominio absoluto de todos los temas.</li>";
+        }
+        
+        document.getElementById('evaluation-text').innerText = isApproved ? 
+            `¡Felicidades! Has superado la evaluación con un ${finalGradeStr}.` : 
+            `Has obtenido un ${finalGradeStr}. Es necesario repasar los temas indicados para mejorar tu desempeño.`;
     }
 
     initExam();
