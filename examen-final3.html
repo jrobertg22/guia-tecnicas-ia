@@ -293,7 +293,7 @@
 
         document.getElementById('final-grade').innerText = finalGradeStr;
         const statusBadge = document.getElementById('status-badge');
-        statusBadge.innerText = isApproved ? "ESTADO: MAESTRÍA ALCANZADA" : "ESTADO: NO ACREDITADO";
+        statusBadge.innerText = isApproved ? "ESTADO: APROBADO" : "ESTADO: NO APROBADO";
         statusBadge.style.color = isApproved ? "var(--success)" : "var(--error)";
 
         const list = document.getElementById('failed-topics');
