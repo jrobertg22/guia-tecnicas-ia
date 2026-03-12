@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examen Nivel Maestría: Técnicas Avanzadas de IA</title>
+    <title>Examen Nivel Maestría V2: Técnicas Avanzadas de IA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #1e293b; 
-            --card-bg: #f8fafc;
+            --bg-color: #0f172a; 
+            --card-bg: #ffffff;
             --primary: #f7b212;
             --text-main: #1e293b;
             --text-light: #64748b;
             --accent: #3b82f6;
             --success: #15803d;
             --error: #b91c1c;
-            --feedback-bg: #f1f5f9;
+            --feedback-bg: #f8fafc;
         }
 
         body {
@@ -44,55 +44,55 @@
 
         .progress-bar-container {
             width: 100%;
-            height: 8px;
+            height: 6px;
             background: #e2e8f0;
             position: absolute;
             top: 0;
             left: 0;
+            z-index: 10;
         }
 
         #progress-fill {
             height: 100%;
-            background: var(--primary);
+            background: linear-gradient(90deg, var(--accent), var(--primary));
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.4s ease;
         }
 
-        header { text-align: center; margin-bottom: 25px; }
-        h1 { font-family: 'Arvo', serif; font-size: 1.6rem; margin: 0; color: var(--bg-color); }
-        .question-info { font-weight: 600; color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 8px; display: block; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-family: 'Arvo', serif; font-size: 1.8rem; margin: 0; color: #0f172a; }
+        .question-info { font-weight: 600; color: var(--accent); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1.5px; margin-bottom: 10px; display: block; }
 
-        .question-text { font-size: 1.2rem; line-height: 1.5; margin-bottom: 20px; font-weight: 600; }
-        .options-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-        .option-item { border: 2px solid #e2e8f0; border-radius: 10px; padding: 12px 18px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; font-size: 0.95rem; }
-        .option-item:hover:not(.disabled) { border-color: var(--accent); background-color: #eff6ff; }
-        .option-item.selected { border-color: var(--primary); background-color: #fefce8; }
+        .question-text { font-size: 1.25rem; line-height: 1.6; margin-bottom: 25px; font-weight: 600; color: #1e293b; }
+        .options-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+        .option-item { border: 2px solid #f1f5f9; border-radius: 12px; padding: 16px 20px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; font-size: 1rem; background: #fff; }
+        .option-item:hover:not(.disabled) { border-color: var(--accent); background-color: #f0f9ff; }
+        .option-item.selected { border-color: var(--primary); background-color: #fffbeb; }
         .option-item.correct-ans { border-color: var(--success); background-color: #f0fdf4; color: var(--success); font-weight: 600; }
         .option-item.wrong-ans { border-color: var(--error); background-color: #fef2f2; color: var(--error); }
         .option-item.disabled { cursor: default; }
 
-        .feedback-area { margin-top: 20px; padding: 15px; border-radius: 10px; background: var(--feedback-bg); border-left: 4px solid var(--accent); display: none; }
-        .feedback-title { font-weight: 700; display: block; margin-bottom: 5px; }
+        .feedback-area { margin-top: 25px; padding: 20px; border-radius: 12px; background: var(--feedback-bg); border-left: 5px solid var(--accent); display: none; }
+        .feedback-title { font-weight: 700; display: block; margin-bottom: 8px; font-size: 1.1rem; }
+        .justification { font-size: 0.95rem; line-height: 1.5; color: var(--text-light); }
 
-        .nav-buttons { margin-top: 25px; display: flex; justify-content: space-between; gap: 10px; }
-        button { padding: 12px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .nav-buttons { margin-top: 35px; display: flex; justify-content: space-between; gap: 15px; }
+        button { padding: 14px 28px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 0.95rem; }
         .btn-validate { background: var(--primary); color: #000; flex-grow: 1; }
         .btn-next { background: var(--bg-color); color: white; }
-        .btn-prev { background: #e2e8f0; color: var(--text-light); }
-        button:disabled { opacity: 0.3; cursor: not-allowed; }
+        .btn-prev { background: #f1f5f9; color: var(--text-light); }
+        button:disabled { opacity: 0.4; cursor: not-allowed; }
 
         #result-screen { text-align: center; display: none; }
-        .score-circle { width: 140px; height: 140px; border-radius: 50%; border: 8px solid var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 20px auto; }
-        .grade-val { font-size: 2.2rem; font-weight: 800; line-height: 1; }
-        .grade-label { font-size: 0.7rem; text-transform: uppercase; color: var(--text-light); margin-top: 5px; }
+        .score-circle { width: 160px; height: 160px; border-radius: 50%; border: 10px solid var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 30px auto; background: #fff; }
+        .grade-val { font-size: 2.8rem; font-weight: 800; color: #0f172a; }
+        .grade-label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-light); letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <div class="quiz-container">
-    <div class="progress-bar-container">
-        <div id="progress-fill"></div>
-    </div>
+    <div class="progress-bar-container"><div id="progress-fill"></div></div>
     
     <div id="quiz-screen">
         <header>
@@ -132,54 +132,54 @@
 <script>
     const masteryBank = {
         T1: [
-            { q: "En el contexto de la IA Simbólica frente a la Conexionista, ¿qué ventaja fundamental ofrece el enfoque simbólico en entornos industriales regulados?", opts: ["Mayor capacidad de generalización", "Explicabilidad y trazabilidad del razonamiento (White Box)", "Eficiencia en el procesamiento de señales ruidosas", "Auto-aprendizaje sin intervención humana"], correct: 1, just: "La IA simbólica permite auditar cada paso lógico, crucial en sectores como el legal o médico." },
-            { q: "Durante la fase de 'Transformación' de KDD, ¿por qué es crítico realizar un análisis de varianza antes de reducir dimensiones?", opts: ["Para eliminar el ruido aleatorio", "Para asegurar que no se pierde información discriminante esencial", "Para normalizar los datos en el rango [0,1]", "Para validar la interpretación del experto"], correct: 1, just: "La reducción de dimensiones debe preservar la varianza que explica las diferencias entre clases." },
-            { q: "Desde una perspectiva ética de maestría, ¿qué riesgo introduce la 'IA Débil' en sistemas de selección automatizada?", opts: ["Conciencia de clase", "Sesgo algorítmico derivado de datos históricos", "Incansabilidad en el proceso", "Falta de potencia de cálculo"], correct: 1, just: "Al no tener 'conciencia', estos sistemas replican sesgos presentes en los datos de entrenamiento sin criterio moral." }
+            { q: "En el contexto de la IA Simbólica frente a la Conexionista, ¿qué ventaja fundamental ofrece el enfoque simbólico en entornos industriales regulados?", opts: ["Mayor capacidad de generalización", "Explicabilidad y trazabilidad del razonamiento (White Box)", "Eficiencia en el procesamiento de señales ruidosas", "Auto-aprendizaje sin intervención humana"], correct: 1, just: "La IA simbólica permite auditar cada paso lógico, crucial en sectores regulados." },
+            { q: "Durante la fase de 'Transformación' de KDD, ¿por qué es crítico realizar un análisis de varianza antes de reducir dimensiones?", opts: ["Para eliminar el ruido aleatorio", "Para asegurar que no se pierde información discriminante esencial", "Para normalizar los datos", "Para validar la interpretación"], correct: 1, just: "La reducción de dimensiones debe preservar la varianza que explica las diferencias entre clases." },
+            { q: "Desde una perspectiva ética de maestría, ¿qué riesgo introduce la 'IA Débil' en sistemas automatizados?", opts: ["Conciencia de clase", "Sesgo algorítmico derivado de datos históricos", "Incansabilidad", "Falta de potencia"], correct: 1, just: "Replican sesgos presentes en los datos de entrenamiento sin criterio moral." }
         ],
         T2: [
-            { q: "¿Qué mecanismo de Python permite que la librería NumPy supere las limitaciones del Global Interpreter Lock (GIL)?", opts: ["El uso de decoradores @jit", "La ejecución de operaciones en extensiones de C/C++ fuera del stack de Python", "El multithreading nativo de las listas", "El uso exclusivo de variables inmutables"], correct: 1, just: "NumPy libera el GIL al ejecutar cómputos intensivos en código compilado de bajo nivel." },
-            { q: "Al gestionar grandes DataFrames en Pandas, ¿qué estrategia minimiza drásticamente el uso de memoria RAM?", opts: ["Convertir todas las columnas a tipo 'object'", "Hacer copias profundas constantes", "Downcasting de tipos numéricos y uso de categorías", "Usar solo archivos .txt"], correct: 2, just: "Optimizar los dtypes reduce el footprint de memoria significativamente." },
-            { q: "En un entorno de producción de IA, ¿cuándo es preferible usar TensorFlow Lite sobre TensorFlow estándar?", opts: ["Para entrenar modelos con Petabytes de datos", "Para inferencia en dispositivos 'Edge' con latencia ultra-baja", "Para visualización de gradientes", "Para investigación teórica"], correct: 1, just: "TF Lite optimiza los grafos para hardware limitado y local." }
+            { q: "¿Qué mecanismo permite que NumPy supere las limitaciones del Global Interpreter Lock (GIL)?", opts: ["Decoradores @jit", "Ejecución en extensiones de C/C++ fuera del stack de Python", "Multithreading de listas", "Variables inmutables"], correct: 1, just: "NumPy libera el GIL al ejecutar cómputos intensivos en código de bajo nivel." },
+            { q: "Al gestionar grandes DataFrames, ¿qué estrategia minimiza el uso de RAM?", opts: ["Columnas tipo 'object'", "Copias profundas", "Downcasting numérico y uso de categorías", "Archivos .txt"], correct: 2, just: "Optimizar dtypes reduce el footprint de memoria significativamente." },
+            { q: "¿Cuándo es preferible usar TensorFlow Lite?", opts: ["Petabytes de datos", "Inferencia en dispositivos 'Edge' con latencia baja", "Visualización", "Investigación teórica"], correct: 1, just: "TF Lite optimiza grafos para hardware limitado y local." }
         ],
         T3: [
-            { q: "¿Por qué el algoritmo C4.5 prefiere la 'Proporción de Ganancia' sobre la 'Ganancia de Información' pura?", opts: ["Es menos costosa", "Corrige el sesgo hacia atributos con muchos niveles", "Garantiza que el árbol sea binario", "Aumenta la entropía de los nodos raíz"], correct: 1, just: "La ganancia pura favorece atributos con alta cardinalidad (como IDs), lo cual no generaliza bien." },
-            { q: "En Random Forest, ¿cuál es el impacto técnico de aumentar el número de árboles (n_estimators) indefinidamente?", opts: ["El modelo sufrirá de Overfitting extremo", "Se estabiliza el error pero aumenta el coste computacional linealmente", "El modelo se vuelve lineal", "Desaparece la varianza"], correct: 1, just: "Random Forest no hace overfitting por añadir más árboles, pero consume más recursos." },
-            { q: "La 'Pospoda' se considera superior a la 'Prepoda' porque:", opts: ["Es más rápida de ejecutar", "Evita el problema de 'visión de túnel'", "Requiere menos datos", "Utiliza el índice Gini"], correct: 1, just: "La pospoda evalúa el impacto real después de que se ha desarrollado el contexto completo." }
+            { q: "¿Por qué C4.5 prefiere la 'Proporción de Ganancia' sobre la pura?", opts: ["Es menos costosa", "Corrige el sesgo hacia atributos con muchos niveles", "Árbol binario", "Aumenta la entropía"], correct: 1, just: "La ganancia pura favorece atributos con alta cardinalidad (ej. IDs)." },
+            { q: "En Random Forest, ¿qué pasa al aumentar n_estimators indefinidamente?", opts: ["Overfitting extremo", "Se estabiliza el error pero aumenta el coste computacional", "Modelo lineal", "Desaparece la varianza"], correct: 1, just: "Aumentar árboles no causa overfitting pero consume más recursos." },
+            { q: "La 'Pospoda' se considera superior a la 'Prepoda' porque:", opts: ["Más rápida", "Evita el problema de 'visión de túnel'", "Menos datos", "Usa Gini"], correct: 1, just: "Evalúa el impacto real después de que se ha desarrollado el contexto completo." }
         ],
         T4: [
-            { q: "En reglas de asociación, ¿qué indica un valor de 'Lift' igual a 1.0 entre dos ítems {A} y {B}?", opts: ["Correlación perfecta", "Independencia estadística absoluta", "A causa a B", "Regla es inválida"], correct: 1, just: "Si Lift=1, la ocurrencia de A no altera la probabilidad de B; son independientes." },
-            { q: "¿Cuál es la ventaja de PRISM frente a los métodos que mapean árboles a reglas?", opts: ["Reglas no necesitan ser mutuamente excluyentes", "Genera menos reglas", "No requiere soporte", "Solo datos binarios"], correct: 0, just: "PRISM genera reglas modulares que pueden solaparse." },
-            { q: "El algoritmo de 'Recubrimiento Secuencial' aplica una estrategia 'Greedy'. ¿Qué implicación tiene esto?", opts: ["Garantiza el camino más corto", "Puede estancarse en óptimos locales", "Búsqueda exhaustiva", "No usa confianza"], correct: 1, just: "Al elegir el mejor paso inmediato, puede perder mejores combinaciones globales." }
+            { q: "En asociación, ¿qué indica un valor de 'Lift' igual a 1.0?", opts: ["Correlación perfecta", "Independencia estadística absoluta", "A causa a B", "Invalidez"], correct: 1, just: "Si Lift=1, la ocurrencia de A no altera la probabilidad de B." },
+            { q: "¿Qué ventaja tiene PRISM frente al mapeo de árboles a reglas?", opts: ["Reglas no mutuamente excluyentes", "Menos reglas", "Sin soporte", "Datos binarios"], correct: 0, just: "Genera reglas modulares que pueden solaparse." },
+            { q: "El 'Recubrimiento Secuencial' es 'Greedy'. ¿Qué implicación tiene?", opts: ["Garantiza camino corto", "Puede estancarse en óptimos locales", "Exhaustiva", "Sin confianza"], correct: 1, just: "Al elegir el mejor paso inmediato, puede perder mejores combinaciones globales." }
         ],
         T5: [
-            { q: "¿Cuál es el propósito de aplicar una activación no lineal (como ReLU) en capas ocultas?", opts: ["Acelerar multiplicación", "Permitir aproximar funciones no lineales complejas", "Pesos positivos", "Normalizar salida"], correct: 1, just: "Sin no-linealidad, la red colapsaría en una simple transformación lineal." },
-            { q: "El 'Desvanecimiento del Gradiente' afecta principalmente a activaciones:", opts: ["ReLU", "Sigmoides o Tangente Hiperbólica", "Identidad", "Leaky ReLU"], correct: 1, just: "Las derivadas son muy pequeñas en los extremos, impidiendo que el error fluya." },
-            { q: "En redes de Hopfield, ¿qué representa la 'Función de Energía'?", opts: ["Velocidad de entrenamiento", "Estabilidad de la red al recuperar una memoria", "Número de neuronas", "Coste de computación"], correct: 1, just: "La red evoluciona hacia estados de mínima energía (atractores)." }
+            { q: "¿Cuál es el propósito de una activación no lineal (ReLU) en ocultas?", opts: ["Multiplicar matrices", "Permitir aproximar funciones complejas", "Pesos positivos", "Normalizar"], correct: 1, just: "Sin no-linealidad, la red colapsaría en una transformación lineal simple." },
+            { q: "El 'Desvanecimiento del Gradiente' afecta principalmente a:", opts: ["ReLU", "Sigmoides o Tangente Hiperbólica", "Identidad", "Leaky ReLU"], correct: 1, just: "Las derivadas son muy pequeñas en los extremos, impidiendo el flujo del error." },
+            { q: "En redes de Hopfield, ¿qué representa la 'Función de Energía'?", opts: ["Velocidad", "Estabilidad al recuperar memorias", "Número de neuronas", "Cómputo"], correct: 1, just: "La red evoluciona hacia estados de mínima energía (atractores)." }
         ],
         T6: [
-            { q: "En una CNN, ¿cómo influye el 'Stride' (paso) mayor a 1?", opts: ["Aumenta resolución", "Reduce el tamaño de salida (submuestreo)", "Aumenta parámetros", "Sin efecto"], correct: 1, just: "Un stride mayor salta píxeles, resultando en un mapa de características más pequeño." },
-            { q: "En Aprendizaje por Refuerzo, ¿qué diferencia al 'Double Q-Learning' del estándar?", opts: ["Doble memoria", "Desacopla selección de acción de su evaluación", "Sin recompensas", "Espacios continuos"], correct: 1, just: "Usa dos redes para evitar el sesgo de sobreestimación del valor." },
-            { q: "¿Cuál es la función del 'Discriminador' en una GAN?", opts: ["Generar imágenes", "Clasificador binario para distinguir real de sintético", "Reducir ruido", "Optimizar pérdida"], correct: 1, just: "Obliga al generador a mejorar su calidad mediante competencia." }
+            { q: "En una CNN, ¿cómo influye el 'Stride' mayor a 1?", opts: ["Más resolución", "Reduce el tamaño (submuestreo)", "Más parámetros", "Sin efecto"], correct: 1, just: "Un stride mayor salta píxeles, reduciendo el mapa de características." },
+            { q: "¿Qué diferencia al 'Double Q-Learning' del estándar?", opts: ["Doble memoria", "Desacopla selección de acción de evaluación", "Sin recompensas", "Espacios continuos"], correct: 1, just: "Evita el sesgo de sobreestimación del valor de la acción." },
+            { q: "¿Cuál es la función del 'Discriminador' en una GAN?", opts: ["Generar imágenes", "Clasificador binario (real vs sintético)", "Reducir ruido", "Optimizar pérdida"], correct: 1, just: "Obliga al generador a mejorar mediante competencia." }
         ],
         T7: [
-            { q: "Al evaluar K-means, ¿por qué la 'Inercia' no es suficiente por sí sola?", opts: ["Favorece siempre a los modelos con K más alto", "No mide distancia", "Solo datos convexos", "Es lenta"], correct: 0, just: "La inercia baja a medida que K sube; se requiere el método del codo o silueta." },
-            { q: "¿Qué ventaja ofrece el algoritmo EM sobre K-means?", opts: ["Más rápido", "Permite clústeres con solapamientos (soft clustering)", "Óptimo global", "Sin inicialización"], correct: 1, just: "Captura la incertidumbre de pertenencia usando mezclas gaussianas." },
-            { q: "En enlace jerárquico, el 'Enlace Completo' tiende a producir:", opts: ["Clústeres alargados", "Clústeres compactos", "Clúster gigante", "Solo dos clústeres"], correct: 1, just: "Al medir la distancia máxima, evita el efecto de 'encadenamiento'." }
+            { q: "Al evaluar K-means, ¿por qué la 'Inercia' no basta?", opts: ["Favorece K alto", "Sin distancia", "Datos convexos", "Lenta"], correct: 0, just: "La inercia baja siempre que K sube; se requiere método del codo o silueta." },
+            { q: "¿Qué ventaja ofrece el algoritmo EM sobre K-means?", opts: ["Velocidad", "Permite clústeres con solapamientos (soft clustering)", "Óptimo global", "Sin inicialización"], correct: 1, just: "Usa mezclas gaussianas para capturar incertidumbre de pertenencia." },
+            { q: "En jerárquico, el 'Enlace Completo' tiende a:", opts: ["Clústeres finos", "Clústeres compactos", "Clúster gigante", "Dos clústeres"], correct: 1, just: "Al medir la distancia máxima, evita el efecto de encadenamiento." }
         ],
         T8: [
-            { q: "¿Cómo aborda la 'Factorización de Matrices' la dispersión (sparsity)?", opts: ["Eliminando usuarios", "Proyectando en un espacio de factores latentes", "Más columnas", "Solo demográfico"], correct: 1, just: "Captura patrones ocultos que permiten predecir votos en celdas vacías." },
-            { q: "En recomendación por contenido, ¿cuál es el riesgo de usar BoW puro?", opts: ["Perder el contexto semántico", "Latencia", "Ser colaborativo", "Muchos usuarios"], correct: 0, just: "BoW solo cuenta frecuencias; no distingue relevancia semántica." },
-            { q: "Un sistema Híbrido 'Paralelo' combina resultados mediante:", opts: ["Cascada", "Ponderación de múltiples algoritmos independientes", "Solo el mejor", "Clustering"], correct: 1, just: "Ejecuta varios modelos a la vez y agrega sus predicciones." }
+            { q: "¿Cómo aborda la 'Factorización de Matrices' la dispersión?", opts: ["Quita usuarios", "Proyecta en factores latentes", "Más columnas", "Demográfico"], correct: 1, just: "Captura patrones ocultos para predecir celdas vacías." },
+            { q: "En contenido, ¿qué riesgo tiene usar BoW puro?", opts: ["Pierde contexto semántico", "Latencia", "Colaborativo", "Muchos usuarios"], correct: 0, just: "BoW solo cuenta frecuencias, no distingue importancia relativa." },
+            { q: "Un sistema Híbrido 'Paralelo' combina resultados mediante:", opts: ["Cascada", "Ponderación de múltiples modelos", "El mejor", "Clustering"], correct: 1, just: "Ejecuta varios modelos a la vez y agrega sus predicciones." }
         ],
         T9: [
-            { q: "En A*, ¿qué sucede si h(n) es 'consistente'?", opts: ["Búsqueda ciega", "Garantiza optimalidad sin re-explorar nodos cerrados", "Coste cero", "En amplitud"], correct: 1, just: "La consistencia optimiza la eficiencia al asegurar caminos mínimos locales." },
-            { q: "¿Cuál es la complejidad espacial de IDS comparada con BFS?", opts: ["IDS mucha más memoria", "IDS requiere lineal O(bd) frente al exponencial O(b^d)", "Idénticas", "IDS sin memoria"], correct: 1, just: "IDS combina la eficiencia de memoria de DFS con la completitud de BFS." },
-            { q: "En suma cero, ¿cómo mejora la 'Poda Alfa-Beta' a Minimax?", opts: ["Aumenta profundidad alcanzable en el mismo tiempo", "Cambia decisión", "Múltiples oponentes", "Sin evaluación"], correct: 0, just: "Al podar ramas irrelevantes, explora mucho más profundo." }
+            { q: "En A*, ¿qué sucede si h(n) es 'consistente'?", opts: ["Ciega", "Garantiza optimalidad sin re-explorar cerrados", "Coste cero", "Amplitud"], correct: 1, just: "La consistencia optimiza la eficiencia asegurando caminos mínimos locales." },
+            { q: "¿Cuál es la complejidad espacial de IDS comparada con BFS?", opts: ["IDS más memoria", "IDS lineal O(bd) vs BFS exponencial O(b^d)", "Iguales", "IDS sin memoria"], correct: 1, just: "IDS combina eficiencia de memoria de DFS con completitud de BFS." },
+            { q: "En suma cero, ¿cómo mejora la 'Poda Alfa-Beta'?", opts: ["Aumenta profundidad alcanzable", "Cambia decisión", "Múltiples rivales", "Sin evaluación"], correct: 0, just: "Al podar ramas irrelevantes, explora mucho más profundo." }
         ],
         T10: [
-            { q: "¿Cómo gestiona Bayes la 'Probabilidad a Priori'?", opts: ["La ignora", "La utiliza como punto de partida que se actualiza", "La suma al final", "Igual a 0.5"], correct: 1, just: "La creencia inicial es fundamental para ponderar la probabilidad final con evidencia." },
-            { q: "En lógica difusa, ¿qué es un 'Término Lingüístico'?", opts: ["String de Python", "Conjunto difuso que representa valor vago", "Error", "Modificador"], correct: 1, just: "Etiquetas como 'tibio' que dividen el universo de discurso." },
-            { q: "Los Factores de Certeza (CF) se diseñaron para evitar:", opts: ["Decimales", "Requerir cantidades inmanejables de probabilidades", "Velocidad", "Reglas SI-ENTONCES"], correct: 1, just: "Permiten asignar confianza heurística sin datos estadísticos masivos." }
+            { q: "¿Cómo gestiona Bayes la 'Probabilidad a Priori'?", opts: ["La ignora", "Punto de partida que se actualiza", "Suma al final", "Igual a 0.5"], correct: 1, just: "Es fundamental para ponderar la probabilidad final con evidencia." },
+            { q: "En lógica difusa, ¿qué es un 'Término Lingüístico'?", opts: ["String", "Conjunto difuso que representa valor vago", "Error", "Modificador"], correct: 1, just: "Etiquetas como 'tibio' que dividen el universo de discurso." },
+            { q: "Los 'Factores de Certeza' (CF) se diseñaron para:", opts: ["Decimales", "Evitar cantidades inmanejables de probabilidades", "Velocidad", "Reglas SI-ENTONCES"], correct: 1, just: "Permiten asignar confianza heurística sin datos estadísticos masivos." }
         ]
     };
 
@@ -202,10 +202,10 @@
             topic: temaKey.replace('T', 'Tema ')
         };
     }
-	
 
     function initExam() {
         quizData = [];
+        // SELECCIONA 2 PREGUNTAS POR TEMA (20 TOTAL)
         Object.keys(masteryBank).forEach(tema => {
             let pool = [...masteryBank[tema]];
             for(let i=0; i<2; i++) {
@@ -257,7 +257,7 @@
         document.getElementById('btn-prev').disabled = currentIdx === 0;
         document.getElementById('btn-validate').style.display = isValidated ? "none" : "block";
         document.getElementById('btn-next').disabled = !isValidated;
-        document.getElementById('btn-next').innerText = currentIdx === 29 ? "RESULTADOS" : "SIGUIENTE";
+        document.getElementById('btn-next').innerText = currentIdx === 19 ? "RESULTADOS" : "SIGUIENTE";
     }
 
     function selectOption(idx) {
@@ -266,13 +266,13 @@
     }
 
     function validateCurrent() {
-        if (userAnswers[currentIdx] === null) return alert("Selecciona una respuesta técnica.");
+        if (userAnswers[currentIdx] === null) return alert("Selecciona una respuesta.");
         validatedArr[currentIdx] = true;
         render();
     }
 
     function changeQuestion(step) {
-        if (step === 1 && currentIdx === 29) return showResults();
+        if (step === 1 && currentIdx === 19) return showResults();
         currentIdx += step;
         render();
     }
@@ -289,21 +289,20 @@
 
         const grade = (correctCount / 20) * 10;
         const finalGradeStr = grade.toFixed(2);
-        const isApproved = grade >= 7.0;
+        const isApproved = grade >= 6.0;
 
         document.getElementById('final-grade').innerText = finalGradeStr;
         const statusBadge = document.getElementById('status-badge');
-        statusBadge.innerText = isApproved ? "ESTADO: APROBADO" : "ESTADO: NO ACREDITADO";
+        statusBadge.innerText = isApproved ? "ESTADO: MAESTRÍA ALCANZADA" : "ESTADO: NO ACREDITADO";
         statusBadge.style.color = isApproved ? "var(--success)" : "var(--error)";
 
         const list = document.getElementById('failed-topics');
         list.innerHTML = "";
         failedTopics.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
-        if (failedTopics.size === 0) list.innerHTML = "<li>¡Excelencia! Dominas todos los fundamentos avanzados.</li>";
         
         document.getElementById('evaluation-text').innerText = isApproved ? 
-            `Has superado la evaluación deL test con un ${finalGradeStr}.` : 
-            `Nota obtenida: ${finalGradeStr}. Se requiere profundizar en la teoría de los temas señalados.`;
+            `Has superado la evaluación con un ${finalGradeStr}.` : 
+            `Nota obtenida: ${finalGradeStr}. Se requiere profundizar en la teoría.`;
     }
 
     initExam();

@@ -185,7 +185,7 @@
             { q: "Característica de 'Feed-Forward':", opts: ["Bucles", "Info fluye en un sentido", "Sin ocultas", "Bidireccional"], correct: 1, just: "No hay retroalimentación entre capas." },
             { q: "Redes de Hopfield son:", opts: ["Feed-Forward", "Memorias asociativas recurrentes", "Árboles", "Genéticos"], correct: 1, just: "Recuperan patrones a partir de datos ruidosos." },
             { q: "Capa Oculta permite:", opts: ["Esconder datos", "Extraer patrones complejos no lineales", "Acelerar", "Nada"], correct: 1, just: "Otorga capacidad de representación profunda." },
-            { q: "Salida típica de Sigmoide:", opts: ["Cualquier real", "Entre -1 y 1", "Entre 0 y 1", "0 o 1"], correct: 2, just: "Comprime la entrada al rango probabilístico (0,1)." },
+            { q: "Salida típica de Sigmoide:", opts: ["Any real", "Entre -1 y 1", "Entre 0 y 1", "0 o 1"], correct: 2, just: "Comprime la entrada al rango probabilístico (0,1)." },
             { q: "Aprendizaje en redes es un proceso de:", opts: ["Deducción", "Optimización", "Memorización", "Búsqueda"], correct: 1, just: "Se busca el mínimo global de la función de coste." },
             { q: "Redes Recurrentes (RNN) ideales para:", opts: ["Imágenes", "Datos secuenciales/series temporales", "Tablas", "No existen"], correct: 1, just: "Su estructura permite recordar estados anteriores." }
         ],
@@ -273,6 +273,7 @@
 
     function initExam() {
         quizData = [];
+        // SELECCIONA 2 PREGUNTAS POR TEMA (10 temas x 2 = 20)
         Object.keys(questionBank).forEach(tema => {
             let pool = [...questionBank[tema]];
             for(let i=0; i<2; i++) {
@@ -323,7 +324,7 @@
         document.getElementById('btn-prev').disabled = currentIdx === 0;
         document.getElementById('btn-validate').style.display = isValidated ? "none" : "block";
         document.getElementById('btn-next').disabled = !isValidated;
-        document.getElementById('btn-next').innerText = currentIdx === 29 ? "Resultados" : "Siguiente";
+        document.getElementById('btn-next').innerText = currentIdx === 19 ? "Resultados" : "Siguiente";
     }
 
     function selectOption(idx) {
@@ -338,7 +339,7 @@
     }
 
     function changeQuestion(step) {
-        if (step === 1 && currentIdx === 29) return showResults();
+        if (step === 1 && currentIdx === 19) return showResults();
         currentIdx += step;
         render();
     }
@@ -353,10 +354,9 @@
             else failedTopics.add(q.topic);
         });
 
-        // Cálculo de calificación 1-10 con 2 decimales
         const grade = (correctCount / 20) * 10;
         const finalGradeStr = grade.toFixed(2);
-        const isApproved = grade >= 5.0; // Umbral de aprobación estándar
+        const isApproved = grade >= 5.0;
 
         document.getElementById('final-grade').innerText = finalGradeStr;
         const statusBadge = document.getElementById('status-badge');
@@ -366,14 +366,10 @@
         const list = document.getElementById('failed-topics');
         list.innerHTML = "";
         failedTopics.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
-        
-        if (failedTopics.size === 0) {
-            list.innerHTML = "<li>¡Excelente! Dominio absoluto de todos los temas.</li>";
-        }
-        
+        if (failedTopics.size === 0) list.innerHTML = "<li>¡Excelente! Dominio absoluto de todos los temas.</li>";
         document.getElementById('evaluation-text').innerText = isApproved ? 
             `¡Felicidades! Has superado la evaluación con un ${finalGradeStr}.` : 
-            `Has obtenido un ${finalGradeStr}. Es necesario repasar los temas indicados para mejorar tu desempeño.`;
+            `Has obtenido un ${finalGradeStr}. Es necesario repasar los temas indicados.`;
     }
 
     initExam();
