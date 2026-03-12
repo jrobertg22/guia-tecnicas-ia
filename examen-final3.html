@@ -224,9 +224,9 @@
     function render() {
         const q = quizData[currentIdx];
         const isValidated = validatedArr[currentIdx];
-        document.getElementById('q-meta').innerText = `DESAFÍO ${currentIdx + 1} DE 30 | ${q.topic}`;
+        document.getElementById('q-meta').innerText = `DESAFÍO ${currentIdx + 1} DE 20 | ${q.topic}`;
         document.getElementById('q-text').innerText = q.q;
-        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / 30) * 100}%`;
+        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / 20) * 100}%`;
         
         const container = document.getElementById('options-container');
         container.innerHTML = "";
@@ -287,7 +287,7 @@
             else failedTopics.add(q.topic);
         });
 
-        const grade = (correctCount / 30) * 10;
+        const grade = (correctCount / 20) * 10;
         const finalGradeStr = grade.toFixed(2);
         const isApproved = grade >= 7.0;
 

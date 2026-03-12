@@ -290,9 +290,9 @@
     function render() {
         const q = quizData[currentIdx];
         const isValidated = validatedArr[currentIdx];
-        document.getElementById('q-meta').innerText = `Pregunta ${currentIdx + 1} de 30 | ${q.topic}`;
+        document.getElementById('q-meta').innerText = `Pregunta ${currentIdx + 1} de 20 | ${q.topic}`;
         document.getElementById('q-text').innerText = q.q;
-        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / 30) * 100}%`;
+        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / 20) * 100}%`;
         
         const container = document.getElementById('options-container');
         container.innerHTML = "";
@@ -354,7 +354,7 @@
         });
 
         // Cálculo de calificación 1-10 con 2 decimales
-        const grade = (correctCount / 30) * 10;
+        const grade = (correctCount / 20) * 10;
         const finalGradeStr = grade.toFixed(2);
         const isApproved = grade >= 5.0; // Umbral de aprobación estándar
 
