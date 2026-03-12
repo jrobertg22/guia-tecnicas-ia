@@ -275,7 +275,7 @@
         quizData = [];
         Object.keys(questionBank).forEach(tema => {
             let pool = [...questionBank[tema]];
-            for(let i=0; i<3; i++) {
+            for(let i=0; i<2; i++) {
                 let rand = Math.floor(Math.random() * pool.length);
                 let rawQ = pool.splice(rand, 1)[0];
                 quizData.push(shuffleOptions(rawQ, tema));

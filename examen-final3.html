@@ -208,7 +208,7 @@
         quizData = [];
         Object.keys(masteryBank).forEach(tema => {
             let pool = [...masteryBank[tema]];
-            for(let i=0; i<3; i++) {
+            for(let i=0; i<2; i++) {
                 if(pool.length === 0) break;
                 let rand = Math.floor(Math.random() * pool.length);
                 let rawQ = pool.splice(rand, 1)[0];
